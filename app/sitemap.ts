@@ -7,12 +7,22 @@ import { siteConfig } from "@/lib/config/site";
 const baseUrl = "https://rcapsule.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const navRoutes = siteConfig.navItems.map((item) => ({
+  // Only public-facing marketing pages — never auth-protected routes
+  const navRoutes = siteConfig.marketingNavItems.map((item) => ({
     url: `${baseUrl}${item.href}`,
     lastModified: new Date().toISOString(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
+    changeFrequency: "monthly" as const,
+    priority: item.href === "/pricing" ? 0.9 : 0.7,
   }));
+
+  const staticRoutes = ["/about", "/contact", "/terms", "/privacy", "/refund-policy"].map(
+    (path) => ({
+      url: `${baseUrl}${path}`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: path === "/about" || path === "/contact" ? 0.6 : 0.4,
+    }),
+  );
 
   const baseRoutes = [
     {
@@ -20,12 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date().toISOString(),
       changeFrequency: "weekly" as const,
       priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/features`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
     },
   ];
 
@@ -54,5 +58,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Non-fatal — sitemap still works without profile routes
   }
 
-  return [...baseRoutes, ...navRoutes, ...profileRoutes];
+  return [...baseRoutes, ...navRoutes, ...staticRoutes, ...profileRoutes];
 }
