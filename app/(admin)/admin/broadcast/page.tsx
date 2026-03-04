@@ -13,7 +13,10 @@ export default function AdminBroadcastPage() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ sent?: number; error?: string } | null>(null);
+  const [result, setResult] = useState<{
+    sent?: number;
+    error?: string;
+  } | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

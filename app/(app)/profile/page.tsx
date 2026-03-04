@@ -22,7 +22,6 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
-
 import NextImage from "next/image";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
@@ -317,7 +316,7 @@ export default function ProfilePage() {
 
           {/* ANALYTICS TAB */}
           <Tab key="analytics" title="Analytics">
-            {analyticsLoading ? (
+            {analyticsLoading || !analytics ? (
               <div className="flex justify-center py-12">
                 <Spinner size="lg" />
               </div>

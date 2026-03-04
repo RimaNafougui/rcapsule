@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { getErrorMessage } from "@/lib/utils/error";
 import {
   Button,
   Card,
@@ -15,6 +14,7 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
+import { getErrorMessage } from "@/lib/utils/error";
 import { categories, colors, colorMap } from "@/lib/data";
 
 const CURRENCIES = ["CAD", "USD", "EUR", "GBP"];
@@ -157,7 +157,10 @@ export default function AdminCatalogNewPage() {
                 label="Currency"
                 selectedKeys={[form.currency]}
                 onSelectionChange={(keys) =>
-                  update("currency", Array.from(keys as Set<string>)[0] ?? "CAD")
+                  update(
+                    "currency",
+                    Array.from(keys as Set<string>)[0] ?? "CAD",
+                  )
                 }
               >
                 {CURRENCIES.map((c) => (
@@ -275,13 +278,20 @@ export default function AdminCatalogNewPage() {
                 </div>
                 <Select
                   label="Scraping Status"
-                  selectedKeys={form.scrapingStatus ? [form.scrapingStatus] : []}
+                  selectedKeys={
+                    form.scrapingStatus ? [form.scrapingStatus] : []
+                  }
                   onSelectionChange={(keys) =>
-                    update("scrapingStatus", Array.from(keys as Set<string>)[0] ?? "")
+                    update(
+                      "scrapingStatus",
+                      Array.from(keys as Set<string>)[0] ?? "",
+                    )
                   }
                 >
                   {SCRAPING_STATUSES.map((s) => (
-                    <SelectItem key={s} className="capitalize">{s}</SelectItem>
+                    <SelectItem key={s} className="capitalize">
+                      {s}
+                    </SelectItem>
                   ))}
                 </Select>
               </div>

@@ -167,7 +167,7 @@ export default function SettingsPage() {
           type: "error",
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: "An error occurred.", type: "error" });
     } finally {
       setLoading(false);
@@ -184,7 +184,7 @@ export default function SettingsPage() {
       if (data.url) window.location.href = data.url;
       else
         setMessage({ text: "Failed to open billing portal.", type: "error" });
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: "An error occurred.", type: "error" });
     } finally {
       setPortalLoading(false);
@@ -232,7 +232,7 @@ export default function SettingsPage() {
           type: "error",
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: "An error occurred.", type: "error" });
     } finally {
       setLoading(false);

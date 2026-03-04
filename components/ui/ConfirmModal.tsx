@@ -40,7 +40,11 @@ export default function ConfirmModal({
           <Button variant="flat" onPress={onClose}>
             Cancel
           </Button>
-          <Button color={confirmColor} isLoading={isLoading} onPress={onConfirm}>
+          <Button
+            color={confirmColor}
+            isLoading={isLoading}
+            onPress={onConfirm}
+          >
             {confirmLabel}
           </Button>
         </ModalFooter>

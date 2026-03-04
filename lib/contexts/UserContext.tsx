@@ -5,6 +5,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import * as Sentry from "@sentry/nextjs";
 
+import { apiFetch } from "@/types/api-response";
+
 interface UserContextType {
   user: User | null;
   refreshUser: () => void;
@@ -35,34 +37,27 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    try {
-      const response = await fetch("/api/user/me");
+    // apiFetch<User> returns ApiResponse<User>; we narrow on `.ok` before
+    // touching `.data`, so there is no implicit `any` cast.
+    const result = await apiFetch<User>("/api/user/me");
 
-      if (response.ok) {
-        const data: User = await response.json();
-
-        setUser(data);
-        Sentry.setUser({
-          id: data.id,
-          email: data.email,
-          username: data.name,
-        });
-      } else {
-        // Fallback with default free status
-        setUser({
-          ...session.user,
-          subscription_status: "free",
-        } as User);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
+    if (result.ok) {
+      setUser(result.data);
+      Sentry.setUser({
+        id: result.data.id,
+        email: result.data.email,
+        username: result.data.name,
+      });
+    } else {
+      // Fallback with default free status on error or auth failure
+      console.error("Error fetching user:", result.error);
       setUser({
         ...session.user,
         subscription_status: "free",
-      } as User);
-    } finally {
-      setLoading(false);
+      } as unknown as User);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {

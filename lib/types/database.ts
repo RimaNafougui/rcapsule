@@ -3,10 +3,21 @@
  * These replace `any` throughout the codebase for type-safe DB access.
  */
 
+import type {
+  UserId,
+  ClothesId,
+  OutfitId,
+  WardrobeId,
+  GlobalProductId,
+  WearLogId,
+  UserPreferencesId,
+  OutfitRecommendationId,
+} from "@/types/branded";
+
 // ─── Core entities ─────────────────────────────────────────────────────────
 
 export interface DbUser {
-  id: string;
+  id: UserId;
   email: string;
   name: string | null;
   username: string | null;
@@ -21,8 +32,8 @@ export interface DbUser {
 }
 
 export interface DbClothes {
-  id: string;
-  userId: string;
+  id: ClothesId;
+  userId: UserId;
   name: string;
   brand: string | null;
   category: string;
@@ -67,8 +78,8 @@ export interface DbClothesWithWardrobes extends DbClothes {
 }
 
 export interface DbWardrobe {
-  id: string;
-  userId: string;
+  id: WardrobeId;
+  userId: UserId;
   title: string;
   description: string | null;
   isPublic: boolean;
@@ -90,8 +101,8 @@ export interface DbWardrobeClothes {
 }
 
 export interface DbOutfit {
-  id: string;
-  userId: string;
+  id: OutfitId;
+  userId: UserId;
   name: string;
   description: string | null;
   season: string | null;
@@ -116,7 +127,7 @@ export interface DbOutfitClothes {
 }
 
 export interface DbGlobalProduct {
-  id: string;
+  id: GlobalProductId;
   name: string;
   brand: string;
   category: string;
@@ -157,15 +168,15 @@ export interface DbAccount {
 }
 
 export interface DbWearLog {
-  id: string;
-  userId: string;
-  clothesId: string;
+  id: WearLogId;
+  userId: UserId;
+  clothesId: ClothesId;
   wornAt: string;
 }
 
 export interface DbUserPreferences {
-  id: string;
-  userId: string;
+  id: UserPreferencesId;
+  userId: UserId;
   location_lat: number | null;
   location_lon: number | null;
   location_city: string | null;
@@ -175,8 +186,8 @@ export interface DbUserPreferences {
 }
 
 export interface DbOutfitRecommendation {
-  id: string;
-  userid: string;
+  id: OutfitRecommendationId;
+  userid: UserId;
   items: Array<{
     id: string;
     name: string;

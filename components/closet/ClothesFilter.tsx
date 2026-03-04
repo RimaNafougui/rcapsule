@@ -64,13 +64,57 @@ export default function ClothesFilter({
   }
 
   const FILTER_SECTIONS: FilterSection[] = [
-    { key: "category", label: "Category", items: categories, value: selectedCategories, onChange: setSelectedCategories },
-    { key: "color", label: "Color", items: colors, value: selectedColors, onChange: setSelectedColors, colorSwatch: true },
-    { key: "brand", label: "Brand", items: availableBrands, value: selectedBrands, onChange: setSelectedBrands, hidden: availableBrands.length === 0 },
-    { key: "style", label: "Style", items: styles, value: selectedStyles, onChange: setSelectedStyles },
-    { key: "condition", label: "Condition", items: conditions, value: selectedConditions, onChange: setSelectedConditions },
-    { key: "occasion", label: "Occasion", items: occasions, value: selectedOccasions, onChange: setSelectedOccasions },
-    { key: "season", label: "Season", items: seasons, value: selectedSeasons, onChange: setSelectedSeasons },
+    {
+      key: "category",
+      label: "Category",
+      items: categories,
+      value: selectedCategories,
+      onChange: setSelectedCategories,
+    },
+    {
+      key: "color",
+      label: "Color",
+      items: colors,
+      value: selectedColors,
+      onChange: setSelectedColors,
+      colorSwatch: true,
+    },
+    {
+      key: "brand",
+      label: "Brand",
+      items: availableBrands,
+      value: selectedBrands,
+      onChange: setSelectedBrands,
+      hidden: availableBrands.length === 0,
+    },
+    {
+      key: "style",
+      label: "Style",
+      items: styles,
+      value: selectedStyles,
+      onChange: setSelectedStyles,
+    },
+    {
+      key: "condition",
+      label: "Condition",
+      items: conditions,
+      value: selectedConditions,
+      onChange: setSelectedConditions,
+    },
+    {
+      key: "occasion",
+      label: "Occasion",
+      items: occasions,
+      value: selectedOccasions,
+      onChange: setSelectedOccasions,
+    },
+    {
+      key: "season",
+      label: "Season",
+      items: seasons,
+      value: selectedSeasons,
+      onChange: setSelectedSeasons,
+    },
   ];
 
   const handleApplyFilters = () => {
@@ -177,40 +221,48 @@ export default function ClothesFilter({
                 </div>
               </div>
             </AccordionItem>,
-            ...FILTER_SECTIONS.filter((s) => !s.hidden).map(({ key, label, items, value, onChange, colorSwatch }) => (
-              <AccordionItem key={key} aria-label={label} title={label}>
-                <CheckboxGroup
-                  classNames={{ wrapper: `gap-3${colorSwatch ? " grid grid-cols-2" : ""}` }}
-                  orientation={colorSwatch ? "horizontal" : undefined}
-                  value={[...value]}
-                  onValueChange={onChange}
-                >
-                  {items.map((item) => (
-                    <Checkbox
-                      key={item}
-                      classNames={{
-                        label: "text-sm text-default-500 capitalize ml-1",
-                      }}
-                      radius="none"
-                      size="sm"
-                      value={item}
-                    >
-                      {colorSwatch ? (
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-3 h-3 border border-default-200 shadow-sm"
-                            style={{ background: (colorMap as Record<string, string>)[item] || item }}
-                          />
-                          {item}
-                        </div>
-                      ) : (
-                        item
-                      )}
-                    </Checkbox>
-                  ))}
-                </CheckboxGroup>
-              </AccordionItem>
-            )),
+            ...FILTER_SECTIONS.filter((s) => !s.hidden).map(
+              ({ key, label, items, value, onChange, colorSwatch }) => (
+                <AccordionItem key={key} aria-label={label} title={label}>
+                  <CheckboxGroup
+                    classNames={{
+                      wrapper: `gap-3${colorSwatch ? " grid grid-cols-2" : ""}`,
+                    }}
+                    orientation={colorSwatch ? "horizontal" : undefined}
+                    value={[...value]}
+                    onValueChange={onChange}
+                  >
+                    {items.map((item) => (
+                      <Checkbox
+                        key={item}
+                        classNames={{
+                          label: "text-sm text-default-500 capitalize ml-1",
+                        }}
+                        radius="none"
+                        size="sm"
+                        value={item}
+                      >
+                        {colorSwatch ? (
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 border border-default-200 shadow-sm"
+                              style={{
+                                background:
+                                  (colorMap as Record<string, string>)[item] ||
+                                  item,
+                              }}
+                            />
+                            {item}
+                          </div>
+                        ) : (
+                          item
+                        )}
+                      </Checkbox>
+                    ))}
+                  </CheckboxGroup>
+                </AccordionItem>
+              ),
+            ),
           ]}
         </Accordion>
       </ScrollShadow>

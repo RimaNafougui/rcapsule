@@ -47,8 +47,15 @@ export default function AdminUsersPage() {
 
   const users: any[] = data?.users ?? [];
   const total: number = data?.total ?? 0;
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   async function toggleField(userId: string, field: string, current: boolean) {
     await fetch(`/api/admin/users/${userId}`, {
@@ -96,8 +103,8 @@ export default function AdminUsersPage() {
         <Select
           className="max-w-36"
           placeholder="Role"
-          size="sm"
           selectedKeys={role ? [role] : []}
+          size="sm"
           onSelectionChange={(keys) => {
             setRole(Array.from(keys as Set<string>)[0] ?? "");
             setOffset(0);
@@ -109,8 +116,8 @@ export default function AdminUsersPage() {
         <Select
           className="max-w-40"
           placeholder="Subscription"
-          size="sm"
           selectedKeys={subscription ? [subscription] : []}
+          size="sm"
           onSelectionChange={(keys) => {
             setSubscription(Array.from(keys as Set<string>)[0] ?? "");
             setOffset(0);
@@ -245,7 +252,9 @@ export default function AdminUsersPage() {
                               color="danger"
                               size="sm"
                               variant="flat"
-                              onPress={() => deleteUser(u.id, u.name || u.email)}
+                              onPress={() =>
+                                deleteUser(u.id, u.name || u.email)
+                              }
                             >
                               Delete
                             </Button>
@@ -286,10 +295,14 @@ export default function AdminUsersPage() {
         </div>
       )}
       <ConfirmModal
-        isOpen={isDeleteOpen}
-        message={deleteTarget ? `Delete user "${deleteTarget.name}"? This cannot be undone.` : ""}
-        title="Delete User"
         confirmLabel="Delete"
+        isOpen={isDeleteOpen}
+        message={
+          deleteTarget
+            ? `Delete user "${deleteTarget.name}"? This cannot be undone.`
+            : ""
+        }
+        title="Delete User"
         onClose={onDeleteClose}
         onConfirm={handleConfirmDelete}
       />

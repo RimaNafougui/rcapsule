@@ -15,14 +15,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: item.href === "/pricing" ? 0.9 : 0.7,
   }));
 
-  const staticRoutes = ["/about", "/contact", "/terms", "/privacy", "/refund-policy"].map(
-    (path) => ({
-      url: `${baseUrl}${path}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly" as const,
-      priority: path === "/about" || path === "/contact" ? 0.6 : 0.4,
-    }),
-  );
+  const staticRoutes = [
+    "/about",
+    "/contact",
+    "/terms",
+    "/privacy",
+    "/refund-policy",
+  ].map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: "monthly" as const,
+    priority: path === "/about" || path === "/contact" ? 0.6 : 0.4,
+  }));
 
   const baseRoutes = [
     {
@@ -48,12 +52,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .eq("profilePublic", true)
       .not("username", "is", null);
 
-    profileRoutes = (users || []).map((user: { username: string; updatedAt: string }) => ({
-      url: `${baseUrl}/u/${user.username}`,
-      lastModified: user.updatedAt || new Date().toISOString(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    }));
+    profileRoutes = (users || []).map(
+      (user: { username: string; updatedAt: string }) => ({
+        url: `${baseUrl}/u/${user.username}`,
+        lastModified: user.updatedAt || new Date().toISOString(),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      }),
+    );
   } catch {
     // Non-fatal — sitemap still works without profile routes
   }

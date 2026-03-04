@@ -36,7 +36,11 @@ export interface CanvasSize {
   height: number;
 }
 
-export const CANVAS_PRESETS: Array<{ name: string; width: number; height: number }> = [
+export const CANVAS_PRESETS: Array<{
+  name: string;
+  width: number;
+  height: number;
+}> = [
   { name: "Portrait (3:4)", width: 600, height: 800 },
   { name: "Square (1:1)", width: 700, height: 700 },
   { name: "Landscape (4:3)", width: 800, height: 600 },

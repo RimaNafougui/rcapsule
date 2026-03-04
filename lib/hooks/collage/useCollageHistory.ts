@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
-
 import type { CanvasItem } from "./types";
+
+import { useState, useCallback } from "react";
 
 const MAX_HISTORY = 30;
 
@@ -8,18 +8,21 @@ export function useCollageHistory() {
   const [history, setHistory] = useState<CanvasItem[][]>([[]]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
-  const saveToHistory = useCallback((newItems: CanvasItem[]) => {
-    setHistory((prev) => {
-      // Cut off any "future" states beyond the current index
-      const base = prev.slice(0, historyIndex + 1);
-      const next = [...base, JSON.parse(JSON.stringify(newItems))];
+  const saveToHistory = useCallback(
+    (newItems: CanvasItem[]) => {
+      setHistory((prev) => {
+        // Cut off any "future" states beyond the current index
+        const base = prev.slice(0, historyIndex + 1);
+        const next = [...base, JSON.parse(JSON.stringify(newItems))];
 
-      if (next.length > MAX_HISTORY) next.shift();
+        if (next.length > MAX_HISTORY) next.shift();
 
-      return next;
-    });
-    setHistoryIndex((prev) => Math.min(prev + 1, MAX_HISTORY - 1));
-  }, [historyIndex]);
+        return next;
+      });
+      setHistoryIndex((prev) => Math.min(prev + 1, MAX_HISTORY - 1));
+    },
+    [historyIndex],
+  );
 
   const undo = useCallback(
     (setCanvasItems: (items: CanvasItem[]) => void) => {

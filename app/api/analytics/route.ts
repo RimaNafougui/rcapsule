@@ -37,7 +37,7 @@ interface WearLog {
   [key: string]: any;
 }
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   return await Sentry.startSpan(
     { op: "analytics.calculate", name: "Calculate Wardrobe Analytics" },
     async (span) => {
@@ -57,6 +57,7 @@ export async function GET(req: Request) {
 
         if (cached) {
           span?.setAttribute("cache", "hit");
+
           return NextResponse.json(cached);
         }
 
@@ -74,14 +75,8 @@ export async function GET(req: Request) {
             )
             .eq("userId", userId)
             .or("status.eq.owned,status.is.null"),
-          supabase
-            .from("Outfit")
-            .select("id,timesWorn")
-            .eq("userId", userId),
-          supabase
-            .from("WearLog")
-            .select("id")
-            .eq("userId", userId),
+          supabase.from("Outfit").select("id,timesWorn").eq("userId", userId),
+          supabase.from("WearLog").select("id").eq("userId", userId),
         ]);
 
         const clothes = (clothesRes.data || []) as ClothesItem[];
@@ -115,7 +110,7 @@ export async function GET(req: Request) {
 function calculateAnalytics(
   clothes: ClothesItem[],
   outfits: Outfit[],
-  wearLogs: WearLog[],
+  _wearLogs: WearLog[],
 ) {
   // 1. FINANCIAL METRICS
   const totalValue = clothes.reduce((sum, item) => sum + (item.price || 0), 0);

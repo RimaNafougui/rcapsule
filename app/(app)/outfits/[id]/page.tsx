@@ -2,15 +2,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button, Spinner, Chip, Image as HeroImage, useDisclosure } from "@heroui/react";
+import {
+  Button,
+  Spinner,
+  Chip,
+  Image as HeroImage,
+  useDisclosure,
+} from "@heroui/react";
 import { toast } from "sonner";
-
-import ConfirmModal from "@/components/ui/ConfirmModal";
 import {
   ArrowLeftIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 interface Outfit {
   id: string;
@@ -37,7 +43,11 @@ export default function OutfitDetailPage() {
   const { status } = useSession();
   const [outfit, setOutfit] = useState<Outfit | null>(null);
   const [loading, setLoading] = useState(true);
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -168,7 +178,14 @@ export default function OutfitDetailPage() {
                 <div
                   key={item.id}
                   className="flex gap-4 items-center group cursor-pointer"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => router.push(`/closet/${item.id}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      router.push(`/closet/${item.id}`);
+                    }
+                  }}
                 >
                   <div className="w-16 h-16 bg-default-50 border border-default-200">
                     <HeroImage
@@ -217,10 +234,10 @@ export default function OutfitDetailPage() {
         </div>
       </div>
       <ConfirmModal
+        confirmLabel="Delete"
         isOpen={isDeleteOpen}
         message="Are you sure you want to delete this look? This cannot be undone."
         title="Delete Look"
-        confirmLabel="Delete"
         onClose={onDeleteClose}
         onConfirm={handleDelete}
       />

@@ -109,7 +109,14 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
               <div
                 key={suggestion.place_id}
                 className="px-4 py-3 hover:bg-secondary cursor-pointer transition-colors border-b border-default-100 last:border-b-0"
+                role="button"
+                tabIndex={0}
                 onClick={() => handleSelect(suggestion)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleSelect(suggestion);
+                  }
+                }}
               >
                 <div className="font-medium text-sm text-foreground">
                   {city}, {country}

@@ -58,7 +58,16 @@ export function useCalendarLogs() {
     async (payload: SubmitPayload, isEditing: boolean) => {
       setError(null);
       const body = isEditing
-        ? { originalDate: payload.date, newDate: payload.date, outfitId: payload.outfitId, occasion: payload.occasion, weather: payload.weather, temperature: payload.temperature, location: payload.location, notes: payload.notes }
+        ? {
+            originalDate: payload.date,
+            newDate: payload.date,
+            outfitId: payload.outfitId,
+            occasion: payload.occasion,
+            weather: payload.weather,
+            temperature: payload.temperature,
+            location: payload.location,
+            notes: payload.notes,
+          }
         : payload;
       const res = await fetch("/api/calendar", {
         method: isEditing ? "PUT" : "POST",
@@ -69,8 +78,10 @@ export function useCalendarLogs() {
 
       if (!res.ok) {
         setError(data.error || "Failed to save");
+
         return false;
       }
+
       return true;
     },
     [],
@@ -81,15 +92,20 @@ export function useCalendarLogs() {
       const dateStr = format(date, "yyyy-MM-dd");
 
       try {
-        const res = await fetch(`/api/calendar?outfitId=${outfitId}&date=${dateStr}`, { method: "DELETE" });
+        const res = await fetch(
+          `/api/calendar?outfitId=${outfitId}&date=${dateStr}`,
+          { method: "DELETE" },
+        );
 
         if (res.ok) return true;
         const data = await res.json();
 
         setError(data.error || "Failed to delete");
+
         return false;
       } catch (err) {
         setError(getErrorMessage(err));
+
         return false;
       }
     },

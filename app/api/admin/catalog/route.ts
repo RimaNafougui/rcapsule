@@ -10,7 +10,9 @@ export async function GET(req: Request) {
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success, reset } = await apiLimiter().limit(`user:${session.user.id}`);
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!success) return rateLimitResponse(reset);
 
@@ -68,7 +70,9 @@ export async function POST(req: Request) {
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success: ok, reset: rst } = await apiLimiter().limit(`user:${session.user.id}`);
+  const { success: ok, reset: rst } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!ok) return rateLimitResponse(rst);
 
@@ -76,9 +80,23 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const {
-      name, brand, category, description, imageurl, retaillink,
-      originalprice, inStock, currency, slug, sku, materials,
-      sustainability, colors, source, externalId, scrapingStatus,
+      name,
+      brand,
+      category,
+      description,
+      imageurl,
+      retaillink,
+      originalprice,
+      inStock,
+      currency,
+      slug,
+      sku,
+      materials,
+      sustainability,
+      colors,
+      source,
+      externalId,
+      scrapingStatus,
     } = body;
 
     if (!name || !brand || !category) {

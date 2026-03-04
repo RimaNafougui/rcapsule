@@ -15,5 +15,6 @@ export function getErrorMessage(err: unknown): string {
   ) {
     return (err as Record<string, unknown>).message as string;
   }
+
   return "An unexpected error occurred";
 }

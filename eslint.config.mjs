@@ -115,6 +115,8 @@ export default defineConfig([
           args: "after-used",
           ignoreRestSiblings: false,
           argsIgnorePattern: "^_.*?$",
+          varsIgnorePattern: "^_.*?$",
+          caughtErrorsIgnorePattern: "^_.*?$",
         },
       ],
 

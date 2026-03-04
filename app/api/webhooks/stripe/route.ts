@@ -117,10 +117,7 @@ export async function POST(request: NextRequest) {
             .single();
 
           if (!user) {
-            console.error(
-              "No user found for subscription:",
-              subscription.id,
-            );
+            console.error("No user found for subscription:", subscription.id);
             break;
           }
 

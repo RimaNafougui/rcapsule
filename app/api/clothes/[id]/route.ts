@@ -94,7 +94,8 @@ export async function PUT(
     if (data.category !== undefined) updatePayload.category = data.category;
     if (data.brand !== undefined) updatePayload.brand = data.brand || null;
     if (data.price !== undefined)
-      updatePayload.price = data.price != null ? parseFloat(String(data.price)) : null;
+      updatePayload.price =
+        data.price != null ? parseFloat(String(data.price)) : null;
     if (data.purchaseDate !== undefined)
       updatePayload.purchaseDate = data.purchaseDate || null;
     if (data.colors !== undefined) updatePayload.colors = data.colors || [];
@@ -128,9 +129,10 @@ export async function PUT(
     if (data.purchaseLocation !== undefined)
       updatePayload.purchaseLocation = data.purchaseLocation || null;
     if (data.originalPrice !== undefined)
-      updatePayload.originalPrice = data.originalPrice != null
-        ? parseFloat(String(data.originalPrice))
-        : null;
+      updatePayload.originalPrice =
+        data.originalPrice != null
+          ? parseFloat(String(data.originalPrice))
+          : null;
     if (data.purchaseType !== undefined)
       updatePayload.purchaseType = data.purchaseType || null;
     if (data.purchaseCurrency !== undefined)

@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
       } else {
         setMessage("Check your email for the password reset link.");
       }
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);

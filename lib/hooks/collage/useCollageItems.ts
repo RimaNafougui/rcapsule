@@ -1,6 +1,6 @@
-import { useState } from "react";
-
 import type { CanvasItem, ClothingItem, CanvasSize } from "./types";
+
+import { useState } from "react";
 
 interface UseCollageItemsOptions {
   canvasSize: CanvasSize;
@@ -20,6 +20,7 @@ export function useCollageItems({
 
   const snapValue = (value: number) => {
     if (!snapToGrid) return value;
+
     return Math.round(value / gridSize) * gridSize;
   };
 
@@ -27,6 +28,7 @@ export function useCollageItems({
     if (!item.imageUrl) return;
 
     const img = new Image();
+
     img.crossOrigin = "anonymous";
     img.src = item.imageUrl;
 
@@ -56,6 +58,7 @@ export function useCollageItems({
       };
 
       const newItems = [...canvasItems, newItem];
+
       setCanvasItems(newItems);
       saveToHistory(newItems);
       setSelectedId(newItem.uniqueId);
@@ -70,12 +73,14 @@ export function useCollageItems({
     const newItems = canvasItems.map((item) =>
       item.uniqueId === uniqueId ? { ...item, ...data } : item,
     );
+
     setCanvasItems(newItems);
     if (saveHistory) saveToHistory(newItems);
   };
 
   const removeItem = (uniqueId: string) => {
     const newItems = canvasItems.filter((i) => i.uniqueId !== uniqueId);
+
     setCanvasItems(newItems);
     saveToHistory(newItems);
     setSelectedId(null);
@@ -91,6 +96,7 @@ export function useCollageItems({
 
   const duplicateItem = (uniqueId: string) => {
     const item = canvasItems.find((i) => i.uniqueId === uniqueId);
+
     if (!item) return;
     const newItem: CanvasItem = {
       ...item,
@@ -100,6 +106,7 @@ export function useCollageItems({
       zIndex: Math.max(...canvasItems.map((i) => i.zIndex)) + 1,
     };
     const newItems = [...canvasItems, newItem];
+
     setCanvasItems(newItems);
     saveToHistory(newItems);
     setSelectedId(newItem.uniqueId);
@@ -108,40 +115,54 @@ export function useCollageItems({
   const bringToFront = (uniqueId: string) => {
     setSelectedId(uniqueId);
     const maxZ = Math.max(...canvasItems.map((i) => i.zIndex), 0);
+
     updateItem(uniqueId, { zIndex: maxZ + 1 });
   };
 
   const sendToBack = (uniqueId: string) => {
     const minZ = Math.min(...canvasItems.map((i) => i.zIndex), 0);
+
     updateItem(uniqueId, { zIndex: minZ - 1 });
   };
 
   const moveLayerUp = (uniqueId: string) => {
     const item = canvasItems.find((i) => i.uniqueId === uniqueId);
+
     if (!item) return;
     const higherItems = canvasItems.filter((i) => i.zIndex > item.zIndex);
+
     if (higherItems.length === 0) return;
-    const nextItem = higherItems.reduce((a, b) => (a.zIndex < b.zIndex ? a : b));
+    const nextItem = higherItems.reduce((a, b) =>
+      a.zIndex < b.zIndex ? a : b,
+    );
     const newItems = canvasItems.map((i) => {
       if (i.uniqueId === uniqueId) return { ...i, zIndex: nextItem.zIndex };
-      if (i.uniqueId === nextItem.uniqueId) return { ...i, zIndex: item.zIndex };
+      if (i.uniqueId === nextItem.uniqueId)
+        return { ...i, zIndex: item.zIndex };
+
       return i;
     });
+
     setCanvasItems(newItems);
     saveToHistory(newItems);
   };
 
   const moveLayerDown = (uniqueId: string) => {
     const item = canvasItems.find((i) => i.uniqueId === uniqueId);
+
     if (!item) return;
     const lowerItems = canvasItems.filter((i) => i.zIndex < item.zIndex);
+
     if (lowerItems.length === 0) return;
     const prevItem = lowerItems.reduce((a, b) => (a.zIndex > b.zIndex ? a : b));
     const newItems = canvasItems.map((i) => {
       if (i.uniqueId === uniqueId) return { ...i, zIndex: prevItem.zIndex };
-      if (i.uniqueId === prevItem.uniqueId) return { ...i, zIndex: item.zIndex };
+      if (i.uniqueId === prevItem.uniqueId)
+        return { ...i, zIndex: item.zIndex };
+
       return i;
     });
+
     setCanvasItems(newItems);
     saveToHistory(newItems);
   };

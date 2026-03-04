@@ -23,7 +23,10 @@ export async function GET(req: Request) {
         const { searchParams } = new URL(req.url);
         const wardrobeId = searchParams.get("wardrobeId");
         const statusFilter = searchParams.get("status");
-        const limit = Math.min(parseInt(searchParams.get("limit") || "200"), 200);
+        const limit = Math.min(
+          parseInt(searchParams.get("limit") || "200"),
+          200,
+        );
         const offset = parseInt(searchParams.get("offset") || "0");
         const supabase = getSupabaseServer();
 
@@ -83,7 +86,10 @@ export async function GET(req: Request) {
           }
           // ---------------------------
 
-          const { data: clothes, error } = await query.range(offset, offset + limit - 1);
+          const { data: clothes, error } = await query.range(
+            offset,
+            offset + limit - 1,
+          );
 
           if (error) throw error;
 

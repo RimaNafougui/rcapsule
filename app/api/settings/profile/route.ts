@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
-import { profilePutSchema } from "@/lib/validations/schemas";
+import {
+  profilePutSchema,
+  type ProfilePutInput,
+} from "@/lib/validations/schemas";
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   try {
     const session = await auth();
 
@@ -89,7 +92,10 @@ export async function PUT(req: Request) {
     const data = result.data;
     const supabase = getSupabaseServer();
 
-    const updateData: any = {
+    // ProfilePutInput is z.infer<typeof profilePutSchema> — all fields optional.
+    // Intersecting with `{ updatedAt: string }` keeps the type narrow while
+    // allowing the timestamp field that Supabase expects but the schema omits.
+    const updateData: Partial<ProfilePutInput> & { updatedAt: string } = {
       updatedAt: new Date().toISOString(),
     };
 

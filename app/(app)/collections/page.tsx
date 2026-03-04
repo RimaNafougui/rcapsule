@@ -339,7 +339,14 @@ export default function CollectionsPage() {
             <div
               key={wardrobe.id}
               className="flex gap-4 p-4 border border-default-200 hover:border-default-400 transition-colors cursor-pointer group"
+              role="button"
+              tabIndex={0}
               onClick={() => router.push(`/wardrobe/${wardrobe.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  router.push(`/wardrobe/${wardrobe.id}`);
+                }
+              }}
             >
               <div className="w-24 h-24 shrink-0 overflow-hidden">
                 <Image

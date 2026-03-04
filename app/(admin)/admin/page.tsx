@@ -65,7 +65,11 @@ export default function AdminDashboard() {
           loading={isLoading}
           value={stats?.totalUsers}
         />
-        <StatCard label="Total Items" loading={isLoading} value={stats?.totalItems} />
+        <StatCard
+          label="Total Items"
+          loading={isLoading}
+          value={stats?.totalItems}
+        />
         <StatCard
           href="/admin/catalog"
           label="Catalog Size"
@@ -125,7 +129,9 @@ export default function AdminDashboard() {
                 return (
                   <div key={c.category ?? i} className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="opacity-80">{c.category || "Unknown"}</span>
+                      <span className="opacity-80">
+                        {c.category || "Unknown"}
+                      </span>
                       <span className="font-medium">{c.count}</span>
                     </div>
                     <div className="w-full bg-content2 rounded-full h-1.5">
@@ -170,7 +176,8 @@ export default function AdminDashboard() {
                       {r.reason.replace(/_/g, " ")}
                     </p>
                     <p className="text-xs opacity-50">
-                      {r.targetType} · {new Date(r.createdAt).toLocaleDateString()}
+                      {r.targetType} ·{" "}
+                      {new Date(r.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <Chip color="warning" size="sm" variant="flat">

@@ -32,15 +32,16 @@ export default function AdminUserDetailPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
-  const { data, isLoading, mutate } = useSWR(
-    `/api/admin/users/${id}`,
-    fetcher,
-  );
+  const { data, isLoading, mutate } = useSWR(`/api/admin/users/${id}`, fetcher);
 
   const user = data?.user;
   const recentItems: any[] = data?.recentItems ?? [];
   const itemCount: number = data?.itemCount ?? 0;
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
 
   async function updateRole(newRole: string) {
     await fetch(`/api/admin/users/${id}`, {
@@ -122,7 +123,9 @@ export default function AdminUserDetailPage({
                 </Chip>
                 <Chip
                   color={
-                    user.subscription_status === "premium" ? "success" : "default"
+                    user.subscription_status === "premium"
+                      ? "success"
+                      : "default"
                   }
                   size="sm"
                   variant="flat"
@@ -164,7 +167,10 @@ export default function AdminUserDetailPage({
             </div>
 
             <p className="text-xs opacity-40">
-              Joined {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+              Joined{" "}
+              {user.createdAt
+                ? new Date(user.createdAt).toLocaleDateString()
+                : "—"}
               {user.location && ` · ${user.location}`}
             </p>
           </div>
@@ -258,10 +264,10 @@ export default function AdminUserDetailPage({
         </Card>
       )}
       <ConfirmModal
+        confirmLabel="Delete"
         isOpen={isDeleteOpen}
         message={`Delete user "${user?.name ?? user?.email}"? This cannot be undone.`}
         title="Delete Account"
-        confirmLabel="Delete"
         onClose={onDeleteClose}
         onConfirm={deleteUser}
       />

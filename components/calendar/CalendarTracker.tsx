@@ -89,11 +89,19 @@ export default function CalendarTracker({
 }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<ViewMode>("month");
-  const { logs, loading, error, setError, fetchLogs, submitLog, deleteLog } = useCalendarLogs();
+  const { logs, loading, error, setError, fetchLogs, submitLog, deleteLog } =
+    useCalendarLogs();
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
-  const [deleteTarget, setDeleteTarget] = useState<{ outfitId: string; date: Date } | null>(null);
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    outfitId: string;
+    date: Date;
+  } | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedOutfitId, setSelectedOutfitId] = useState("");
@@ -296,12 +304,19 @@ export default function CalendarTracker({
           return (
             <div
               key={day.toString()}
-              className={`bg-background p-2 transition-colors hover:bg-default-50 cursor-pointer relative group flex flex-col gap-2 
+              className={`bg-background p-2 transition-colors hover:bg-default-50 cursor-pointer relative group flex flex-col gap-2
                 ${!isCurrentMonth && view === "month" ? "opacity-30 bg-default-50/50" : ""}
                 ${isWeek ? "min-h-[450px]" : "min-h-[140px]"}
                 ${isToday ? "ring-2 ring-primary ring-inset" : ""}
               `}
+              role="button"
+              tabIndex={0}
               onClick={() => handleDayClick(day)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleDayClick(day);
+                }
+              }}
             >
               <div className="flex justify-between items-start">
                 <span
@@ -311,9 +326,16 @@ export default function CalendarTracker({
                 </span>
                 <div
                   className="p-1.5 rounded-full hover:bg-default-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                  role="button"
+                  tabIndex={0}
                   onClick={(e) => {
                     e.stopPropagation();
                     openAddModal(day);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      openAddModal(day);
+                    }
                   }}
                 >
                   <PlusIcon className="w-4 h-4 text-default-500" />
@@ -370,7 +392,14 @@ export default function CalendarTracker({
       <div className="bg-background min-h-[500px] flex flex-col gap-6 animate-in fade-in duration-300">
         <div
           className="p-10 border border-dashed border-default-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-default-50 transition-colors group"
+          role="button"
+          tabIndex={0}
           onClick={() => openAddModal(currentDate)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              openAddModal(currentDate);
+            }
+          }}
         >
           <div className="bg-default-100 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
             <PlusIcon className="w-6 h-6 text-default-500" />
@@ -435,7 +464,9 @@ export default function CalendarTracker({
                         color="danger"
                         size="sm"
                         variant="light"
-                        onPress={() => handleDeleteClick(entry.data.id, currentDate)}
+                        onPress={() =>
+                          handleDeleteClick(entry.data.id, currentDate)
+                        }
                       >
                         <TrashIcon className="w-4 h-4" />
                       </Button>
@@ -764,10 +795,10 @@ export default function CalendarTracker({
       </Modal>
 
       <ConfirmModal
+        confirmLabel="Remove"
         isOpen={isDeleteOpen}
         message="Remove this wear log? Your outfit stats will be updated automatically."
         title="Remove Wear Log"
-        confirmLabel="Remove"
         onClose={onDeleteClose}
         onConfirm={handleConfirmDelete}
       />

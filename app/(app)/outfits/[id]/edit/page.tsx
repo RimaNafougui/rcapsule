@@ -33,7 +33,6 @@ import {
   ArrowPathIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
 import { toast } from "sonner";
 
 import { ImageUpload } from "@/components/closet/ImageUpload";
@@ -733,7 +732,14 @@ export default function EditOutfitPage() {
                             <div
                               key={item.id}
                               className={`relative group aspect-[3/4] border-2 cursor-pointer hover:border-danger transition-colors ${isNew ? "border-success" : "border-default-200"}`}
+                              role="button"
+                              tabIndex={0}
                               onClick={() => handleRemoveClothes(item.id)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  handleRemoveClothes(item.id);
+                                }
+                              }}
                             >
                               <Image
                                 className="w-full h-full object-cover"
@@ -922,7 +928,14 @@ export default function EditOutfitPage() {
                             >
                               <div
                                 className={`aspect-[3/4] cursor-pointer group relative border-2 transition-all ${isSelected ? "border-primary shadow-lg" : wouldReplace ? "border-warning-300 hover:border-warning" : "border-transparent hover:border-default-300"}`}
+                                role="button"
+                                tabIndex={0}
                                 onClick={() => handleAddClothes(item)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    handleAddClothes(item);
+                                  }
+                                }}
                               >
                                 <Image
                                   className="w-full h-full object-cover group-hover:opacity-90"

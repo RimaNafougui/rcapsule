@@ -55,7 +55,10 @@ export default function Footer() {
                 size="sm"
                 variant="underline"
               />
-              <button aria-label="Subscribe" className="p-2 hover:bg-default-100 transition-colors duration-200">
+              <button
+                aria-label="Subscribe"
+                className="p-2 hover:bg-default-100 transition-colors duration-200"
+              >
                 <ArrowRight size={18} />
               </button>
             </div>

@@ -26,22 +26,60 @@ const variantClassNames = {
   },
 } as const;
 
-interface DSInputProps {
-  variant?: keyof typeof variantClassNames;
+/**
+ * Shared props that exist on every input variant.
+ */
+type DSInputShared = {
   label?: string;
   helperText?: string;
   error?: string;
-  icon?: ReactNode;
   placeholder?: string;
-  value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClear?: () => void;
   className?: string;
   type?: string;
   name?: string;
   required?: boolean;
   size?: "sm" | "md" | "lg";
-}
+};
+
+/**
+ * Default / underline variant.
+ *
+ * - `icon` is accepted (no search icon is injected automatically).
+ * - `onClear` is forbidden (`never`) — passing it would be a type error,
+ *   which prevents the easy mistake of wiring up a clear handler on a
+ *   non-search input where nothing would render it.
+ */
+type DSInputDefault = DSInputShared & {
+  variant?: "default" | "underline";
+  icon?: ReactNode;
+  value?: string;
+  onClear?: never;
+};
+
+/**
+ * Search variant.
+ *
+ * - `value` is required so the clear button can render conditionally.
+ * - `onClear` is required — the search input always shows a clear button
+ *   when `value` is non-empty, so a handler must always be provided.
+ * - `icon` is forbidden (`never`) — the search icon is injected internally
+ *   and a second icon would be confusing.
+ *
+ * WHY a discriminated union instead of optional fields:
+ * TypeScript's control-flow narrowing on the `variant` discriminant lets the
+ * compiler enforce these constraints statically. A caller that writes
+ * `<DSInput variant="search" />` without `onClear` gets a compile error,
+ * not a silent runtime bug.
+ */
+type DSInputSearch = DSInputShared & {
+  variant: "search";
+  value: string;
+  onClear: () => void;
+  icon?: never;
+};
+
+type DSInputProps = DSInputDefault | DSInputSearch;
 
 export function DSInput({
   variant = "default",

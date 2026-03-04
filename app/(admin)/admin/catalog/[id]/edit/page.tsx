@@ -1,6 +1,5 @@
 "use client";
 import { use, useEffect, useState } from "react";
-import { getErrorMessage } from "@/lib/utils/error";
 import useSWR from "swr";
 import {
   Button,
@@ -17,6 +16,7 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
+import { getErrorMessage } from "@/lib/utils/error";
 import { categories, colors, colorMap } from "@/lib/data";
 
 const fetcher = (url: string) =>

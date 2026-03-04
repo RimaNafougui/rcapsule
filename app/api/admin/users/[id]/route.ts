@@ -13,7 +13,9 @@ export async function GET(
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success, reset } = await apiLimiter().limit(`user:${session.user.id}`);
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!success) return rateLimitResponse(reset);
 
@@ -22,33 +24,40 @@ export async function GET(
   try {
     const supabase = getSupabaseServer();
 
-    const [{ data: user, error: userError }, { data: items }, { count: itemCount }] =
-      await Promise.all([
-        supabase
-          .from("User")
-          .select(
-            "id, name, email, image, role, subscription_status, isVerified, isFeatured, createdAt, bio, location, followerCount, followingCount, profileViews",
-          )
-          .eq("id", id)
-          .single(),
-        supabase
-          .from("Clothes")
-          .select("id, name, category, brand, imageUrl, status, createdAt")
-          .eq("userId", id)
-          .order("createdAt", { ascending: false })
-          .limit(20),
-        supabase
-          .from("Clothes")
-          .select("*", { count: "exact", head: true })
-          .eq("userId", id),
-      ]);
+    const [
+      { data: user, error: userError },
+      { data: items },
+      { count: itemCount },
+    ] = await Promise.all([
+      supabase
+        .from("User")
+        .select(
+          "id, name, email, image, role, subscription_status, isVerified, isFeatured, createdAt, bio, location, followerCount, followingCount, profileViews",
+        )
+        .eq("id", id)
+        .single(),
+      supabase
+        .from("Clothes")
+        .select("id, name, category, brand, imageUrl, status, createdAt")
+        .eq("userId", id)
+        .order("createdAt", { ascending: false })
+        .limit(20),
+      supabase
+        .from("Clothes")
+        .select("*", { count: "exact", head: true })
+        .eq("userId", id),
+    ]);
 
     if (userError) throw userError;
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ user, recentItems: items ?? [], itemCount: itemCount ?? 0 });
+    return NextResponse.json({
+      user,
+      recentItems: items ?? [],
+      itemCount: itemCount ?? 0,
+    });
   } catch (error) {
     console.error("Error fetching admin user detail:", error);
 
@@ -68,7 +77,9 @@ export async function PATCH(
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success, reset } = await apiLimiter().limit(`user:${session.user.id}`);
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!success) return rateLimitResponse(reset);
 
@@ -86,7 +97,10 @@ export async function PATCH(
     }
 
     if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No valid fields to update" },
+        { status: 400 },
+      );
     }
 
     updates.updatedAt = new Date().toISOString();
@@ -116,7 +130,9 @@ export async function DELETE(
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success, reset } = await apiLimiter().limit(`user:${session.user.id}`);
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!success) return rateLimitResponse(reset);
 

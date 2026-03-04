@@ -278,7 +278,14 @@ export default function OutfitsPage() {
               <div
                 key={outfit.id}
                 className="group cursor-pointer"
+                role="button"
+                tabIndex={0}
                 onClick={() => router.push(`/outfits/${outfit.id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    router.push(`/outfits/${outfit.id}`);
+                  }
+                }}
               >
                 <div className="relative aspect-[3/4] bg-content2 mb-4 overflow-hidden">
                   {outfit.imageUrl ? (

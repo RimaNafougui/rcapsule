@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const { data, error } = await supabase.storage
+    const { data: _data, error } = await supabase.storage
       .from("wardrobe-images")
       .upload(fileName, buffer, {
         contentType: file.type,

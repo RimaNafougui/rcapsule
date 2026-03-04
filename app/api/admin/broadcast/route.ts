@@ -10,7 +10,9 @@ export async function POST(req: Request) {
   if ("error" in result) return result.error;
 
   const { session } = result;
-  const { success, reset } = await heavyLimiter().limit(`user:${session.user.id}`);
+  const { success, reset } = await heavyLimiter().limit(
+    `user:${session.user.id}`,
+  );
 
   if (!success) return rateLimitResponse(reset);
 

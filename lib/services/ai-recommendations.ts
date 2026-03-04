@@ -276,7 +276,7 @@ export async function getOutfitRecommendation(
     });
 
     return recommendation;
-  } catch (parseError) {
+  } catch (_parseError) {
     console.error("Failed to parse AI response:", responseText);
     throw new Error("Failed to parse outfit recommendation");
   }

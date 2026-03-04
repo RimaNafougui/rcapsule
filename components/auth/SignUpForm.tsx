@@ -70,7 +70,7 @@ export default function SignUpForm() {
           setUsernameError(data.error || "Failed to check username");
           setUsernameAvailable(null);
         }
-      } catch (err) {
+      } catch (_err) {
         setUsernameError("Failed to check username");
         setUsernameAvailable(null);
       } finally {
@@ -154,7 +154,7 @@ export default function SignUpForm() {
 
       router.push("/login?signup=success");
       toast.success("Successfully Signed Up!");
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred");
       setIsLoading(false);
     }

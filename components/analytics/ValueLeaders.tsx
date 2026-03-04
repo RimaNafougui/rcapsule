@@ -54,7 +54,7 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
         </div>
 
         <div className="space-y-4">
-          {worstValue.slice(0, 5).map((item: any, index: number) => (
+          {worstValue.slice(0, 5).map((item: any, _index: number) => (
             <div
               key={item.id}
               className="flex justify-between items-start pb-4 border-b border-[#5e4b3b]/20 last:border-0"

@@ -120,11 +120,13 @@ export async function GET(req: Request) {
     const weather = await getWeather(
       prefs.location_lat,
       prefs.location_lon,
-      prefs.temperature_unit as "celsius" | "fahrenheit" || "celsius",
+      (prefs.temperature_unit as "celsius" | "fahrenheit") || "celsius",
     );
 
     // 4. Get user's clothes (cached)
-    let clothes = await cacheGet<ClothingItem[]>(ownedClothesKey(session.user.id));
+    let clothes = await cacheGet<ClothingItem[]>(
+      ownedClothesKey(session.user.id),
+    );
 
     if (!clothes) {
       const { data, error: clothesError } = await supabase
@@ -142,7 +144,11 @@ export async function GET(req: Request) {
       clothes = (data as ClothingItem[]) ?? [];
 
       if (clothes.length > 0) {
-        await cacheSet(ownedClothesKey(session.user.id), clothes, OWNED_CLOTHES_TTL);
+        await cacheSet(
+          ownedClothesKey(session.user.id),
+          clothes,
+          OWNED_CLOTHES_TTL,
+        );
       }
     }
 
@@ -322,7 +328,7 @@ export async function POST(req: Request) {
       weather = await getWeather(
         prefs.location_lat,
         prefs.location_lon,
-        prefs.temperature_unit as "celsius" | "fahrenheit" || "celsius",
+        (prefs.temperature_unit as "celsius" | "fahrenheit") || "celsius",
       );
     } else {
       return NextResponse.json(
@@ -332,7 +338,9 @@ export async function POST(req: Request) {
     }
 
     // 4. Get clothes (cached)
-    let clothes = await cacheGet<ClothingItem[]>(ownedClothesKey(session.user.id));
+    let clothes = await cacheGet<ClothingItem[]>(
+      ownedClothesKey(session.user.id),
+    );
 
     if (!clothes) {
       const { data } = await supabase
@@ -346,7 +354,11 @@ export async function POST(req: Request) {
       clothes = (data as ClothingItem[]) ?? [];
 
       if (clothes.length > 0) {
-        await cacheSet(ownedClothesKey(session.user.id), clothes, OWNED_CLOTHES_TTL);
+        await cacheSet(
+          ownedClothesKey(session.user.id),
+          clothes,
+          OWNED_CLOTHES_TTL,
+        );
       }
     }
 

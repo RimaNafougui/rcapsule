@@ -44,7 +44,7 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   const { isPremium } = useUser();
 
-  const joinedDate = user.createdAt
+  const _joinedDate = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString("en-US", {
         month: "long",
         year: "numeric",

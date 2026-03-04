@@ -57,7 +57,11 @@ export default function ItemPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
   const [editTab, setEditTab] = useState("basic");
 
   // Removed redundant imageMethod state
@@ -328,10 +332,10 @@ export default function ItemPage() {
         </div>
       </div>
       <ConfirmModal
+        confirmLabel="Remove"
         isOpen={isDeleteOpen}
         message="Remove this piece from your collection? This cannot be undone."
         title="Remove Item"
-        confirmLabel="Remove"
         onClose={onDeleteClose}
         onConfirm={handleDelete}
       />

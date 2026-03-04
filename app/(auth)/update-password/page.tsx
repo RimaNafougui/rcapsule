@@ -80,7 +80,7 @@ export default function UpdatePasswordPage() {
           router.push("/login?signup=password_updated");
         }, 2000);
       }
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);

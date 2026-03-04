@@ -68,7 +68,7 @@ interface Owner {
 export default function PublicCollectionPage() {
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: _session } = useSession();
   const username = params.username as string;
   const slug = params.slug as string;
 
@@ -125,7 +125,7 @@ export default function PublicCollectionPage() {
           title: `${collection?.title} by @${owner?.username}`,
           url,
         });
-      } catch (err) {}
+      } catch (_err) {}
     } else {
       await navigator.clipboard.writeText(url);
     }

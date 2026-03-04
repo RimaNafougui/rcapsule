@@ -75,7 +75,11 @@ export default function WardrobePage() {
 
   const wardrobeModal = useDisclosure();
   const addExistingModal = useDisclosure();
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
 
   const [selectedExistingItems, setSelectedExistingItems] = useState<
     Set<string>
@@ -369,7 +373,14 @@ export default function WardrobePage() {
               <div key={item.id} className="group relative">
                 <div
                   className="aspect-[3/4] bg-content2 relative overflow-hidden mb-4 cursor-pointer"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => router.push(`/closet/${item.id}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      router.push(`/closet/${item.id}`);
+                    }
+                  }}
                 >
                   <Image
                     alt={item.name}
@@ -419,7 +430,14 @@ export default function WardrobePage() {
 
             <div
               className="aspect-[3/4] border border-dashed border-default-300 flex flex-col items-center justify-center cursor-pointer hover:bg-default-50 transition-colors group"
+              role="button"
+              tabIndex={0}
               onClick={addExistingModal.onOpen}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  addExistingModal.onOpen();
+                }
+              }}
             >
               <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
               <span className="text-xs font-bold uppercase tracking-widest text-default-400 mt-2">
@@ -537,7 +555,14 @@ export default function WardrobePage() {
                     <div
                       key={item.id}
                       className={`relative aspect-[3/4] cursor-pointer group transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => toggleItemSelection(item.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          toggleItemSelection(item.id);
+                        }
+                      }}
                     >
                       <Image
                         className={`w-full h-full object-cover transition-opacity ${isSelected ? "opacity-80" : "opacity-100"}`}
@@ -581,10 +606,10 @@ export default function WardrobePage() {
       </Modal>
 
       <ConfirmModal
+        confirmLabel="Delete"
         isOpen={isDeleteOpen}
         message="This collection will be permanently deleted."
         title="Delete Collection"
-        confirmLabel="Delete"
         onClose={onDeleteClose}
         onConfirm={handleDeleteWardrobe}
       />

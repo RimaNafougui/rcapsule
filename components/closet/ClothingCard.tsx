@@ -81,7 +81,14 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
         {isWishlist && (
           <div
             className="absolute top-2 right-2 z-20"
+            role="button"
+            tabIndex={0}
             onClick={(e) => e.stopPropagation()} // Prevent card click
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+              }
+            }}
           >
             <Button
               isIconOnly

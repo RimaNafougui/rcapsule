@@ -63,7 +63,7 @@ function LoginFormContent() {
         router.push(callbackUrl);
         router.refresh();
       }
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred");
       setIsLoading(false);
     }

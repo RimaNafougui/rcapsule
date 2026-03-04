@@ -29,7 +29,7 @@ function useCountUp(end: number, duration = 2000) {
 
   useEffect(() => {
     if (!inView) return;
-    let start = 0;
+    let _start = 0;
     const startTime = Date.now();
 
     const tick = () => {

@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const { data: userRecord, error: dbError } = await supabase
+    const { data: _userRecord, error: dbError } = await supabase
       .from("User")
       .select("id, email, name, username")
       .eq("id", authData.user.id)

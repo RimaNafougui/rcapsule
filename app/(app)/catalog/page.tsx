@@ -60,7 +60,9 @@ export default function CatalogPage() {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [selectedProduct, setSelectedProduct] = useState<GlobalProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<GlobalProduct | null>(
+    null,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [sort, setSort] = useState<SortOption>("popularity");
@@ -97,12 +99,21 @@ export default function CatalogPage() {
     params.set("sort", sort);
     params.set("limit", String(LIMIT));
     params.set("offset", String(offset));
-    if (selectedCategories.length > 0) params.set("category", selectedCategories.join(","));
-    if (selectedBrands.length > 0) params.set("brand", selectedBrands.join(","));
+    if (selectedCategories.length > 0)
+      params.set("category", selectedCategories.join(","));
+    if (selectedBrands.length > 0)
+      params.set("brand", selectedBrands.join(","));
     if (inStockOnly) params.set("inStock", "true");
 
     return `/api/catalog?${params.toString()}`;
-  }, [debouncedQuery, sort, offset, selectedCategories, selectedBrands, inStockOnly]);
+  }, [
+    debouncedQuery,
+    sort,
+    offset,
+    selectedCategories,
+    selectedBrands,
+    inStockOnly,
+  ]);
 
   const { data, isLoading } = useSWR<CatalogResponse>(apiUrl, fetcher, {
     keepPreviousData: true,
@@ -117,10 +128,14 @@ export default function CatalogPage() {
     }
     setTotal(data.total);
     if (data.availableBrands) setAvailableBrands(data.availableBrands);
-    if (data.availableCategories) setAvailableCategories(data.availableCategories);
+    if (data.availableCategories)
+      setAvailableCategories(data.availableCategories);
   }, [data]);
 
-  const handleLoadMore = useCallback(() => setOffset((prev) => prev + LIMIT), []);
+  const handleLoadMore = useCallback(
+    () => setOffset((prev) => prev + LIMIT),
+    [],
+  );
 
   const handleClearFilters = () => {
     setSelectedCategories([]);
@@ -163,7 +178,8 @@ export default function CatalogPage() {
     return Array.from(terms).slice(0, 5);
   }, [products, debouncedQuery]);
 
-  const hasActiveFilters = selectedCategories.length > 0 || selectedBrands.length > 0 || inStockOnly;
+  const hasActiveFilters =
+    selectedCategories.length > 0 || selectedBrands.length > 0 || inStockOnly;
   const allLoaded = products.length >= total;
   const isLoadingMore = isLoading && offset > 0;
   const isInitialLoading = isLoading && offset === 0 && products.length === 0;
@@ -199,7 +215,9 @@ export default function CatalogPage() {
               {availableCategories.map((cat) => (
                 <Checkbox
                   key={cat}
-                  classNames={{ label: "text-sm text-default-500 capitalize ml-1" }}
+                  classNames={{
+                    label: "text-sm text-default-500 capitalize ml-1",
+                  }}
                   radius="none"
                   size="sm"
                   value={cat}
@@ -230,9 +248,17 @@ export default function CatalogPage() {
             </CheckboxGroup>
           </AccordionItem>
 
-          <AccordionItem key="stock" aria-label="Availability" title="Availability">
+          <AccordionItem
+            key="stock"
+            aria-label="Availability"
+            title="Availability"
+          >
             <div className="flex items-center gap-3">
-              <Switch isSelected={inStockOnly} size="sm" onValueChange={setInStockOnly} />
+              <Switch
+                isSelected={inStockOnly}
+                size="sm"
+                onValueChange={setInStockOnly}
+              />
               <span className="text-sm text-default-500">In Stock Only</span>
             </div>
           </AccordionItem>
@@ -258,7 +284,9 @@ export default function CatalogPage() {
           isInitialLoading ? (
             <div className="h-5 w-32 bg-default-200 animate-pulse rounded" />
           ) : (
-            <>{total} product{total !== 1 ? "s" : ""}</>
+            <>
+              {total} product{total !== 1 ? "s" : ""}
+            </>
           )
         }
         suggestions={suggestions}

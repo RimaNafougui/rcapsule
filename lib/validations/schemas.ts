@@ -63,12 +63,7 @@ export const profilePutSchema = z.object({
     .refine((val) => !/^[-_]|[-_]$/.test(val))
     .optional(),
   bio: z.string().max(500).optional(),
-  website: z
-    .string()
-    .url()
-    .optional()
-    .or(z.literal(""))
-    .or(z.undefined()),
+  website: z.string().url().optional().or(z.literal("")).or(z.undefined()),
   instagramHandle: z.string().max(50).optional(),
   tiktokHandle: z.string().max(50).optional(),
   pinterestHandle: z.string().max(50).optional(),
@@ -92,3 +87,18 @@ export const outfitPostSchema = z.object({
   clothesIds: z.array(z.string()).optional(),
   wardrobeIds: z.array(z.string()).optional(),
 });
+
+// ─── Inferred types ──────────────────────────────────────────────────────────
+//
+// WHY z.infer instead of separate interfaces: keeping the schema as the single
+// source of truth means the TypeScript type and the runtime validator can never
+// drift apart. If a field is added to the schema it automatically appears in
+// the type; if it's removed the type error propagates everywhere it was used.
+// The previous pattern required updating both the schema AND an interface
+// separately, which is error-prone.
+
+export type SignupInput = z.infer<typeof signupSchema>;
+export type ClothesPostInput = z.infer<typeof clothesPostSchema>;
+export type ClothesPutInput = z.infer<typeof clothesPutSchema>;
+export type ProfilePutInput = z.infer<typeof profilePutSchema>;
+export type OutfitPostInput = z.infer<typeof outfitPostSchema>;

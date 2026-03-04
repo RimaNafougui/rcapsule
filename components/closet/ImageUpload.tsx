@@ -337,7 +337,14 @@ export function ImageUpload({
           {uploadMode === "file" && (
             <div
               className="w-full h-full flex flex-col items-center justify-center"
+              role="button"
+              tabIndex={0}
               onClick={() => !uploading && fileInputRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  if (!uploading) fileInputRef.current?.click();
+                }
+              }}
             >
               {uploading ? (
                 <div className="text-center">

@@ -169,7 +169,7 @@ export default function PublicProfilePage() {
       });
 
       if (!response.ok) throw new Error();
-    } catch (error) {
+    } catch (_error) {
       setIsFollowing(previousState);
       if (profile) setProfile({ ...profile, followerCount: previousCount });
     } finally {
@@ -186,7 +186,7 @@ export default function PublicProfilePage() {
           title: `${profile?.name || profile?.username}'s Wardrobe`,
           url,
         });
-      } catch (err) {}
+      } catch (_err) {}
     } else {
       await navigator.clipboard.writeText(url);
     }

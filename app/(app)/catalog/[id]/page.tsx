@@ -1,13 +1,9 @@
 "use client";
+import type { GlobalProduct } from "@/lib/types/globalproduct";
+
 import { use, useState } from "react";
 import useSWR from "swr";
-import {
-  Button,
-  Chip,
-  Skeleton,
-  useDisclosure,
-  Image,
-} from "@heroui/react";
+import { Button, Chip, Skeleton, useDisclosure, Image } from "@heroui/react";
 import NextLink from "next/link";
 import {
   ArrowTopRightOnSquareIcon,
@@ -18,7 +14,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import AddToClosetModal from "@/components/catalog/AddToClosetModal";
-import type { GlobalProduct } from "@/lib/types/globalproduct";
 
 const fetcher = (url: string) =>
   fetch(url).then((r) => {
@@ -130,7 +125,8 @@ export default function CatalogItemPage({
               <div className="absolute top-3 left-3 z-10">
                 <Chip
                   classNames={{
-                    content: "text-[10px] uppercase tracking-wider font-semibold",
+                    content:
+                      "text-[10px] uppercase tracking-wider font-semibold",
                   }}
                   color="warning"
                   size="sm"
@@ -161,14 +157,18 @@ export default function CatalogItemPage({
           </div>
 
           {/* Name */}
-          <h1 className="text-3xl font-extralight tracking-wide">{product.name}</h1>
+          <h1 className="text-3xl font-extralight tracking-wide">
+            {product.name}
+          </h1>
 
           {/* Price */}
           {product.originalprice != null && (
             <p className="text-2xl font-light">
               {currencySymbol}
               {product.originalprice.toFixed(2)}{" "}
-              <span className="text-sm text-default-400">{product.currency}</span>
+              <span className="text-sm text-default-400">
+                {product.currency}
+              </span>
             </p>
           )}
 

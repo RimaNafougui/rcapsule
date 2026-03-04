@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button, Input, Textarea } from "@heroui/react";
 import { EnvelopeIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-
 import { toast } from "sonner";
 
 import { supabase } from "@/lib/supabase";

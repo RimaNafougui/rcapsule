@@ -18,7 +18,10 @@ import {
 } from "@heroui/react";
 import NextLink from "next/link";
 import { motion } from "framer-motion";
-import { AdjustmentsHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  AdjustmentsHorizontalIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 import ConfirmModal from "@/components/ui/ConfirmModal";
 
@@ -48,7 +51,9 @@ export default function AdminCatalogPage() {
     limit: String(limit),
     offset: String(offset),
     ...(search && { search }),
-    ...(selectedCategories.length > 0 && { category: selectedCategories.join(",") }),
+    ...(selectedCategories.length > 0 && {
+      category: selectedCategories.join(","),
+    }),
     ...(selectedBrands.length > 0 && { brand: selectedBrands.join(",") }),
     ...(inStockOnly && { inStock: "true" }),
   });
@@ -59,22 +64,37 @@ export default function AdminCatalogPage() {
   );
 
   // Fetch metadata for filter options
-  const { data: meta } = useSWR(
+  const { data: _meta } = useSWR(
     "/api/admin/catalog?limit=1&offset=0&meta=true",
     fetcher,
   );
 
   const products: any[] = data?.products ?? [];
   const total: number = data?.total ?? 0;
-  const hasActiveFilters = selectedCategories.length > 0 || selectedBrands.length > 0 || inStockOnly;
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const hasActiveFilters =
+    selectedCategories.length > 0 || selectedBrands.length > 0 || inStockOnly;
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Derive available filters from all products (fetch with no filters to get all)
-  const { data: allData } = useSWR("/api/admin/catalog?limit=2000&offset=0", fetcher);
+  const { data: allData } = useSWR(
+    "/api/admin/catalog?limit=2000&offset=0",
+    fetcher,
+  );
   const allProducts: any[] = allData?.products ?? [];
-  const availableCategories = [...new Set(allProducts.map((p: any) => p.category).filter(Boolean))].sort();
-  const availableBrands = [...new Set(allProducts.map((p: any) => p.brand).filter(Boolean))].sort();
+  const availableCategories = [
+    ...new Set(allProducts.map((p: any) => p.category).filter(Boolean)),
+  ].sort();
+  const availableBrands = [
+    ...new Set(allProducts.map((p: any) => p.brand).filter(Boolean)),
+  ].sort();
 
   function deleteProduct(id: string, name: string) {
     setDeleteTarget({ id, name });
@@ -167,27 +187,45 @@ export default function AdminCatalogPage() {
                     selectionMode="multiple"
                     showDivider={false}
                   >
-                    <AccordionItem key="stock" aria-label="Availability" title="Availability">
+                    <AccordionItem
+                      key="stock"
+                      aria-label="Availability"
+                      title="Availability"
+                    >
                       <div className="flex items-center gap-2">
                         <Switch
                           isSelected={inStockOnly}
                           size="sm"
-                          onValueChange={(v) => { setInStockOnly(v); setOffset(0); }}
+                          onValueChange={(v) => {
+                            setInStockOnly(v);
+                            setOffset(0);
+                          }}
                         />
-                        <span className="text-xs text-default-500">In Stock Only</span>
+                        <span className="text-xs text-default-500">
+                          In Stock Only
+                        </span>
                       </div>
                     </AccordionItem>
 
-                    <AccordionItem key="category" aria-label="Category" title="Category">
+                    <AccordionItem
+                      key="category"
+                      aria-label="Category"
+                      title="Category"
+                    >
                       <CheckboxGroup
                         classNames={{ wrapper: "gap-2" }}
                         value={selectedCategories}
-                        onValueChange={(v) => { setSelectedCategories(v); setOffset(0); }}
+                        onValueChange={(v) => {
+                          setSelectedCategories(v);
+                          setOffset(0);
+                        }}
                       >
                         {availableCategories.map((cat) => (
                           <Checkbox
                             key={cat}
-                            classNames={{ label: "text-xs text-default-500 capitalize ml-1" }}
+                            classNames={{
+                              label: "text-xs text-default-500 capitalize ml-1",
+                            }}
                             radius="none"
                             size="sm"
                             value={cat}
@@ -202,12 +240,17 @@ export default function AdminCatalogPage() {
                       <CheckboxGroup
                         classNames={{ wrapper: "gap-2" }}
                         value={selectedBrands}
-                        onValueChange={(v) => { setSelectedBrands(v); setOffset(0); }}
+                        onValueChange={(v) => {
+                          setSelectedBrands(v);
+                          setOffset(0);
+                        }}
                       >
                         {availableBrands.map((brand) => (
                           <Checkbox
                             key={brand}
-                            classNames={{ label: "text-xs text-default-500 ml-1" }}
+                            classNames={{
+                              label: "text-xs text-default-500 ml-1",
+                            }}
                             radius="none"
                             size="sm"
                             value={brand}
@@ -296,7 +339,8 @@ export default function AdminCatalogPage() {
           {total > limit && (
             <div className="flex items-center justify-between mt-6">
               <p className="text-sm opacity-50">
-                Showing {offset + 1}–{Math.min(offset + limit, total)} of {total}
+                Showing {offset + 1}–{Math.min(offset + limit, total)} of{" "}
+                {total}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -321,10 +365,14 @@ export default function AdminCatalogPage() {
         </div>
       </div>
       <ConfirmModal
-        isOpen={isDeleteOpen}
-        message={deleteTarget ? `Delete "${deleteTarget.name}"? This cannot be undone.` : ""}
-        title="Delete Product"
         confirmLabel="Delete"
+        isOpen={isDeleteOpen}
+        message={
+          deleteTarget
+            ? `Delete "${deleteTarget.name}"? This cannot be undone.`
+            : ""
+        }
+        title="Delete Product"
         onClose={onDeleteClose}
         onConfirm={handleConfirmDelete}
       />

@@ -80,16 +80,32 @@ export default function PricingPage() {
               ? "text-foreground font-bold"
               : "text-default-400"
           }`}
+          role="button"
+          tabIndex={0}
           onClick={() => setBillingCycle("monthly")}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setBillingCycle("monthly");
+            }
+          }}
         >
           Monthly
         </span>
 
         <div
           className="w-14 h-8 bg-default-100 p-1 cursor-pointer flex items-center relative border border-default-200"
+          role="button"
+          tabIndex={0}
           onClick={() =>
             setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")
           }
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setBillingCycle(
+                billingCycle === "monthly" ? "yearly" : "monthly",
+              );
+            }
+          }}
         >
           <motion.div
             layout
@@ -106,7 +122,14 @@ export default function PricingPage() {
                 ? "text-foreground font-bold"
                 : "text-default-400"
             }`}
+            role="button"
+            tabIndex={0}
             onClick={() => setBillingCycle("yearly")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                setBillingCycle("yearly");
+              }
+            }}
           >
             Annually
           </span>

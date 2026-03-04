@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
-
 import type { CanvasSize } from "./types";
+
+import { useState, useRef } from "react";
 
 export function useCollagePanZoom(canvasSize: CanvasSize) {
   const [canvasOffset, setCanvasOffset] = useState({ x: 0, y: 0 });
@@ -12,7 +12,10 @@ export function useCollagePanZoom(canvasSize: CanvasSize) {
   const handleMouseDown = (e: React.MouseEvent, toolMode: "select" | "pan") => {
     if (toolMode === "pan" || e.button === 1) {
       setIsPanning(true);
-      setPanStart({ x: e.clientX - canvasOffset.x, y: e.clientY - canvasOffset.y });
+      setPanStart({
+        x: e.clientX - canvasOffset.x,
+        y: e.clientY - canvasOffset.y,
+      });
       e.preventDefault();
     }
   };
@@ -29,6 +32,7 @@ export function useCollagePanZoom(canvasSize: CanvasSize) {
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
       const delta = e.deltaY > 0 ? -0.1 : 0.1;
+
       setCanvasZoom((prev) => Math.min(Math.max(prev + delta, 0.25), 3));
     }
   };
@@ -43,6 +47,7 @@ export function useCollagePanZoom(canvasSize: CanvasSize) {
     const container = containerRef.current.getBoundingClientRect();
     const scaleX = (container.width - 40) / canvasSize.width;
     const scaleY = (container.height - 40) / canvasSize.height;
+
     setCanvasZoom(Math.min(scaleX, scaleY, 1));
     setCanvasOffset({ x: 0, y: 0 });
   };

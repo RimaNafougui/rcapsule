@@ -58,7 +58,9 @@ export function OutfitCollage({
       }
     } catch (error) {
       console.error("Error fetching outfit:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to load outfit");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load outfit",
+      );
     } finally {
       setLoading(false);
     }
@@ -281,7 +283,7 @@ export function OutfitCollage({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Layout Style</label>
+          <p className="block text-sm font-medium mb-2">Layout Style</p>
           <div className="flex gap-2">
             <Button
               color={layout === "grid" ? "primary" : "default"}

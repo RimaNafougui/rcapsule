@@ -3,7 +3,6 @@
 import type { WeatherContext } from "@/lib/services/weather";
 
 import { useState, useEffect } from "react";
-import { getErrorMessage } from "@/lib/utils/error";
 import { Button, Spinner } from "@heroui/react";
 import {
   SunIcon,
@@ -13,6 +12,8 @@ import {
   ExclamationTriangleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+
+import { getErrorMessage } from "@/lib/utils/error";
 
 interface WeatherResponse {
   weather: WeatherContext;
