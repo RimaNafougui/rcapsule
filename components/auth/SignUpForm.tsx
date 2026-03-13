@@ -146,7 +146,7 @@ export default function SignUpForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Something went wrong");
+        setError(typeof data.error === "string" ? data.error : "Something went wrong");
         setIsLoading(false);
 
         return;
@@ -168,10 +168,10 @@ export default function SignUpForm() {
     >
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-extrabold tracking-tighter uppercase italic">
-          Join RCapsule
+          Join the Community
         </h2>
         <p className="text-default-500 text-sm tracking-wide">
-          Start digitizing your wardrobe today
+          Discover real outfits. Share your style. Build with intention.
         </p>
       </div>
 
@@ -238,7 +238,7 @@ export default function SignUpForm() {
           }
           label="Password"
           labelPlacement="outside"
-          minLength={6}
+          minLength={8}
           name="password"
           placeholder="••••••••"
           startContent={<Lock className="text-default-400" size={18} />}

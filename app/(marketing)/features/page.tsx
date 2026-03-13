@@ -8,6 +8,9 @@ import {
   CloudArrowDownIcon,
   SwatchIcon,
   DevicePhoneMobileIcon,
+  UsersIcon,
+  MagnifyingGlassIcon,
+  HeartIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
@@ -16,7 +19,25 @@ import { FeatureCard } from "@/components/ui/card";
 import { DSButton } from "@/components/ui/button";
 import { fadeInUp, staggerContainer } from "@/components/ui/motion";
 
-const features = [
+const communityFeatures = [
+  {
+    title: "Discover Looks",
+    desc: "Browse a curated feed of real outfits from real people. Filter by style, season, and occasion to find inspiration that fits your life.",
+    icon: MagnifyingGlassIcon,
+  },
+  {
+    title: "Follow & Connect",
+    desc: "Follow the people whose taste you love. Build a feed that feels personal — not algorithmic noise.",
+    icon: UsersIcon,
+  },
+  {
+    title: "Share Your Style",
+    desc: "Publish your outfits publicly, collect likes, and inspire others. Your wardrobe is worth showing off.",
+    icon: HeartIcon,
+  },
+];
+
+const toolFeatures = [
   {
     title: "Auto-Import",
     desc: "Paste a product link from your favorite store. We scrape the image, brand, and price automatically.",
@@ -34,7 +55,7 @@ const features = [
   },
   {
     title: "Cost Per Wear",
-    desc: "Track purchase dates and usage (coming soon) to understand the real value of your investments.",
+    desc: "Track purchase dates and usage to understand the real value of every piece you own.",
     icon: ChartBarIcon,
   },
   {
@@ -54,35 +75,64 @@ export default function FeaturesPage() {
     <Container className="py-16">
       <div className="text-center max-w-2xl mx-auto mb-16">
         <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-2">
-          The Operating System <br /> For Your Closet
+          Built for the Community. <br /> Powered by the Technology.
         </h1>
         <p className="text-default-500 uppercase tracking-widest text-sm">
-          Built for the modern collector
+          Fashion meets social — finally done right
         </p>
       </div>
 
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
-        initial="hidden"
-        variants={staggerContainer}
-        viewport={{ once: true }}
-        whileInView="visible"
-      >
-        {features.map((f, i) => (
-          <motion.div key={i} variants={fadeInUp}>
-            <FeatureCard
-              className="h-full"
-              description={f.desc}
-              icon={<f.icon className="w-8 h-8 text-foreground stroke-1" />}
-              title={f.title}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
+      <div className="mb-6">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-default-400 mb-6">
+          Community
+        </h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
+          initial="hidden"
+          variants={staggerContainer}
+          viewport={{ once: true }}
+          whileInView="visible"
+        >
+          {communityFeatures.map((f, i) => (
+            <motion.div key={i} variants={fadeInUp}>
+              <FeatureCard
+                className="h-full"
+                description={f.desc}
+                icon={<f.icon className="w-8 h-8 text-foreground stroke-1" />}
+                title={f.title}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="mb-16">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-default-400 mb-6">
+          Tools
+        </h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          variants={staggerContainer}
+          viewport={{ once: true }}
+          whileInView="visible"
+        >
+          {toolFeatures.map((f, i) => (
+            <motion.div key={i} variants={fadeInUp}>
+              <FeatureCard
+                className="h-full"
+                description={f.desc}
+                icon={<f.icon className="w-8 h-8 text-foreground stroke-1" />}
+                title={f.title}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
 
       <div className="flex justify-center">
         <DSButton as={Link} href="/signup" size="lg" variant="primary">
-          Start Digitizing
+          Join the Community
         </DSButton>
       </div>
     </Container>

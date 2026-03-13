@@ -558,6 +558,20 @@ function ViewMode({
                 </p>
               </div>
             )}
+            {item.price && item.price > 0 && item.timesworn && item.timesworn > 0 && (
+              <div className="col-span-2 mt-2 pt-3 border-t border-default-200">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-default-400 block mb-1">
+                  Cost Per Wear
+                </span>
+                <p className="text-2xl font-black tracking-tighter">
+                  ${(item.price / item.timesworn).toFixed(2)}
+                  <span className="text-sm font-normal text-default-400 ml-1">/ wear</span>
+                </p>
+                <p className="text-[10px] text-default-400 mt-0.5">
+                  Based on {item.timesworn} wear{item.timesworn !== 1 ? "s" : ""} · ${item.price.toFixed(2)} purchase price
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

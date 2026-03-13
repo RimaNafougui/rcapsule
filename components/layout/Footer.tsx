@@ -67,8 +67,7 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="text-default-500 text-sm leading-relaxed max-w-sm">
-              Digitizing your wardrobe for a smarter, more sustainable
-              lifestyle. Join the future of fashion management.
+              The social network for fashion. Discover real outfits from real people, share your style, and build a wardrobe with intention.
             </p>
 
             <div

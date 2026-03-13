@@ -39,8 +39,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Dynamic public user profile pages
+  // Dynamic public user profile pages and brand pages
   let profileRoutes: MetadataRoute.Sitemap = [];
+  let brandRoutes: MetadataRoute.Sitemap = [];
 
   try {
     const supabase = createClient(
@@ -48,13 +49,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
-    const { data: users } = await supabase
-      .from("User")
-      .select("username, updatedAt")
-      .eq("profilePublic", true)
-      .not("username", "is", null);
+    const [usersResult, brandsResult] = await Promise.all([
+      supabase
+        .from("User")
+        .select("username, updatedAt")
+        .eq("profilePublic", true)
+        .not("username", "is", null),
+      supabase
+        .from("GlobalProduct")
+        .select("brand")
+        .not("brand", "is", null),
+    ]);
 
-    profileRoutes = (users || []).map(
+    profileRoutes = (usersResult.data || []).map(
       (user: { username: string; updatedAt: string }) => ({
         url: `${baseUrl}/u/${user.username}`,
         lastModified: user.updatedAt ? new Date(user.updatedAt) : now,
@@ -62,9 +69,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       }),
     );
+
+    const distinctBrands = [
+      ...new Set(
+        (brandsResult.data || [])
+          .map((p: { brand: string }) => p.brand)
+          .filter(Boolean),
+      ),
+    ] as string[];
+
+    brandRoutes = distinctBrands.map((brand) => ({
+      url: `${baseUrl}/catalog/brand/${encodeURIComponent(brand)}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    }));
   } catch {
-    // Non-fatal — sitemap still works without profile routes
+    // Non-fatal — sitemap still works without dynamic routes
   }
 
-  return [...baseRoutes, ...navRoutes, ...staticRoutes, ...profileRoutes];
+  return [...baseRoutes, ...navRoutes, ...staticRoutes, ...profileRoutes, ...brandRoutes];
 }

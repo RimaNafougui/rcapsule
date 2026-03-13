@@ -319,7 +319,7 @@ export function OutfitCollage({
           size="lg"
           onPress={() => generateCollage()}
         >
-          {generating ? "Generating Collage..." : "🎨 Generate Outfit Collage"}
+          {generating ? "Generating Collage..." : "Generate Outfit Collage"}
         </Button>
 
         {collageUrl && (
@@ -334,7 +334,7 @@ export function OutfitCollage({
                 src={collageUrl}
               />
             </div>
-            <p className="text-xs text-success">✓ Saved to outfit</p>
+            <p className="text-xs text-success">Saved to outfit</p>
           </div>
         )}
 

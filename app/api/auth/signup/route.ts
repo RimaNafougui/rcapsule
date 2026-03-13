@@ -16,8 +16,11 @@ export async function POST(req: Request) {
     const result = signupSchema.safeParse(body);
 
     if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      const first = Object.values(fieldErrors).flat()[0];
+
       return NextResponse.json(
-        { error: result.error.flatten() },
+        { error: first ?? "Invalid input" },
         { status: 400 },
       );
     }
@@ -54,7 +57,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: authError.message }, { status: 400 });
     }
 
-    if (!authData.user) {
+    if (!authData?.user) {
       return NextResponse.json(
         { error: "Failed to create user" },
         { status: 400 },
@@ -63,13 +66,24 @@ export async function POST(req: Request) {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const { data: _userRecord, error: dbError } = await supabase
+    const { data: existingRecord, error: dbError } = await supabase
       .from("User")
-      .select("id, email, name, username")
+      .select("id")
       .eq("id", authData.user.id)
       .single();
 
-    if (dbError) {
+    if (existingRecord) {
+      // Trigger already created the row — patch in the username and name
+      await supabase
+        .from("User")
+        .update({
+          username: username.toLowerCase(),
+          name: name || null,
+          updatedAt: new Date().toISOString(),
+        })
+        .eq("id", authData.user.id);
+    } else if (dbError) {
+      // No trigger — insert the row manually
       const { error: insertError } = await supabase.from("User").insert({
         id: authData.user.id,
         email: authData.user.email!,

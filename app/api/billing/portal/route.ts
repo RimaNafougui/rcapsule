@@ -38,7 +38,7 @@ export async function POST() {
 
     console.log("Creating portal for customer:", user.stripe_customer_id);
     console.log(
-      "🔍 Return URL:",
+      "Return URL:",
       `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
     );
 

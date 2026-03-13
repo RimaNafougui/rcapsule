@@ -153,17 +153,17 @@ function HeroSection() {
           className="text-[clamp(2rem,8vw,7rem)] font-black uppercase tracking-tighter italic leading-[0.9] mb-6 md:mb-8"
           variants={fadeInUp}
         >
-          Your Wardrobe. <br />
-          <span className="text-default-400">Your Story.</span>
+          The Social Network <br />
+          <span className="text-default-400">For Fashion.</span>
         </motion.h1>
 
         <motion.p
           className="text-sm sm:text-base md:text-lg text-default-500 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed font-light px-4"
           variants={fadeInUp}
         >
-          Catalog your closet, plan outfits,
+          Discover real outfits from real people. Share your style, follow people whose taste you love,
           <br className="hidden sm:block" />
-          and share your style with the world.
+          and build a wardrobe with intention.
         </motion.p>
 
         <motion.div
@@ -178,17 +178,17 @@ function HeroSection() {
             size="lg"
             variant="primary"
           >
-            Start Curating
+            Join the Community
           </DSButton>
 
           <DSButton
             as="a"
             className="w-full sm:w-auto"
-            href="/catalog"
+            href="/discover"
             size="lg"
             variant="outline"
           >
-            Browse Catalog
+            Explore Looks
           </DSButton>
         </motion.div>
 
@@ -250,6 +250,7 @@ function StatsBar() {
   const stat1 = useCountUp(2000);
   const stat2 = useCountUp(500);
   const stat3 = useCountUp(1000);
+  const stat4 = useCountUp(3500);
 
   return (
     <section className="py-8 md:py-12 border-b border-default-200">
@@ -288,6 +289,18 @@ function StatsBar() {
             </span>
             <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
               Outfits Created
+            </p>
+          </div>
+          <div className="hidden md:block h-8 w-px bg-default-200" />
+          <div className="text-center">
+            <span
+              ref={stat4.ref}
+              className="text-2xl md:text-3xl font-black tracking-tighter"
+            >
+              {stat4.count.toLocaleString()}+
+            </span>
+            <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
+              Outfits Shared
             </p>
           </div>
         </div>
@@ -1079,11 +1092,11 @@ function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic">
-            Start Building Your Digital Closet
+            Join a Community That Takes Fashion Seriously.
           </h2>
           <p className="text-sm md:text-base opacity-60 max-w-xl mx-auto">
-            Join fashion enthusiasts, budget-conscious shoppers, and mindful
-            minimalists who know exactly what they own.
+            Discover real outfits from real people. Share your style, follow people whose taste you love,
+            and build a wardrobe with intention.
           </p>
           <div className="flex flex-col items-center gap-3 md:gap-4">
             <DSButton
@@ -1093,7 +1106,7 @@ function FinalCTA() {
               size="lg"
               variant="primary"
             >
-              Start Curating
+              Join the Community
             </DSButton>
             <p className="text-xs opacity-40 uppercase tracking-widest mt-2 md:mt-4">
               Free &bull; No Credit Card Required

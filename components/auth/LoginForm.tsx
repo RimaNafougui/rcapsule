@@ -80,13 +80,13 @@ function LoginFormContent() {
           Welcome Back
         </h2>
         <p className="text-default-500 text-sm tracking-wide">
-          Enter your details to access your closet
+          Welcome back to your community
         </p>
       </div>
 
       {signupSuccess && (
         <div className="p-3 text-xs bg-success-50 border border-success-200 text-success-700 rounded-xl text-center">
-          Closet account created! Please sign in.
+          Account created! Check your email and click the link to verify, then sign in here.
         </div>
       )}
 

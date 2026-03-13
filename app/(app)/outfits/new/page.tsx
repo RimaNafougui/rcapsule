@@ -968,8 +968,8 @@ export default function CreateOutfitPage() {
                                   {item.name}
                                 </div>
                                 {isSelected && (
-                                  <div className="absolute top-1 right-1 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                                    ✓
+                                  <div className="absolute top-1 right-1 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center">
+                                    <CheckCircleIcon className="w-4 h-4" />
                                   </div>
                                 )}
                                 {wouldReplace && (

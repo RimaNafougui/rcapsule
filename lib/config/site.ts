@@ -4,6 +4,10 @@ export const siteConfig = {
   /** Logged-in navbar links (core actions only) */
   navItems: [
     {
+      label: "Discover",
+      href: "/discover",
+    },
+    {
       label: "Closet",
       href: "/closet",
     },
@@ -18,6 +22,10 @@ export const siteConfig = {
   ],
   /** Logged-out navbar links (marketing / conversion) */
   marketingNavItems: [
+    {
+      label: "Discover",
+      href: "/discover",
+    },
     {
       label: "Features",
       href: "/features",
