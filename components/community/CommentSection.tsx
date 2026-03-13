@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Avatar, Button, Textarea } from "@heroui/react";
-import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -44,7 +44,6 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
   const [editContent, setEditContent] = useState("");
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     fetchComments();
@@ -80,7 +79,12 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
       const res = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetType, targetId, content: content.trim(), parentId }),
+        body: JSON.stringify({
+          targetType,
+          targetId,
+          content: content.trim(),
+          parentId,
+        }),
       });
 
       if (!res.ok) {
@@ -118,7 +122,9 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
 
       const updated: Comment = await res.json();
 
-      setComments((prev) => prev.map((c) => (c.id === commentId ? updated : c)));
+      setComments((prev) =>
+        prev.map((c) => (c.id === commentId ? updated : c)),
+      );
       setEditingId(null);
     } catch {
       toast.error("Failed to edit comment");
@@ -127,7 +133,9 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
 
   const handleDelete = async (commentId: string) => {
     try {
-      const res = await fetch(`/api/comments/${commentId}`, { method: "DELETE" });
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) throw new Error();
 
@@ -269,7 +277,6 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
                   />
                   <div className="flex-1">
                     <Textarea
-                      autoFocus
                       classNames={{ inputWrapper: "border-default-300" }}
                       maxRows={3}
                       minRows={1}
@@ -345,7 +352,7 @@ function CommentItem({
 
   return (
     <div className="flex gap-3">
-      <Link href={`/u/${comment.author.username}`} className="flex-shrink-0">
+      <Link className="flex-shrink-0" href={`/u/${comment.author.username}`}>
         <Avatar
           className="w-8 h-8"
           name={comment.author.name || comment.author.username}
@@ -369,7 +376,6 @@ function CommentItem({
         {isEditing ? (
           <div>
             <Textarea
-              autoFocus
               classNames={{ inputWrapper: "border-default-300" }}
               maxRows={4}
               minRows={2}
@@ -382,9 +388,9 @@ function CommentItem({
               <Button
                 isIconOnly
                 color="primary"
+                isLoading={submitting}
                 radius="none"
                 size="sm"
-                isLoading={submitting}
                 onPress={() => onEdit(comment.id)}
               >
                 <CheckIcon className="w-3.5 h-3.5" />

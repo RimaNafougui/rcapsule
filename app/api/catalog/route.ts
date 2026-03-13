@@ -266,8 +266,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json(responseBody, { headers: { "X-Cache": "MISS" } });
   } catch (error) {
-    console.error("Error fetching catalog:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch catalog" },
       { status: 500 },

@@ -20,7 +20,9 @@ export async function GET(req: Request) {
 
     let query = supabase
       .from("User")
-      .select("id, username, name, image, bio, styleTags, followerCount, isVerified")
+      .select(
+        "id, username, name, image, bio, styleTags, followerCount, isVerified",
+      )
       .eq("profilePublic", true)
       .not("username", "is", null)
       .order("followerCount", { ascending: false })
@@ -42,7 +44,9 @@ export async function GET(req: Request) {
       result = result
         .map((u) => ({
           ...u,
-          _overlap: (u.styleTags || []).filter((t: string) => userStyleTags.includes(t)).length,
+          _overlap: (u.styleTags || []).filter((t: string) =>
+            userStyleTags.includes(t),
+          ).length,
         }))
         .sort((a, b) => b._overlap - a._overlap)
         .map(({ _overlap: _, ...u }) => u);
@@ -52,6 +56,9 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error("Error fetching suggested users:", error);
 
-    return NextResponse.json({ error: "Failed to fetch suggested users" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch suggested users" },
+      { status: 500 },
+    );
   }
 }

@@ -32,8 +32,6 @@ export async function GET(
       clothes: undefined,
     });
   } catch (error) {
-    console.error("Error fetching product:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch product" },
       { status: 500 },

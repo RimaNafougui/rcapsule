@@ -74,12 +74,6 @@ export default function WishlistPage() {
 
   const isLoading = status === "loading" || swrLoading;
 
-  if (status === "unauthenticated") {
-    router.push("/login");
-
-    return null;
-  }
-
   // --- Logic: Derived Data ---
   const availableBrands = useMemo(() => {
     const brands = clothes
@@ -235,6 +229,12 @@ export default function WishlistPage() {
       ([, itemsA], [, itemsB]) => itemsB.length - itemsA.length,
     );
   }, [sortedClothes]);
+
+  if (status === "unauthenticated") {
+    router.push("/login");
+
+    return null;
+  }
 
   const handleItemClick = (itemId: string) => {
     router.push(`/closet/${itemId}`);

@@ -58,7 +58,11 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("No checkout URL returned:", data.error, data.detail ?? "");
+        console.error(
+          "No checkout URL returned:",
+          data.error,
+          data.detail ?? "",
+        );
       }
     } catch (error) {
       console.error("Checkout error:", error);

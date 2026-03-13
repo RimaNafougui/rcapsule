@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
-import { publicLimiter, apiLimiter, getIdentifier, rateLimitResponse } from "@/lib/ratelimit";
+import {
+  publicLimiter,
+  apiLimiter,
+  getIdentifier,
+  rateLimitResponse,
+} from "@/lib/ratelimit";
 import { cacheGet, cacheSet } from "@/lib/redis";
 
 const FEED_TTL = 60; // 60 seconds for trending/recent
@@ -31,9 +36,10 @@ export async function GET(req: Request) {
   if (!success) return rateLimitResponse(reset);
 
   // Cache key for non-personalized feeds
-  const cacheKey = !isFollowingFeed && offset === 0
-    ? `feed:v1:${sort}:${tags}:${season}`
-    : null;
+  const cacheKey =
+    !isFollowingFeed && offset === 0
+      ? `feed:v1:${sort}:${tags}:${season}`
+      : null;
 
   if (cacheKey) {
     const cached = await cacheGet<object>(cacheKey);
@@ -46,7 +52,8 @@ export async function GET(req: Request) {
 
     let query = supabase
       .from("Outfit")
-      .select(`
+      .select(
+        `
         id,
         name,
         "imageUrl",
@@ -59,7 +66,8 @@ export async function GET(req: Request) {
         "viewCount",
         "createdAt",
         author:User!userId(id, username, name, image, "isVerified")
-      `)
+      `,
+      )
       .eq("isPublic", true);
 
     // Filter: style tags
@@ -95,7 +103,9 @@ export async function GET(req: Request) {
     // Sorting
     if (sort === "trending") {
       // Trending: high likes in last 30 days
-      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const thirtyDaysAgo = new Date(
+        Date.now() - 30 * 24 * 60 * 60 * 1000,
+      ).toISOString();
 
       query = query
         .gte("createdAt", thirtyDaysAgo)
@@ -106,8 +116,11 @@ export async function GET(req: Request) {
       query = query.order("createdAt", { ascending: false });
     }
 
-    const { data: outfits, error, count } = await query
-      .range(offset, offset + limit - 1);
+    const {
+      data: outfits,
+      error,
+      count,
+    } = await query.range(offset, offset + limit - 1);
 
     if (error) throw error;
 
@@ -119,8 +132,9 @@ export async function GET(req: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error fetching feed:", error);
-
-    return NextResponse.json({ error: "Failed to fetch feed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch feed" },
+      { status: 500 },
+    );
   }
 }

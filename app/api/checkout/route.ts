@@ -34,8 +34,6 @@ export async function POST(request: NextRequest) {
     const priceId = PRICE_IDS[billingCycle];
 
     if (!priceId) {
-      console.error(`Missing Stripe price ID env var for billing cycle: ${billingCycle}`);
-
       return NextResponse.json(
         { error: "Checkout unavailable — Stripe price not configured" },
         { status: 500 },
@@ -67,8 +65,6 @@ export async function POST(request: NextRequest) {
       error instanceof Stripe.errors.StripeError
         ? `${error.type}: ${error.message}`
         : String(error);
-
-    console.error("Stripe checkout error:", stripeMessage);
 
     return NextResponse.json(
       { error: "Failed to create checkout session", detail: stripeMessage },

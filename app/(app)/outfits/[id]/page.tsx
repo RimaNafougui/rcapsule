@@ -146,7 +146,7 @@ export default function OutfitDetailPage() {
           </h1>
           {outfit.description && (
             <p className="text-default-500 font-light text-lg mb-8 border-l-2 border-foreground pl-4 italic">
-              "{outfit.description}"
+              &quot;{outfit.description}&quot;
             </p>
           )}
           <div className="flex items-center gap-8 mb-12 border-y border-divider py-4">

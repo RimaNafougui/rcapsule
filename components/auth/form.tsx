@@ -45,7 +45,7 @@ export const LoginForm = () => {
           </div>
         )}
         <div className="text-center text-sm mt-4">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link className="text-primary hover:underline" href="/signup">
             Sign up
           </Link>

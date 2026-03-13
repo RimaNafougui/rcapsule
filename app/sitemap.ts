@@ -55,10 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .select("username, updatedAt")
         .eq("profilePublic", true)
         .not("username", "is", null),
-      supabase
-        .from("GlobalProduct")
-        .select("brand")
-        .not("brand", "is", null),
+      supabase.from("GlobalProduct").select("brand").not("brand", "is", null),
     ]);
 
     profileRoutes = (usersResult.data || []).map(
@@ -88,5 +85,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Non-fatal — sitemap still works without dynamic routes
   }
 
-  return [...baseRoutes, ...navRoutes, ...staticRoutes, ...profileRoutes, ...brandRoutes];
+  return [
+    ...baseRoutes,
+    ...navRoutes,
+    ...staticRoutes,
+    ...profileRoutes,
+    ...brandRoutes,
+  ];
 }

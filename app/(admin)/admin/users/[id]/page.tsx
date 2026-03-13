@@ -1,5 +1,6 @@
 "use client";
 import { use } from "react";
+import Image from "next/image";
 import useSWR from "swr";
 import {
   Avatar,
@@ -243,10 +244,13 @@ export default function AdminUserDetailPage({
                   className="border border-divider rounded-xl overflow-hidden"
                 >
                   {item.imageUrl ? (
-                    <img
+                    <Image
+                      unoptimized
                       alt={item.name}
                       className="w-full aspect-square object-cover"
                       src={item.imageUrl}
+                      width={200}
+                      height={200}
                     />
                   ) : (
                     <div className="w-full aspect-square bg-content2 flex items-center justify-center">

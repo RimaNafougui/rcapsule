@@ -147,7 +147,7 @@ export default function PublicCollectionPage() {
             Collection Not Found
           </h1>
           <p className="text-default-500 max-w-sm mx-auto">
-            This collection doesn't exist or is set to private.
+            This collection doesn&apos;t exist or is set to private.
           </p>
         </div>
         <Button

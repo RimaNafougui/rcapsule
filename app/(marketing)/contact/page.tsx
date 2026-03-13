@@ -73,7 +73,7 @@ export default function ContactPage() {
                 Note on Scraping
               </h3>
               <p className="text-sm text-default-500">
-                If a specific store isn't importing correctly, please send us
+                If a specific store isn&apos;t importing correctly, please send us
                 the URL. We update our scrapers weekly.
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function ContactPage() {
                 Message Sent
               </h3>
               <p className="text-default-500">
-                We've received your message and saved it to our database.
+                We&apos;ve received your message and saved it to our database.
               </p>
               <Button
                 className="mt-4 uppercase tracking-wider font-bold text-xs"

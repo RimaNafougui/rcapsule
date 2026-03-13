@@ -161,7 +161,8 @@ function HeroSection() {
           className="text-sm sm:text-base md:text-lg text-default-500 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed font-light px-4"
           variants={fadeInUp}
         >
-          Discover real outfits from real people. Share your style, follow people whose taste you love,
+          Discover real outfits from real people. Share your style, follow
+          people whose taste you love,
           <br className="hidden sm:block" />
           and build a wardrobe with intention.
         </motion.p>
@@ -1095,8 +1096,8 @@ function FinalCTA() {
             Join a Community That Takes Fashion Seriously.
           </h2>
           <p className="text-sm md:text-base opacity-60 max-w-xl mx-auto">
-            Discover real outfits from real people. Share your style, follow people whose taste you love,
-            and build a wardrobe with intention.
+            Discover real outfits from real people. Share your style, follow
+            people whose taste you love, and build a wardrobe with intention.
           </p>
           <div className="flex flex-col items-center gap-3 md:gap-4">
             <DSButton

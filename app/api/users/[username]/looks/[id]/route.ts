@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
-import { publicLimiter, getIdentifier, rateLimitResponse } from "@/lib/ratelimit";
+import {
+  publicLimiter,
+  getIdentifier,
+  rateLimitResponse,
+} from "@/lib/ratelimit";
 
 export async function GET(
   req: Request,
@@ -21,7 +25,9 @@ export async function GET(
     // Look up user by username
     const { data: user, error: userError } = await supabase
       .from("User")
-      .select("id, username, name, image, bio, followerCount, isVerified, profilePublic")
+      .select(
+        "id, username, name, image, bio, followerCount, isVerified, profilePublic",
+      )
       .eq("username", username)
       .single();
 
@@ -32,13 +38,17 @@ export async function GET(
     const isOwnProfile = session?.user?.id === user.id;
 
     if (!user.profilePublic && !isOwnProfile) {
-      return NextResponse.json({ error: "Profile is private" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Profile is private" },
+        { status: 404 },
+      );
     }
 
     // Fetch outfit by id or slug, verify ownership
     const { data: outfit, error: outfitError } = await supabase
       .from("Outfit")
-      .select(`
+      .select(
+        `
         id,
         name,
         "imageUrl",
@@ -60,7 +70,8 @@ export async function GET(
           layer,
           clothes:Clothes(id, name, brand, category, "imageUrl", price, "purchaseCurrency", colors)
         )
-      `)
+      `,
+      )
       .or(`id.eq.${id},slug.eq.${id}`)
       .eq("userId", user.id)
       .single();
@@ -136,6 +147,9 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching look:", error);
 
-    return NextResponse.json({ error: "Failed to fetch look" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch look" },
+      { status: 500 },
+    );
   }
 }

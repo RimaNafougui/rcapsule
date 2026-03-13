@@ -64,8 +64,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error liking:", error);
-
     return NextResponse.json({ error: "Failed to like" }, { status: 500 });
   }
 }
@@ -119,8 +117,6 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error unliking:", error);
-
     return NextResponse.json({ error: "Failed to unlike" }, { status: 500 });
   }
 }

@@ -33,7 +33,7 @@ export default function TermsPage() {
             2. Auto-Import Tool
           </h2>
           <p className="mb-4">
-            Our "Auto-Import" feature is provided as a convenience tool. It
+            Our &quot;Auto-Import&quot; feature is provided as a convenience tool. It
             retrieves publicly available metadata (images, prices, descriptions)
             from product URLs provided by you.
           </p>
@@ -73,7 +73,7 @@ export default function TermsPage() {
             4. Limitation of Liability
           </h2>
           <p>
-            The service is provided "as is." We are not liable for any data loss
+            The service is provided &quot;as is.&quot; We are not liable for any data loss
             or service interruptions. While we strive for 99% uptime and secure
             backups, we encourage you to keep copies of important data.
           </p>

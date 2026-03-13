@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-3">1. Overview</h2>
         <p className="text-gray-700 leading-relaxed">
-          The Capsule Extension ("we", "us") is designed to help you save
+          The Capsule Extension (&quot;we&quot;, &quot;us&quot;) is designed to help you save
           clothing items from third-party websites to your personal digital
           wardrobe. We respect your privacy and only collect data necessary to
           perform this function.
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <h2 className="text-xl font-bold mb-3">2. Data We Collect</h2>
         <p className="text-gray-700 leading-relaxed mb-4">
           When you use the extension, we collect the following information{" "}
-          <strong>only when you click "Save"</strong>:
+          <strong>only when you click &quot;Save&quot;</strong>:
         </p>
         <ul className="list-disc pl-5 space-y-2 text-gray-700">
           <li>

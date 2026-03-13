@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Avatar, Button, Chip, Link } from "@heroui/react";
 import {
   Cog6ToothIcon,
@@ -56,10 +57,12 @@ export default function ProfileHeader({
       {/* 1. COVER IMAGE BANNER */}
       <div className="relative w-full h-48 md:h-64 bg-default-100 overflow-hidden">
         {user.coverImage ? (
-          <img
+          <Image
+            unoptimized
             alt="Cover"
             className="w-full h-full object-cover"
             src={user.coverImage}
+            fill
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-default-100 to-default-200 flex items-center justify-center">

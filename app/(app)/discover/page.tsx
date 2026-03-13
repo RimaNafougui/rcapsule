@@ -47,7 +47,12 @@ export default function DiscoverPage() {
   const LIMIT = 24;
 
   const fetchFeed = useCallback(
-    async (tab: SortTab, season: string, currentOffset: number, replace: boolean) => {
+    async (
+      tab: SortTab,
+      season: string,
+      currentOffset: number,
+      replace: boolean,
+    ) => {
       if (replace) setLoading(true);
       else setLoadingMore(true);
 
@@ -201,7 +206,9 @@ export default function DiscoverPage() {
                 isLoading={loadingMore}
                 radius="none"
                 variant="bordered"
-                onPress={() => fetchFeed(activeTab, selectedSeason, offset, false)}
+                onPress={() =>
+                  fetchFeed(activeTab, selectedSeason, offset, false)
+                }
               >
                 Load More
               </Button>
@@ -216,7 +223,9 @@ export default function DiscoverPage() {
 function OutfitCard({ outfit }: { outfit: FeedOutfit }) {
   return (
     <div className="break-inside-avoid mb-4 group relative border border-default-200 overflow-hidden hover:border-default-400 transition-colors">
-      <Link href={`/u/${outfit.author.username}/looks/${outfit.slug || outfit.id}`}>
+      <Link
+        href={`/u/${outfit.author.username}/looks/${outfit.slug || outfit.id}`}
+      >
         {/* Image */}
         <div className="relative bg-default-100 overflow-hidden">
           {outfit.imageUrl ? (

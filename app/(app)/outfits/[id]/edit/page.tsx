@@ -354,7 +354,9 @@ export default function EditOutfitPage() {
       } else {
         const err = await response.json();
 
-        const msg = typeof err.error === "string" ? err.error : "Failed to save outfit";
+        const msg =
+          typeof err.error === "string" ? err.error : "Failed to save outfit";
+
         toast.error(msg);
       }
     } catch (error) {
@@ -1049,7 +1051,7 @@ export default function EditOutfitPage() {
           </ModalHeader>
           <ModalBody>
             <p className="text-default-600">
-              Are you sure you want to delete <strong>"{formData.name}"</strong>
+              Are you sure you want to delete <strong>&quot;{formData.name}&quot;</strong>
               ? This cannot be undone.
             </p>
           </ModalBody>

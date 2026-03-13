@@ -101,7 +101,9 @@ export default function AddToClosetModal({
       } else {
         const error = await response.json();
 
-        const msg = typeof error.error === "string" ? error.error : "Failed to add item";
+        const msg =
+          typeof error.error === "string" ? error.error : "Failed to add item";
+
         toast.error(msg);
       }
     } catch (error) {

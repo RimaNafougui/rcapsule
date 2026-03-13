@@ -227,7 +227,7 @@ export default function PublicProfilePage() {
             Profile Not Found
           </h1>
           <p className="text-default-500 max-w-sm mx-auto">
-            The user @{username} doesn't exist or their profile is set to
+            The user @{username} doesn&apos;t exist or their profile is set to
             private.
           </p>
         </div>

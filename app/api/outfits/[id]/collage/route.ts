@@ -66,8 +66,6 @@ export async function GET(
       clothes: clothes,
     });
   } catch (error) {
-    console.error("Error fetching outfit data:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch outfit data" },
       { status: 500 },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   format,
   startOfMonth,
@@ -350,7 +351,7 @@ export default function CalendarTracker({
                         className="border border-default-200 shadow-sm"
                         radius="md"
                         size={isWeek ? "lg" : "sm"}
-                        src={entry.data.imageUrl}
+                        src={entry.data.imageUrl ?? ""}
                       />
                       {isWeek && (
                         <div className="hidden group-hover/avatar:block absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-foreground text-background text-xs p-3 rounded-lg shadow-xl pointer-events-none">
@@ -417,10 +418,12 @@ export default function CalendarTracker({
                 className="flex flex-col md:flex-row gap-6 p-6 border border-default-200 rounded-2xl bg-default-50/30 hover:border-default-300 transition-colors"
               >
                 <div className="w-full md:w-48 h-64 bg-background rounded-xl border border-default-100 shrink-0 overflow-hidden">
-                  <img
+                  <Image
+                    unoptimized
                     alt={entry.data.name}
                     className="w-full h-full object-cover"
-                    src={entry.data.imageUrl}
+                    src={entry.data.imageUrl ?? ""}
+                    fill
                   />
                 </div>
 
@@ -516,7 +519,7 @@ export default function CalendarTracker({
                         Notes
                       </p>
                       <p className="text-sm italic text-default-600 leading-relaxed">
-                        "{entry.metadata.notes}"
+                        &quot;{entry.metadata.notes}&quot;
                       </p>
                     </div>
                   )}
@@ -681,12 +684,14 @@ export default function CalendarTracker({
 
                 <div className="aspect-[3/4] bg-background rounded-xl border-2 border-dashed border-default-200 flex items-center justify-center overflow-hidden relative">
                   {selectedOutfitId ? (
-                    <img
+                    <Image
+                      unoptimized
                       alt="Selected outfit"
                       className="w-full h-full object-cover"
                       src={
-                        outfits.find((i) => i.id === selectedOutfitId)?.imageUrl
+                        outfits.find((i) => i.id === selectedOutfitId)?.imageUrl ?? ""
                       }
+                      fill
                     />
                   ) : (
                     <div className="text-center p-4">

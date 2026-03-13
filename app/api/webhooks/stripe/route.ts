@@ -120,9 +120,14 @@ export async function POST(request: NextRequest) {
               from: FROM_EMAIL,
               to: customerEmail,
               subject: "Welcome to Rcapsule Premium",
-              react: PremiumWelcome({ email: customerEmail, name: customerName }),
+              react: PremiumWelcome({
+                email: customerEmail,
+                name: customerName,
+              }),
             })
-            .catch((err) => console.error("Failed to send premium welcome email:", err));
+            .catch((err) =>
+              console.error("Failed to send premium welcome email:", err),
+            );
         }
 
         break;

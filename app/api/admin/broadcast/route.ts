@@ -63,8 +63,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ sent: inserted });
   } catch (error) {
-    console.error("Error sending broadcast:", error);
-
     return NextResponse.json(
       { error: "Failed to send broadcast" },
       { status: 500 },

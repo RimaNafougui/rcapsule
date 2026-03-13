@@ -27,8 +27,6 @@ export async function GET() {
       .single();
 
     if (error) {
-      console.error("Supabase error fetching user:", error);
-
       return NextResponse.json(
         { error: "Failed to fetch user data" },
         { status: 500 },

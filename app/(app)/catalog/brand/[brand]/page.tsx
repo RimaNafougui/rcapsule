@@ -50,7 +50,9 @@ async function getBrandProducts(brand: string) {
 
   const { data: products } = await supabase
     .from("GlobalProduct")
-    .select("id, name, brand, category, originalprice, currency, imageurl, slug, colors")
+    .select(
+      "id, name, brand, category, originalprice, currency, imageurl, slug, colors",
+    )
     .ilike("brand", brand)
     .order("createdat", { ascending: false })
     .limit(100);
@@ -94,8 +96,12 @@ export default async function BrandPage({ params }: Props) {
         </h1>
 
         <div className="flex flex-wrap items-center gap-4 text-sm text-default-500">
-          <span className="font-bold text-foreground text-lg">{products.length}</span>
-          <span className="text-[10px] uppercase tracking-widest">Items Cataloged</span>
+          <span className="font-bold text-foreground text-lg">
+            {products.length}
+          </span>
+          <span className="text-[10px] uppercase tracking-widest">
+            Items Cataloged
+          </span>
 
           {topCategories.length > 0 && (
             <>
@@ -118,7 +124,9 @@ export default async function BrandPage({ params }: Props) {
       {/* Products grid */}
       {products.length === 0 ? (
         <div className="text-center py-24 border border-dashed border-default-200">
-          <p className="text-default-400 text-sm">No products found for {brandName}.</p>
+          <p className="text-default-400 text-sm">
+            No products found for {brandName}.
+          </p>
           <Link
             className="text-xs uppercase tracking-widest text-primary hover:underline mt-2 inline-block"
             href="/catalog"

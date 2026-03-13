@@ -3,14 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {
-  Avatar,
-  Button,
-  Chip,
-  Image,
-  Spinner,
-  Tooltip,
-} from "@heroui/react";
+import { Avatar, Button, Chip, Image, Spinner, Tooltip } from "@heroui/react";
 import {
   HeartIcon,
   BookmarkIcon,
@@ -20,7 +13,10 @@ import {
   UserPlusIcon,
   UserMinusIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolid, BookmarkIcon as BookmarkSolid } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as HeartSolid,
+  BookmarkIcon as BookmarkSolid,
+} from "@heroicons/react/24/solid";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -98,6 +94,7 @@ export default function PublicOutfitPage() {
 
       if (res.status === 404) {
         setNotFound(true);
+
         return;
       }
       if (!res.ok) throw new Error();
@@ -184,7 +181,10 @@ export default function PublicOutfitPage() {
 
     setIsFollowing(!isFollowing);
     if (author) {
-      setAuthor({ ...author, followerCount: author.followerCount + (prev ? -1 : 1) });
+      setAuthor({
+        ...author,
+        followerCount: author.followerCount + (prev ? -1 : 1),
+      });
     }
 
     try {
@@ -212,8 +212,12 @@ export default function PublicOutfitPage() {
   if (notFound || !outfit || !author) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
-        <h1 className="text-3xl font-black uppercase tracking-tighter italic">Look Not Found</h1>
-        <p className="text-default-500">This outfit doesn&apos;t exist or is set to private.</p>
+        <h1 className="text-3xl font-black uppercase tracking-tighter italic">
+          Look Not Found
+        </h1>
+        <p className="text-default-500">
+          This outfit doesn&apos;t exist or is set to private.
+        </p>
         <Button
           className="uppercase font-bold tracking-widest"
           radius="none"
@@ -271,13 +275,19 @@ export default function PublicOutfitPage() {
             {/* Meta chips */}
             <div className="flex flex-wrap gap-2">
               {outfit.season && (
-                <Chip size="sm" variant="flat">{outfit.season}</Chip>
+                <Chip size="sm" variant="flat">
+                  {outfit.season}
+                </Chip>
               )}
               {outfit.occasion && (
-                <Chip size="sm" variant="flat">{outfit.occasion}</Chip>
+                <Chip size="sm" variant="flat">
+                  {outfit.occasion}
+                </Chip>
               )}
               {(outfit.styleTags || []).map((tag) => (
-                <Chip key={tag} size="sm" variant="bordered">{tag}</Chip>
+                <Chip key={tag} size="sm" variant="bordered">
+                  {tag}
+                </Chip>
               ))}
             </div>
           </div>
@@ -296,7 +306,9 @@ export default function PublicOutfitPage() {
               <span>{likeCount}</span>
             </button>
 
-            <Tooltip content={isSaved ? "Remove from saved" : "Save to inspiration"}>
+            <Tooltip
+              content={isSaved ? "Remove from saved" : "Save to inspiration"}
+            >
               <button onClick={handleSave}>
                 {isSaved ? (
                   <BookmarkSolid className="w-5 h-5 text-primary" />
@@ -383,9 +395,13 @@ export default function PublicOutfitPage() {
                   <CheckBadgeIcon className="w-4 h-4 text-primary flex-shrink-0" />
                 )}
               </div>
-              <p className="text-[10px] text-default-400">@{author.username} · {author.followerCount} followers</p>
+              <p className="text-[10px] text-default-400">
+                @{author.username} · {author.followerCount} followers
+              </p>
               {author.bio && (
-                <p className="text-xs text-default-500 mt-1 line-clamp-2">{author.bio}</p>
+                <p className="text-xs text-default-500 mt-1 line-clamp-2">
+                  {author.bio}
+                </p>
               )}
             </div>
             {!isOwnProfile && (
@@ -396,7 +412,11 @@ export default function PublicOutfitPage() {
                 radius="none"
                 size="sm"
                 startContent={
-                  isFollowing ? <UserMinusIcon className="w-3.5 h-3.5" /> : <UserPlusIcon className="w-3.5 h-3.5" />
+                  isFollowing ? (
+                    <UserMinusIcon className="w-3.5 h-3.5" />
+                  ) : (
+                    <UserPlusIcon className="w-3.5 h-3.5" />
+                  )
                 }
                 variant={isFollowing ? "bordered" : "solid"}
                 onPress={handleFollow}
@@ -411,7 +431,7 @@ export default function PublicOutfitPage() {
       {/* Comments */}
       {outfit.allowComments && (
         <div className="mt-12 pt-8 border-t border-default-200">
-          <CommentSection targetType="outfit" targetId={outfit.id} />
+          <CommentSection targetId={outfit.id} targetType="outfit" />
         </div>
       )}
     </div>

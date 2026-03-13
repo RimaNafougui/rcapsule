@@ -63,8 +63,6 @@ export async function POST(req: Request) {
       });
 
     if (error) {
-      console.error("Upload error:", error);
-
       return NextResponse.json(
         { error: "Failed to upload file" },
         { status: 500 },
@@ -80,8 +78,6 @@ export async function POST(req: Request) {
       path: fileName,
     });
   } catch (error) {
-    console.error("Error uploading file:", error);
-
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 },
@@ -114,8 +110,6 @@ export async function DELETE(req: Request) {
       .remove([path]);
 
     if (error) {
-      console.error("Delete error:", error);
-
       return NextResponse.json(
         { error: "Failed to delete file" },
         { status: 500 },
@@ -124,8 +118,6 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting file:", error);
-
     return NextResponse.json(
       { error: "Failed to delete file" },
       { status: 500 },

@@ -67,13 +67,11 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="text-default-500 text-sm leading-relaxed max-w-sm">
-              The social network for fashion. Discover real outfits from real people, share your style, and build a wardrobe with intention.
+              The social network for fashion. Discover real outfits from real
+              people, share your style, and build a wardrobe with intention.
             </p>
 
-            <div
-              className="flex gap-2 max-w-sm mt-2 items-end"
-              onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && handleSubscribe()}
-            >
+            <div className="flex gap-2 max-w-sm mt-2 items-end" role="group">
               <DSInput
                 placeholder="Enter your email"
                 size="sm"

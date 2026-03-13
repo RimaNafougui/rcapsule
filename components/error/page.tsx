@@ -31,7 +31,7 @@ export default function Error({
         </div>
 
         <p className="text-sm text-default-500">
-          We've been notified and are looking into it. Please try again.
+          We&apos;ve been notified and are looking into it. Please try again.
         </p>
 
         {process.env.NODE_ENV === "development" && (

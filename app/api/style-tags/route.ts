@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
-import { publicLimiter, getIdentifier, rateLimitResponse } from "@/lib/ratelimit";
+import {
+  publicLimiter,
+  getIdentifier,
+  rateLimitResponse,
+} from "@/lib/ratelimit";
 
 export async function GET(req: Request) {
   const identifier = getIdentifier(req);
@@ -31,8 +35,9 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ tags: tags || [], grouped });
   } catch (error) {
-    console.error("Error fetching style tags:", error);
-
-    return NextResponse.json({ error: "Failed to fetch style tags" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch style tags" },
+      { status: 500 },
+    );
   }
 }

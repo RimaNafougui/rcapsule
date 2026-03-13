@@ -46,8 +46,6 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
-
       return NextResponse.json(
         { error: "Failed to send email" },
         { status: 500 },
@@ -56,11 +54,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Newsletter subscription error:", err);
-
-    return NextResponse.json(
-      { error: "Failed to subscribe" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
   }
 }

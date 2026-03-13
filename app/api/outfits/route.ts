@@ -48,8 +48,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json(transformedOutfits);
   } catch (error) {
-    console.error("Error fetching outfits:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch outfits" },
       { status: 500 },
@@ -130,15 +128,11 @@ export async function POST(req: Request) {
         .from("WardrobeOutfit")
         .insert(wardrobeOutfits);
 
-      if (wardrobeError) {
-        console.error("Error adding outfit to wardrobes:", wardrobeError);
-      }
+      if (wardrobeError) { /* non-critical: wardrobe association failed */ }
     }
 
     return NextResponse.json(outfit, { status: 201 });
   } catch (error) {
-    console.error("Error creating outfit:", error);
-
     return NextResponse.json(
       { error: "Failed to create outfit" },
       { status: 500 },

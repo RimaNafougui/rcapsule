@@ -377,7 +377,11 @@ export default function CreateOutfitPage() {
       } else {
         const error = await response.json();
 
-        const msg = typeof error.error === "string" ? error.error : "Failed to create outfit";
+        const msg =
+          typeof error.error === "string"
+            ? error.error
+            : "Failed to create outfit";
+
         toast.error(msg);
       }
     } catch (error) {

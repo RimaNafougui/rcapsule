@@ -765,8 +765,8 @@ export default function NewItemPage() {
                 )}
 
                 <p className="text-xs text-default-400">
-                  Use tags to organize and search your items (e.g., "vintage",
-                  "investment piece", "needs repair")
+                  Use tags to organize and search your items (e.g., &quot;vintage&quot;,
+                  &quot;investment piece&quot;, &quot;needs repair&quot;)
                 </p>
               </div>
             </Tab>

@@ -77,12 +77,6 @@ export default function ClosetPage() {
   // Combine session loading and data loading
   const isLoading = status === "loading" || swrLoading;
 
-  if (status === "unauthenticated") {
-    router.push("/login");
-
-    return null; // Prevent flash of content
-  }
-
   // --- Logic: Derived Data ---
   const availableBrands = useMemo(() => {
     const brands = clothes
@@ -240,6 +234,12 @@ export default function ClosetPage() {
       ([, itemsA], [, itemsB]) => itemsB.length - itemsA.length,
     );
   }, [sortedClothes]);
+
+  if (status === "unauthenticated") {
+    router.push("/login");
+
+    return null; // Prevent flash of content
+  }
 
   const handleItemClick = (itemId: string) => {
     Sentry.addBreadcrumb({

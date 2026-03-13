@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import useSWR from "swr";
 import {
   Accordion,
@@ -278,10 +279,12 @@ export default function AdminCatalogPage() {
                   <Card key={p.id} className="overflow-hidden group">
                     <div className="relative aspect-[3/4] bg-content2">
                       {p.imageurl ? (
-                        <img
+                        <Image
+                          unoptimized
                           alt={p.name}
                           className="w-full h-full object-contain"
                           src={p.imageurl}
+                          fill
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">

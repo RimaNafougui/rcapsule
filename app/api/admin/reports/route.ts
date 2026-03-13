@@ -63,8 +63,6 @@ export async function GET(req: Request) {
       offset,
     });
   } catch (error) {
-    console.error("Error fetching reports:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch reports" },
       { status: 500 },

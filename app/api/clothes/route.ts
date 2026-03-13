@@ -100,7 +100,6 @@ export async function GET(req: Request) {
           return NextResponse.json(clothes || []);
         }
       } catch (error) {
-        console.error("Error fetching clothes:", error);
         const session = await auth();
         const { searchParams } = new URL(req.url);
         const wardrobeId = searchParams.get("wardrobeId");
@@ -212,9 +211,7 @@ export async function POST(req: Request) {
         .from("WardrobeClothes")
         .insert(wardrobeEntries);
 
-      if (junctionError) {
-        console.error("Error adding to wardrobes:", junctionError);
-      }
+      if (junctionError) { /* error is non-critical; wardrobe association failed */ }
     }
 
     const { data: clothingWithWardrobes } = await supabase
@@ -240,7 +237,6 @@ export async function POST(req: Request) {
       status: 201,
     });
   } catch (error) {
-    console.error("Error creating clothing:", error);
     const session = await auth();
 
     Sentry.captureException(error, {

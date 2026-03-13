@@ -227,8 +227,7 @@ export async function GET(req: Request) {
       .insert(recommendationsToStore);
 
     if (insertError) {
-      console.error("Failed to store recommendation:", insertError);
-      // We log the error but return the data so the user still sees the outfit
+      // We still return the data so the user sees the outfit even if storage failed
     }
 
     // Calculate remaining recommendations
@@ -245,8 +244,6 @@ export async function GET(req: Request) {
       remaining: Math.max(0, remaining),
     });
   } catch (error) {
-    console.error("Recommendation error:", error);
-
     return NextResponse.json(
       {
         error: "Failed to generate recommendation",
@@ -423,9 +420,7 @@ export async function POST(req: Request) {
         expiresat: new Date(new Date().setHours(23, 59, 59, 999)).toISOString(), // Lowercase
       });
 
-    if (insertError) {
-      console.error("Failed to store recommendation:", insertError);
-    }
+    if (insertError) { /* non-critical: storage failed, return data anyway */ }
 
     const remaining = DAILY_LIMIT - (usageCount ?? 0) - 1;
 
@@ -440,8 +435,6 @@ export async function POST(req: Request) {
       remaining: Math.max(0, remaining),
     });
   } catch (error) {
-    console.error("Recommendation error:", error);
-
     return NextResponse.json(
       {
         error: "Failed to generate recommendation",

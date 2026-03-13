@@ -77,7 +77,8 @@ export default function CatalogItemPage({
           price: product.originalprice ?? undefined,
           condition: "new",
           status: "wishlist",
-          imageUrl: product.processed_image_url || product.imageurl || undefined,
+          imageUrl:
+            product.processed_image_url || product.imageurl || undefined,
           link: product.retaillink || undefined,
           materials: product.materials || undefined,
           description: product.description || undefined,
@@ -91,7 +92,11 @@ export default function CatalogItemPage({
       } else {
         const err = await res.json();
 
-        const msg = typeof err.error === "string" ? err.error : "Failed to add to wishlist";
+        const msg =
+          typeof err.error === "string"
+            ? err.error
+            : "Failed to add to wishlist";
+
         toast.error(msg);
       }
     } catch {

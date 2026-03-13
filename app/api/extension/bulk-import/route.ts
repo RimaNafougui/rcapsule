@@ -173,8 +173,6 @@ export async function POST(req: Request) {
       { headers: corsHeaders(origin) },
     );
   } catch (error) {
-    console.error("Bulk import error:", error);
-
     return NextResponse.json(
       { error: "Server Exception", details: String(error) },
       { status: 500, headers: corsHeaders(req.headers.get("origin") || "") },

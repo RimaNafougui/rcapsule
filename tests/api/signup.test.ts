@@ -37,6 +37,7 @@ function makeChain(data: unknown, error: unknown = null) {
   chain.eq     = vi.fn().mockReturnValue(chain);
   chain.single = resolve;
   chain.insert = vi.fn().mockResolvedValue({ data, error });
+  chain.update = vi.fn().mockReturnValue(chain);
   return chain;
 }
 
@@ -65,8 +66,8 @@ describe("POST /api/auth/signup", () => {
     it("returns 400 when username is too short (< 3 chars)", async () => {
       const res = await POST(makeRequest({ email: "test@test.com", password: "Passw0rd!", username: "ab" }));
       expect(res.status).toBe(400);
-      const body = await res.json() as { error: { fieldErrors: { username?: string[] } } };
-      expect(body.error.fieldErrors.username?.[0]).toMatch(/3-30/);
+      const body = await res.json() as { error: string };
+      expect(body.error).toMatch(/3-30/);
     });
 
     it("returns 400 when username is too long (> 30 chars)", async () => {
@@ -77,8 +78,8 @@ describe("POST /api/auth/signup", () => {
     it("returns 400 when username contains invalid characters", async () => {
       const res = await POST(makeRequest({ email: "test@test.com", password: "Passw0rd!", username: "bad user!" }));
       expect(res.status).toBe(400);
-      const body = await res.json() as { error: { fieldErrors: { username?: string[] } } };
-      expect(body.error.fieldErrors.username?.[0]).toMatch(/letters, numbers/);
+      const body = await res.json() as { error: string };
+      expect(body.error).toMatch(/letters, numbers/);
     });
 
     it("returns 400 when username starts with a dash", async () => {
@@ -116,12 +117,12 @@ describe("POST /api/auth/signup", () => {
 
     it("returns 201 on successful signup", async () => {
       // First call: username check (not taken)
-      // Second call: user record check (found in DB)
+      // Second call: user record select (found — trigger created it)
+      // Third call: update to patch in username
       mockFrom
-        .mockReturnValueOnce(makeChain(null, { code: "PGRST116" }))      // username ilike check
-        .mockReturnValueOnce(makeChain(                                    // user record select
-          { id: "new-id", email: "test@test.com", name: null, username: "newuser" },
-        ));
+        .mockReturnValueOnce(makeChain(null, { code: "PGRST116" }))   // username ilike check
+        .mockReturnValueOnce(makeChain({ id: "new-id" }))              // existingRecord select
+        .mockReturnValueOnce(makeChain(null));                          // update username
 
       mockSignUp.mockResolvedValue({
         data: { user: { id: "new-id", email: "test@test.com" } },

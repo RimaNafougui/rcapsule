@@ -30,7 +30,10 @@ export async function PATCH(
     const result = editSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: result.error.flatten() },
+        { status: 400 },
+      );
     }
 
     const supabase = getSupabaseServer();
@@ -58,7 +61,8 @@ export async function PATCH(
         updatedAt: new Date().toISOString(),
       })
       .eq("id", id)
-      .select(`
+      .select(
+        `
         id,
         content,
         "parentId",
@@ -66,16 +70,18 @@ export async function PATCH(
         "isEdited",
         "createdAt",
         author:User!userId(id, username, name, image, "isVerified")
-      `)
+      `,
+      )
       .single();
 
     if (error) throw error;
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("Error editing comment:", error);
-
-    return NextResponse.json({ error: "Failed to edit comment" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to edit comment" },
+      { status: 500 },
+    );
   }
 }
 
@@ -119,8 +125,9 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting comment:", error);
-
-    return NextResponse.json({ error: "Failed to delete comment" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete comment" },
+      { status: 500 },
+    );
   }
 }

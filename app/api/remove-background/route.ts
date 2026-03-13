@@ -118,7 +118,6 @@ export async function POST(req: Request) {
     if (!lambdaResponse.ok) {
       const error = await lambdaResponse.json();
 
-      console.error("Lambda error:", error);
       throw new Error(error.error || "Background removal failed");
     }
 
@@ -129,8 +128,6 @@ export async function POST(req: Request) {
       success: data.success,
     });
   } catch (error) {
-    console.error("Remove background error:", error);
-
     return NextResponse.json(
       {
         error:

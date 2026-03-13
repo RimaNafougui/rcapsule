@@ -25,7 +25,7 @@ export default function RefundPolicyPage() {
           </h2>
           <p className="text-default-600">
             At rcapsule, we want you to be completely satisfied with your
-            Premium subscription. If you're not happy with your purchase, we
+            Premium subscription. If you&apos;re not happy with your purchase, we
             offer a straightforward refund policy to ensure your peace of mind.
           </p>
         </section>
@@ -36,7 +36,7 @@ export default function RefundPolicyPage() {
             7-Day Money-Back Guarantee
           </h2>
           <p className="text-default-600 mb-4">
-            If you're not satisfied with rcapsule Premium for any reason, you
+            If you&apos;re not satisfied with rcapsule Premium for any reason, you
             may request a full refund within <strong>7 days</strong> of your
             initial purchase. No questions asked.
           </p>
@@ -66,7 +66,7 @@ export default function RefundPolicyPage() {
               >
                 nafouguirima@gmail.com
               </a>{" "}
-              with the subject line "Refund Request"
+              with the subject line &quot;Refund Request&quot;
             </li>
             <li>
               Include your account email address and reason for the refund
@@ -83,7 +83,7 @@ export default function RefundPolicyPage() {
           </h2>
           <p className="text-default-600 mb-4">
             You may cancel your Premium subscription at any time through your
-            account settings. Here's what happens when you cancel:
+            account settings. Here&apos;s what happens when you cancel:
           </p>
           <ul className="list-disc list-inside text-default-600 space-y-2">
             <li>
@@ -168,7 +168,7 @@ export default function RefundPolicyPage() {
             Questions?
           </h2>
           <p className="text-default-600 mb-4">
-            If you have any questions about our refund policy, please don't
+            If you have any questions about our refund policy, please don&apos;t
             hesitate to reach out:
           </p>
           <div className="space-y-2 text-default-600">

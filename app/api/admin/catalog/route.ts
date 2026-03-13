@@ -55,8 +55,6 @@ export async function GET(req: Request) {
       offset,
     });
   } catch (error) {
-    console.error("Error fetching admin catalog:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch catalog" },
       { status: 500 },
@@ -137,8 +135,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error("Error creating product:", error);
-
     return NextResponse.json(
       { error: "Failed to create product" },
       { status: 500 },

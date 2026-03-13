@@ -86,7 +86,8 @@ function LoginFormContent() {
 
       {signupSuccess && (
         <div className="p-3 text-xs bg-success-50 border border-success-200 text-success-700 rounded-xl text-center">
-          Account created! Check your email and click the link to verify, then sign in here.
+          Account created! Check your email and click the link to verify, then
+          sign in here.
         </div>
       )}
 

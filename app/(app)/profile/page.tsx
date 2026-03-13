@@ -26,16 +26,12 @@ import { toast } from "sonner";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import { useUser } from "@/lib/contexts/UserContext";
-
-// Import Visualization Components
 import { ColorPalette } from "@/components/closet/ColorPalette";
 import { StatsCard } from "@/components/analytics/StatsCard";
 import CalendarTracker from "@/components/calendar/CalendarTracker";
 import OutfitRecommendation from "@/components/outfit/OutfitRecommendation";
 import LocationSettings from "@/components/settings/LocationSettings";
 import WeatherWidget from "@/components/weather/WeatherWidget";
-
-// Analytics
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { OverviewDashboard } from "@/components/analytics/OverviewDashboard";
 import { CategoryBreakdown } from "@/components/analytics/CategoryBreakdown";
@@ -387,7 +383,7 @@ export default function ProfilePage() {
                           startContent={<SparklesIcon className="w-5 h-5" />}
                           onPress={() => setShowRecommendation(true)}
                         >
-                          Curate Today's Look
+                          Curate Today&apos;s Look
                         </Button>
                       </div>
                     </div>

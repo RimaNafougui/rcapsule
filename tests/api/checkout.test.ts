@@ -10,6 +10,8 @@ vi.mock("stripe", () => {
   function FakeStripe(this: any) {
     this.checkout = { sessions: { create: stripeMocks.createSession } };
   }
+  class StripeError extends Error {}
+  (FakeStripe as any).errors = { StripeError };
   return { default: FakeStripe };
 });
 

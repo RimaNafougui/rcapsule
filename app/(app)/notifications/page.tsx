@@ -129,7 +129,9 @@ export default function NotificationsPage() {
     );
     setUnreadCount((prev) => Math.max(0, prev - 1));
 
-    await fetch(`/api/notifications/${id}`, { method: "PATCH" }).catch(() => {});
+    await fetch(`/api/notifications/${id}`, { method: "PATCH" }).catch(
+      () => {},
+    );
   };
 
   if (status === "loading" || loading) {
@@ -148,7 +150,9 @@ export default function NotificationsPage() {
             Notifications
           </h1>
           {unreadCount > 0 && (
-            <p className="text-default-500 text-sm mt-1">{unreadCount} unread</p>
+            <p className="text-default-500 text-sm mt-1">
+              {unreadCount} unread
+            </p>
           )}
         </div>
         {unreadCount > 0 && (
@@ -177,9 +181,9 @@ export default function NotificationsPage() {
       ) : (
         <div className="space-y-1">
           {notifications.map((notif) => (
-            <div
+            <button
               key={notif.id}
-              className={`flex items-start gap-4 p-4 border transition-colors cursor-pointer ${
+              className={`w-full text-left flex items-start gap-4 p-4 border transition-colors ${
                 notif.isRead
                   ? "border-default-200 bg-background"
                   : "border-default-300 bg-default-50"
@@ -200,7 +204,10 @@ export default function NotificationsPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   {notif.actor && (
-                    <Link href={`/u/${notif.actor.username}`} onClick={(e) => e.stopPropagation()}>
+                    <Link
+                      href={`/u/${notif.actor.username}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Avatar
                         className="w-6 h-6"
                         name={notif.actor.name || notif.actor.username}
@@ -208,7 +215,9 @@ export default function NotificationsPage() {
                       />
                     </Link>
                   )}
-                  <p className={`text-sm ${notif.isRead ? "text-default-600" : "text-foreground font-medium"}`}>
+                  <p
+                    className={`text-sm ${notif.isRead ? "text-default-600" : "text-foreground font-medium"}`}
+                  >
                     {getNotifText(notif)}
                   </p>
                 </div>
@@ -221,7 +230,7 @@ export default function NotificationsPage() {
               {!notif.isRead && (
                 <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
               )}
-            </div>
+            </button>
           ))}
         </div>
       )}

@@ -3,7 +3,12 @@ import { z } from "zod";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
-import { apiLimiter, publicLimiter, getIdentifier, rateLimitResponse } from "@/lib/ratelimit";
+import {
+  apiLimiter,
+  publicLimiter,
+  getIdentifier,
+  rateLimitResponse,
+} from "@/lib/ratelimit";
 
 const createSchema = z.object({
   targetType: z.enum(["outfit", "wardrobe"]),
@@ -26,14 +31,22 @@ export async function GET(req: Request) {
     const offset = parseInt(searchParams.get("offset") || "0");
 
     if (!targetType || !targetId) {
-      return NextResponse.json({ error: "Missing targetType or targetId" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing targetType or targetId" },
+        { status: 400 },
+      );
     }
 
     const supabase = getSupabaseServer();
 
-    const { data: comments, error, count } = await supabase
+    const {
+      data: comments,
+      error,
+      count,
+    } = await supabase
       .from("Comment")
-      .select(`
+      .select(
+        `
         id,
         content,
         "parentId",
@@ -41,7 +54,9 @@ export async function GET(req: Request) {
         "isEdited",
         "createdAt",
         author:User!userId(id, username, name, image, "isVerified")
-      `, { count: "exact" })
+      `,
+        { count: "exact" },
+      )
       .eq("targetType", targetType)
       .eq("targetId", targetId)
       .eq("isHidden", false)
@@ -52,9 +67,10 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ comments: comments || [], total: count || 0 });
   } catch (error) {
-    console.error("Error fetching comments:", error);
-
-    return NextResponse.json({ error: "Failed to fetch comments" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch comments" },
+      { status: 500 },
+    );
   }
 }
 
@@ -75,7 +91,10 @@ export async function POST(req: Request) {
     const result = createSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: result.error.flatten() },
+        { status: 400 },
+      );
     }
 
     const { targetType, targetId, content, parentId } = result.data;
@@ -94,7 +113,10 @@ export async function POST(req: Request) {
     }
 
     if (!target.allowComments) {
-      return NextResponse.json({ error: "Comments are disabled" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Comments are disabled" },
+        { status: 403 },
+      );
     }
 
     if (!target.isPublic && target.userId !== session.user.id) {
@@ -111,7 +133,8 @@ export async function POST(req: Request) {
         content,
         parentId: parentId || null,
       })
-      .select(`
+      .select(
+        `
         id,
         content,
         "parentId",
@@ -119,7 +142,8 @@ export async function POST(req: Request) {
         "isEdited",
         "createdAt",
         author:User!userId(id, username, name, image, "isVerified")
-      `)
+      `,
+      )
       .single();
 
     if (commentError) throw commentError;
@@ -140,8 +164,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json(comment, { status: 201 });
   } catch (error) {
-    console.error("Error creating comment:", error);
-
-    return NextResponse.json({ error: "Failed to create comment" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create comment" },
+      { status: 500 },
+    );
   }
 }

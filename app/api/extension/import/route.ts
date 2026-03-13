@@ -107,7 +107,6 @@ export async function POST(req: Request) {
           .single();
 
         if (gpError) {
-          console.error("GlobalProduct insert error:", gpError);
           // Non-blocking — still save the clothing item
         } else {
           globalProductId = newProduct.id;
@@ -139,8 +138,6 @@ export async function POST(req: Request) {
       .single();
 
     if (error) {
-      console.error("Clothes insert error:", error);
-
       return NextResponse.json(
         { error: "Database Error", details: error.message },
         { status: 500, headers: corsHeaders(origin) },
@@ -152,8 +149,6 @@ export async function POST(req: Request) {
       { headers: corsHeaders(origin) },
     );
   } catch (error) {
-    console.error("Server Error:", error);
-
     return NextResponse.json(
       { error: "Server Exception", details: String(error) },
       { status: 500, headers: corsHeaders(req.headers.get("origin") || "") },

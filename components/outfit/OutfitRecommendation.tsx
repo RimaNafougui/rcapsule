@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Button,
   Modal,
@@ -335,10 +336,12 @@ export default function OutfitRecommendation({
               >
                 <div className="relative group cursor-pointer w-28 md:w-32 aspect-[3/4] border border-default-200 bg-content2 hover:border-default-900 transition-colors">
                   {item.imageUrl ? (
-                    <img
+                    <Image
+                      unoptimized
                       alt={item.name}
                       className="w-full h-full object-cover p-1"
                       src={item.imageUrl}
+                      fill
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-[10px] uppercase text-default-300">
@@ -361,10 +364,10 @@ export default function OutfitRecommendation({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
-                Stylist's Notes
+                Stylist&apos;s Notes
               </h4>
               <p className="text-sm font-serif italic leading-relaxed text-default-700">
-                "{currentRecommendation.reasoning}"
+                &quot;{currentRecommendation.reasoning}&quot;
               </p>
             </div>
 
@@ -466,10 +469,12 @@ export default function OutfitRecommendation({
                 <div key={item.id} className="text-center group">
                   <div className="aspect-[3/4] mx-auto mb-3 border border-default-200 p-1 bg-content2 relative">
                     {item.imageUrl && (
-                      <img
+                      <Image
+                        unoptimized
                         alt={item.name}
                         className="w-full h-full object-cover"
                         src={item.imageUrl}
+                        fill
                       />
                     )}
                   </div>

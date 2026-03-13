@@ -104,8 +104,6 @@ export async function GET(_req: Request) {
       itemsByCategory,
     });
   } catch (error) {
-    console.error("Error fetching admin stats:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch stats" },
       { status: 500 },

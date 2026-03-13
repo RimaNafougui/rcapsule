@@ -78,8 +78,6 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error changing password:", error);
-
     return NextResponse.json(
       { error: getErrorMessage(error) || "Failed to change password" },
       { status: 500 },

@@ -146,7 +146,9 @@ export default function SignUpForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(typeof data.error === "string" ? data.error : "Something went wrong");
+        setError(
+          typeof data.error === "string" ? data.error : "Something went wrong",
+        );
         setIsLoading(false);
 
         return;

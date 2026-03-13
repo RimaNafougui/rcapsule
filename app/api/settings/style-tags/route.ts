@@ -26,20 +26,27 @@ export async function PATCH(req: Request) {
     const result = schema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: result.error.flatten() },
+        { status: 400 },
+      );
     }
 
     const supabase = getSupabaseServer();
 
     await supabase
       .from("User")
-      .update({ styleTags: result.data.styleTags, updatedAt: new Date().toISOString() })
+      .update({
+        styleTags: result.data.styleTags,
+        updatedAt: new Date().toISOString(),
+      })
       .eq("id", session.user.id);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error saving style tags:", error);
-
-    return NextResponse.json({ error: "Failed to save style tags" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to save style tags" },
+      { status: 500 },
+    );
   }
 }

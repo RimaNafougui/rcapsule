@@ -56,8 +56,6 @@ export async function GET(req: Request) {
       offset,
     });
   } catch (error) {
-    console.error("Error fetching admin users:", error);
-
     return NextResponse.json(
       { error: "Failed to fetch users" },
       { status: 500 },

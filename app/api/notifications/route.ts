@@ -26,7 +26,8 @@ export async function GET(req: Request) {
 
     let query = supabase
       .from("Notification")
-      .select(`
+      .select(
+        `
         id,
         type,
         "isRead",
@@ -35,7 +36,9 @@ export async function GET(req: Request) {
         "targetId",
         "createdAt",
         actor:User!actorId(id, username, name, image)
-      `, { count: "exact" })
+      `,
+        { count: "exact" },
+      )
       .eq("userId", session.user.id)
       .order("createdAt", { ascending: false })
       .range(offset, offset + limit - 1);
@@ -61,9 +64,10 @@ export async function GET(req: Request) {
       unreadCount: unreadCount || 0,
     });
   } catch (error) {
-    console.error("Error fetching notifications:", error);
-
-    return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch notifications" },
+      { status: 500 },
+    );
   }
 }
 
@@ -90,8 +94,9 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error marking notifications read:", error);
-
-    return NextResponse.json({ error: "Failed to update notifications" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update notifications" },
+      { status: 500 },
+    );
   }
 }
