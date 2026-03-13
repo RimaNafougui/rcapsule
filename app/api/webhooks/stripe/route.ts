@@ -3,6 +3,8 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 import { cacheGet, cacheSet } from "@/lib/redis";
+import { resend, FROM_EMAIL } from "@/lib/resend";
+import { PremiumWelcome } from "@/emails/PremiumWelcome";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-12-15.clover",
@@ -101,6 +103,28 @@ export async function POST(request: NextRequest) {
           await stripe.subscriptions.retrieve(subscriptionId);
 
         await updateSubscription(userId, subscription, customerId);
+
+        // Send premium welcome email
+        const customerEmail =
+          typeof session.customer_details?.email === "string"
+            ? session.customer_details.email
+            : null;
+        const customerName =
+          typeof session.customer_details?.name === "string"
+            ? session.customer_details.name
+            : undefined;
+
+        if (customerEmail) {
+          resend.emails
+            .send({
+              from: FROM_EMAIL,
+              to: customerEmail,
+              subject: "Welcome to Rcapsule Premium",
+              react: PremiumWelcome({ email: customerEmail, name: customerName }),
+            })
+            .catch((err) => console.error("Failed to send premium welcome email:", err));
+        }
+
         break;
       }
 

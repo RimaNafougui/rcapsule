@@ -1,6 +1,7 @@
 "use client";
+import { useState } from "react";
 import { Link, Divider } from "@heroui/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Loader } from "lucide-react";
 import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 
 import { Logo } from "@/components/ui/logo";
@@ -9,6 +10,25 @@ import { Container } from "@/components/ui/container";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubscribe = async () => {
+    if (!email || status === "loading" || status === "success") return;
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      setStatus(res.ok ? "success" : "error");
+    } catch {
+      setStatus("error");
+    }
+  };
 
   const footerLinks = [
     {
@@ -51,17 +71,36 @@ export default function Footer() {
 
             <div className="flex gap-2 max-w-sm mt-2 items-end">
               <DSInput
+                disabled={status === "success"}
                 placeholder="Enter your email"
                 size="sm"
+                type="email"
+                value={email}
                 variant="underline"
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
               />
               <button
                 aria-label="Subscribe"
-                className="p-2 hover:bg-default-100 transition-colors duration-200"
+                className="p-2 hover:bg-default-100 transition-colors duration-200 disabled:opacity-40"
+                disabled={status === "loading" || status === "success"}
+                onClick={handleSubscribe}
               >
-                <ArrowRight size={18} />
+                {status === "loading" ? (
+                  <Loader className="animate-spin" size={18} />
+                ) : status === "success" ? (
+                  <Check className="text-success" size={18} />
+                ) : (
+                  <ArrowRight size={18} />
+                )}
               </button>
             </div>
+            {status === "error" && (
+              <p className="text-danger text-xs mt-1">Something went wrong. Try again.</p>
+            )}
+            {status === "success" && (
+              <p className="text-success text-xs mt-1">You&apos;re on the list!</p>
+            )}
           </div>
 
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
