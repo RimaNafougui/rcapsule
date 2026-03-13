@@ -8,9 +8,11 @@ const baseUrl = "https://rcapsule.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Only public-facing marketing pages — never auth-protected routes
+  const now = new Date();
+
   const navRoutes = siteConfig.marketingNavItems.map((item) => ({
     url: `${baseUrl}${item.href}`,
-    lastModified: new Date().toISOString(),
+    lastModified: now,
     changeFrequency: "monthly" as const,
     priority: item.href === "/pricing" ? 0.9 : 0.7,
   }));
@@ -23,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/refund-policy",
   ].map((path) => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date().toISOString(),
+    lastModified: now,
     changeFrequency: "monthly" as const,
     priority: path === "/about" || path === "/contact" ? 0.6 : 0.4,
   }));
@@ -31,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes = [
     {
       url: baseUrl,
-      lastModified: new Date().toISOString(),
+      lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 1.0,
     },
@@ -55,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     profileRoutes = (users || []).map(
       (user: { username: string; updatedAt: string }) => ({
         url: `${baseUrl}/u/${user.username}`,
-        lastModified: user.updatedAt || new Date().toISOString(),
+        lastModified: user.updatedAt ? new Date(user.updatedAt) : now,
         changeFrequency: "weekly" as const,
         priority: 0.6,
       }),

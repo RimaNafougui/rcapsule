@@ -1,4 +1,16 @@
+import { Metadata } from "next";
 import { Divider } from "@heroui/react";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "We believe a great wardrobe isn't about having more clothes — it's about knowing exactly what you have, where it is, and how to wear it.",
+  openGraph: {
+    title: "About | Rcapsule",
+    description:
+      "We believe a great wardrobe isn't about having more clothes — it's about knowing exactly what you have, where it is, and how to wear it.",
+  },
+};
 
 export default function AboutPage() {
   return (

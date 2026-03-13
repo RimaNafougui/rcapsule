@@ -81,7 +81,7 @@ export default function FeaturesPage() {
       </motion.div>
 
       <div className="flex justify-center">
-        <DSButton as={Link} href="/closet" size="lg" variant="primary">
+        <DSButton as={Link} href="/signup" size="lg" variant="primary">
           Start Digitizing
         </DSButton>
       </div>

@@ -31,16 +31,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!user) {
     return {
-      title: "Profile Not Found | Wardrobe OS",
+      title: "Profile Not Found | Rcapsule",
       description: "This profile doesn't exist or is private.",
     };
   }
 
   const displayName = user.name || `@${user.username}`;
-  const title = `${displayName} | Wardrobe OS`;
+  const title = `${displayName} | Rcapsule`;
   const description =
     user.bio ||
-    `Check out ${displayName}'s wardrobe and outfit inspiration on Wardrobe OS.`;
+    `Check out ${displayName}'s wardrobe and outfit inspiration on Rcapsule.`;
 
   const ogImage = user.coverImage || user.image || "/og-default.png";
 
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: `${displayName}'s profile`,
         },
       ],
-      siteName: "Wardrobe OS",
+      siteName: "Rcapsule",
     },
     twitter: {
       card: "summary_large_image",

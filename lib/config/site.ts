@@ -26,10 +26,6 @@ export const siteConfig = {
       label: "Pricing",
       href: "/pricing",
     },
-    {
-      label: "Catalog",
-      href: "/catalog",
-    },
   ],
   /** Profile dropdown items (logged in) */
   profileDropdownItems: [

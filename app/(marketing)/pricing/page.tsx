@@ -61,8 +61,51 @@ export default function PricingPage() {
     }
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How does the AI work?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Our AI analyzes your clothing items, local weather data, and style preferences to generate cohesive outfits. It learns what you like the more you log your daily looks.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I cancel anytime?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes! You can cancel your subscription at any time. You'll continue to have access to premium features until the end of your billing period.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I export my data?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes. You own your data. You can export your entire wardrobe catalog and usage logs at any time from your account settings.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What's your refund policy?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "We offer a 7-day money-back guarantee. If you're not satisfied with premium features, contact us within 7 days for a full refund.",
+        },
+      },
+    ],
+  };
+
   return (
     <Container className="min-h-screen py-16">
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        type="application/ld+json"
+      />
       <header className="text-center mb-16 pt-8">
         <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-2">
           The Membership
