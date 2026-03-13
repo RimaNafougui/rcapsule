@@ -14,6 +14,7 @@ import {
   ModalContent,
   ModalBody,
   useDisclosure,
+  Image,
 } from "@heroui/react";
 import {
   SparklesIcon,
@@ -22,7 +23,6 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
-import NextImage from "next/image";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import { useUser } from "@/lib/contexts/UserContext";
@@ -285,18 +285,12 @@ export default function ProfilePage() {
                       key={item.id}
                       className="aspect-[3/4] bg-content2 relative group overflow-hidden rounded-md"
                     >
-                      {item.imageUrl ? (
-                        <NextImage
-                          fill
-                          alt={item.name}
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          src={item.imageUrl}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-default-300 text-xs uppercase">
-                          No Image
-                        </div>
-                      )}
+                      <Image
+                        removeWrapper
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        src={item.imageUrl || "/images/placeholder.png"}
+                      />
                       <div className="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                         <p className="text-white text-[10px] uppercase font-bold truncate">
                           {item.name}
