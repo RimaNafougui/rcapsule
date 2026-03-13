@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, Divider } from "@heroui/react";
 import { ArrowRight, Check, Loader } from "lucide-react";
 import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
@@ -11,7 +11,9 @@ import { Container } from "@/components/ui/container";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   const handleSubscribe = async () => {
     if (!email || status === "loading" || status === "success") return;
@@ -69,16 +71,17 @@ export default function Footer() {
               lifestyle. Join the future of fashion management.
             </p>
 
-            <div className="flex gap-2 max-w-sm mt-2 items-end">
+            <div
+              className="flex gap-2 max-w-sm mt-2 items-end"
+              onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && handleSubscribe()}
+            >
               <DSInput
-                disabled={status === "success"}
                 placeholder="Enter your email"
                 size="sm"
                 type="email"
                 value={email}
                 variant="underline"
                 onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
               />
               <button
                 aria-label="Subscribe"
@@ -96,10 +99,14 @@ export default function Footer() {
               </button>
             </div>
             {status === "error" && (
-              <p className="text-danger text-xs mt-1">Something went wrong. Try again.</p>
+              <p className="text-danger text-xs mt-1">
+                Something went wrong. Try again.
+              </p>
             )}
             {status === "success" && (
-              <p className="text-success text-xs mt-1">You&apos;re on the list!</p>
+              <p className="text-success text-xs mt-1">
+                You&apos;re on the list!
+              </p>
             )}
           </div>
 
@@ -163,7 +170,7 @@ export default function Footer() {
             <Link
               isExternal
               color="foreground"
-              href="https://instagram.com/Mercuryy.200"
+              href="https://instagram.com/RimaNafougui"
             >
               <FaInstagram
                 className="hover:text-default-500 transition-colors duration-200"

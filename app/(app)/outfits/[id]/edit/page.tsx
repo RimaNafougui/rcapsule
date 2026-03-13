@@ -354,7 +354,8 @@ export default function EditOutfitPage() {
       } else {
         const err = await response.json();
 
-        toast.error(`Failed: ${err.error}`);
+        const msg = typeof err.error === "string" ? err.error : "Failed to save outfit";
+        toast.error(msg);
       }
     } catch (error) {
       console.error(error);

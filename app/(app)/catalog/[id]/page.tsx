@@ -8,7 +8,9 @@ import NextLink from "next/link";
 import {
   ArrowTopRightOnSquareIcon,
   ArrowLeftIcon,
+  BookmarkIcon,
 } from "@heroicons/react/24/outline";
+import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -32,6 +34,8 @@ export default function CatalogItemPage({
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imgError, setImgError] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   const { data: product, isLoading } = useSWR<GlobalProduct>(
     `/api/catalog/${id}`,
@@ -50,6 +54,51 @@ export default function CatalogItemPage({
   const handleAddSuccess = () => {
     toast.success("Added to your closet!");
     onClose();
+  };
+
+  const handleAddToWishlist = async () => {
+    if (status !== "authenticated") {
+      router.push("/login");
+
+      return;
+    }
+    if (wishlisted || wishlistLoading || !product) return;
+
+    setWishlistLoading(true);
+    try {
+      const res = await fetch("/api/clothes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: product.name,
+          brand: product.brand || undefined,
+          category: product.category,
+          colors: product.colors || [],
+          price: product.originalprice ?? undefined,
+          condition: "new",
+          status: "wishlist",
+          imageUrl: product.processed_image_url || product.imageurl || undefined,
+          link: product.retaillink || undefined,
+          materials: product.materials || undefined,
+          description: product.description || undefined,
+          globalproductid: product.id,
+        }),
+      });
+
+      if (res.ok) {
+        setWishlisted(true);
+        toast.success("Saved to wishlist!");
+      } else {
+        const err = await res.json();
+
+        const msg = typeof err.error === "string" ? err.error : "Failed to add to wishlist";
+        toast.error(msg);
+      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setWishlistLoading(false);
+    }
   };
 
   if (isLoading) {
@@ -225,7 +274,7 @@ export default function CatalogItemPage({
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-2 flex-wrap">
             <Button
               className="uppercase tracking-[0.15em] text-xs px-8 h-12"
               color="primary"
@@ -233,6 +282,24 @@ export default function CatalogItemPage({
               onPress={handleAddToCloset}
             >
               Add to Closet
+            </Button>
+
+            <Button
+              className="uppercase tracking-[0.15em] text-xs h-12 border-default-300"
+              isLoading={wishlistLoading}
+              radius="none"
+              startContent={
+                !wishlistLoading &&
+                (wishlisted ? (
+                  <BookmarkSolidIcon className="w-4 h-4" />
+                ) : (
+                  <BookmarkIcon className="w-4 h-4" />
+                ))
+              }
+              variant={wishlisted ? "flat" : "bordered"}
+              onPress={handleAddToWishlist}
+            >
+              {wishlisted ? "Wishlisted" : "Wishlist"}
             </Button>
 
             {product.retaillink && (
