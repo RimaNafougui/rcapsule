@@ -108,7 +108,7 @@ export default function Footer() {
             <Link
               isExternal
               color="foreground"
-              href="https://github.com/Mercuryy200"
+              href="https://github.com/RimaNafougui"
             >
               <FaGithub
                 className="hover:text-default-500 transition-colors duration-200"

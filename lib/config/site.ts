@@ -47,6 +47,6 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/Mercuryy200/ClosetOrganizer",
+    github: "https://github.com/RimaNafougui/rcapsule",
   },
 };

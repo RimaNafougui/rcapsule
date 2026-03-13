@@ -3,7 +3,7 @@
 A full-stack wardrobe management application that helps you catalog, organize, and create outfit combinations from your clothing collection.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://rcapsule.com)
-[![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/Mercuryy200/ClosetOrganizer)
+[![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/RimaNafougui/rcapsule)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Extension Showcase
@@ -120,27 +120,28 @@ pnpm vitest --coverage  # run with coverage report
 
 **72 tests** across 8 test suites — all passing.
 
-| Suite | Tests | What's covered |
-|-------|------:|----------------|
-| `tests/api/signup.test.ts` | 11 | Input validation, username rules, duplicate checks, successful signup |
-| `tests/api/clothes.test.ts` | 10 | CRUD operations, auth guards, ownership verification, DB errors |
-| `tests/api/catalog.test.ts` | 6 | Product listing, cache hit/miss headers, pagination, search suggestions |
-| `tests/api/checkout.test.ts` | 6 | Auth checks, billing cycle validation, Stripe session creation |
-| `tests/services/ai-recommendations.test.ts` | 10 | Recommendation structure, wardrobe item matching, multi-provider support (OpenAI/Anthropic), error recovery |
-| `tests/services/weather.test.ts` | 10 | Weather context, temp rounding, cold/hot flags, rain/umbrella/layer detection, API fallback |
-| `tests/lib/redis.test.ts` | 10 | Cache get/set/delete, TTL defaults, multi-key delete, error resilience |
-| `tests/lib/ratelimit.test.ts` | 9 | User/IP identifier extraction, 429 responses, Retry-After headers, forwarded-for parsing |
+| Suite                                       | Tests | What's covered                                                                                              |
+| ------------------------------------------- | ----: | ----------------------------------------------------------------------------------------------------------- |
+| `tests/api/signup.test.ts`                  |    11 | Input validation, username rules, duplicate checks, successful signup                                       |
+| `tests/api/clothes.test.ts`                 |    10 | CRUD operations, auth guards, ownership verification, DB errors                                             |
+| `tests/api/catalog.test.ts`                 |     6 | Product listing, cache hit/miss headers, pagination, search suggestions                                     |
+| `tests/api/checkout.test.ts`                |     6 | Auth checks, billing cycle validation, Stripe session creation                                              |
+| `tests/services/ai-recommendations.test.ts` |    10 | Recommendation structure, wardrobe item matching, multi-provider support (OpenAI/Anthropic), error recovery |
+| `tests/services/weather.test.ts`            |    10 | Weather context, temp rounding, cold/hot flags, rain/umbrella/layer detection, API fallback                 |
+| `tests/lib/redis.test.ts`                   |    10 | Cache get/set/delete, TTL defaults, multi-key delete, error resilience                                      |
+| `tests/lib/ratelimit.test.ts`               |     9 | User/IP identifier extraction, 429 responses, Retry-After headers, forwarded-for parsing                    |
 
 **Coverage thresholds** (enforced in `vitest.config.ts`):
 
-| Metric | Threshold |
-|--------|-----------|
-| Lines | 70% |
-| Functions | 70% |
-| Statements | 70% |
-| Branches | 60% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Lines      | 70%       |
+| Functions  | 70%       |
+| Statements | 70%       |
+| Branches   | 60%       |
 
 **Test infrastructure:**
+
 - **MSW** intercepts HTTP calls to OpenAI, Anthropic, and OpenWeather APIs
 - **Vitest `vi.mock`** stubs Supabase, Stripe, Redis, and NextAuth at the module level
 - **Global setup** (`tests/setup.ts`) starts/stops the MSW server and resets handlers between tests
@@ -154,9 +155,9 @@ pnpm vitest --coverage  # run with coverage report
 
 ## Contact
 
-Rima Nafougui - [@Mercuryy200](https://github.com/Mercuryy200)
+Rima Nafougui - [@RimaNafougui](https://github.com/RimaNafougui)
 
-Project Link: [https://github.com/Mercuryy200/ClosetOrganizer](https://github.com/Mercuryy200/ClosetOrganizer)
+Project Link: [https://github.com/RimaNafougui/rcapsule](https://github.com/RimaNafougui/rcapsule)
 
 ## Acknowledgments
 
