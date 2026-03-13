@@ -17,6 +17,13 @@ export async function POST(request: NextRequest) {
 
     const { billingCycle } = await request.json();
 
+    if (billingCycle !== "monthly" && billingCycle !== "yearly") {
+      return NextResponse.json(
+        { error: "Invalid billing cycle" },
+        { status: 400 },
+      );
+    }
+
     // Evaluated at request time so env stubs work in tests and runtime changes
     // (e.g. staging vs prod) are picked up without a redeploy.
     const PRICE_IDS: Record<string, string | undefined> = {
@@ -24,12 +31,14 @@ export async function POST(request: NextRequest) {
       yearly: process.env.STRIPE_PRICE_YEARLY,
     };
 
-    const priceId = PRICE_IDS[billingCycle as string];
+    const priceId = PRICE_IDS[billingCycle];
 
     if (!priceId) {
+      console.error(`Missing Stripe price ID env var for billing cycle: ${billingCycle}`);
+
       return NextResponse.json(
-        { error: "Invalid billing cycle" },
-        { status: 400 },
+        { error: "Checkout unavailable — Stripe price not configured" },
+        { status: 500 },
       );
     }
 
