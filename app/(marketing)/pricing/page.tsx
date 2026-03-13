@@ -33,7 +33,13 @@ export default function PricingPage() {
 
   const handleSubscribe = async (plan: "free" | "premium") => {
     if (plan === "free") {
-      router.push("/closet");
+      router.push(user ? "/closet" : "/signup");
+
+      return;
+    }
+
+    if (!user) {
+      router.push("/login?callbackUrl=/pricing");
 
       return;
     }
@@ -52,7 +58,7 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("No checkout URL returned:", data.error);
+        console.error("No checkout URL returned:", data.error, data.detail ?? "");
       }
     } catch (error) {
       console.error("Checkout error:", error);
