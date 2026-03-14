@@ -32,7 +32,7 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update notification" },
       { status: 500 },

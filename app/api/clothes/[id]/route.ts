@@ -50,7 +50,7 @@ export async function GET(
     }
 
     return NextResponse.json(clothing);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch clothing" },
       { status: 500 },
@@ -188,7 +188,7 @@ export async function PUT(
     );
 
     return NextResponse.json(clothingWithWardrobes || updatedClothing[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update clothing" },
       { status: 500 },
@@ -233,7 +233,7 @@ export async function DELETE(
     );
 
     return NextResponse.json({ message: "Deleted successfully" });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete clothing" },
       { status: 500 },

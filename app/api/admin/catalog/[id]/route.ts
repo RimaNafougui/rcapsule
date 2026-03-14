@@ -35,7 +35,7 @@ export async function GET(
     }
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch product" },
       { status: 500 },
@@ -109,7 +109,7 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update product" },
       { status: 500 },
@@ -144,7 +144,7 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete product" },
       { status: 500 },

@@ -58,7 +58,7 @@ export async function GET(
       recentItems: items ?? [],
       itemCount: itemCount ?? 0,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch user" },
       { status: 500 },
@@ -109,7 +109,7 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update user" },
       { status: 500 },
@@ -148,7 +148,7 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete user" },
       { status: 500 },

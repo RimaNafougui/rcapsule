@@ -83,7 +83,7 @@ export async function GET(
     delete transformedOutfit.WardrobeOutfit;
 
     return NextResponse.json(transformedOutfit);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch outfit" },
       { status: 500 },
@@ -182,7 +182,7 @@ export async function PUT(
     }
 
     return NextResponse.json(outfit);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update outfit" },
       { status: 500 },
@@ -230,7 +230,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete outfit" },
       { status: 500 },

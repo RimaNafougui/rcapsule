@@ -25,7 +25,7 @@ export async function GET() {
     }
 
     return NextResponse.json({ profilePublic: user?.profilePublic || false });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch visibility" },
       { status: 500 },
@@ -56,7 +56,7 @@ export async function PUT(req: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update visibility" },
       { status: 500 },

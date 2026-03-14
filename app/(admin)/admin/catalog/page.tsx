@@ -280,11 +280,11 @@ export default function AdminCatalogPage() {
                     <div className="relative aspect-[3/4] bg-content2">
                       {p.imageurl ? (
                         <Image
+                          fill
                           unoptimized
                           alt={p.name}
                           className="w-full h-full object-contain"
                           src={p.imageurl}
-                          fill
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">

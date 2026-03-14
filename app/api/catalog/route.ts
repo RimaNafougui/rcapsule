@@ -265,7 +265,7 @@ export async function GET(req: Request) {
     await cacheSet(cacheKey, responseBody, 300);
 
     return NextResponse.json(responseBody, { headers: { "X-Cache": "MISS" } });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch catalog" },
       { status: 500 },

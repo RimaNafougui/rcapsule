@@ -419,11 +419,11 @@ export default function CalendarTracker({
               >
                 <div className="w-full md:w-48 h-64 bg-background rounded-xl border border-default-100 shrink-0 overflow-hidden">
                   <Image
+                    fill
                     unoptimized
                     alt={entry.data.name}
                     className="w-full h-full object-cover"
                     src={entry.data.imageUrl ?? ""}
-                    fill
                   />
                 </div>
 
@@ -685,13 +685,14 @@ export default function CalendarTracker({
                 <div className="aspect-[3/4] bg-background rounded-xl border-2 border-dashed border-default-200 flex items-center justify-center overflow-hidden relative">
                   {selectedOutfitId ? (
                     <Image
+                      fill
                       unoptimized
                       alt="Selected outfit"
                       className="w-full h-full object-cover"
                       src={
-                        outfits.find((i) => i.id === selectedOutfitId)?.imageUrl ?? ""
+                        outfits.find((i) => i.id === selectedOutfitId)
+                          ?.imageUrl ?? ""
                       }
-                      fill
                     />
                   ) : (
                     <div className="text-center p-4">

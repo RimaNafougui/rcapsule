@@ -248,9 +248,9 @@ export default function AdminUserDetailPage({
                       unoptimized
                       alt={item.name}
                       className="w-full aspect-square object-cover"
+                      height={200}
                       src={item.imageUrl}
                       width={200}
-                      height={200}
                     />
                   ) : (
                     <div className="w-full aspect-square bg-content2 flex items-center justify-center">

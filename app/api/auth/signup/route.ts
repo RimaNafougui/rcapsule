@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const { data: existingRecord, error: dbError } = await supabase
+    const { data: existingRecord, error: _dbError } = await supabase
       .from("User")
       .select("id")
       .eq("id", authData.user.id)
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
           updatedAt: new Date().toISOString(),
         })
         .eq("id", authData.user.id);
-    } else if (dbError) {
+    } else if (_dbError) {
       // No trigger — insert the row manually
       const { error: insertError } = await supabase.from("User").insert({
         id: authData.user.id,
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 },

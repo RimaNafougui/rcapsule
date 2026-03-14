@@ -25,8 +25,9 @@ export default function RefundPolicyPage() {
           </h2>
           <p className="text-default-600">
             At rcapsule, we want you to be completely satisfied with your
-            Premium subscription. If you&apos;re not happy with your purchase, we
-            offer a straightforward refund policy to ensure your peace of mind.
+            Premium subscription. If you&apos;re not happy with your purchase,
+            we offer a straightforward refund policy to ensure your peace of
+            mind.
           </p>
         </section>
 
@@ -36,8 +37,8 @@ export default function RefundPolicyPage() {
             7-Day Money-Back Guarantee
           </h2>
           <p className="text-default-600 mb-4">
-            If you&apos;re not satisfied with rcapsule Premium for any reason, you
-            may request a full refund within <strong>7 days</strong> of your
+            If you&apos;re not satisfied with rcapsule Premium for any reason,
+            you may request a full refund within <strong>7 days</strong> of your
             initial purchase. No questions asked.
           </p>
           <ul className="list-disc list-inside text-default-600 space-y-2">

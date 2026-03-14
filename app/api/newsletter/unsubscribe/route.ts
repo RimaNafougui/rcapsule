@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (err) {
+  } catch (_err) {
     // Still return success — we don't want to expose internal errors
     // and the user expects to be unsubscribed regardless.
     return NextResponse.json({ success: true });

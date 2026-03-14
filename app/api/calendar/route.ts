@@ -17,7 +17,9 @@ async function updateOutfitStats(
     .eq("outfitId", outfitId)
     .order("wornAt", { ascending: false });
 
-  if (countError) { /* error handled by returning partial data */ }
+  if (countError) {
+    /* error handled by returning partial data */
+  }
 
   // Count unique dates (not individual clothing items)
   const uniqueDates = new Set(
@@ -66,7 +68,9 @@ async function updateClothesStats(supabase: any, clothesIds: string[]) {
       })
       .eq("id", clothesId);
 
-    if (clothesUpdateError) { /* error handled by continuing loop */ }
+    if (clothesUpdateError) {
+      /* error handled by continuing loop */
+    }
 
     const { error: analyticsError } = await supabase
       .from("ClothesAnalytics")
@@ -79,7 +83,9 @@ async function updateClothesStats(supabase: any, clothesIds: string[]) {
         lastCalculatedAt: new Date().toISOString(),
       });
 
-    if (analyticsError) { /* error handled by continuing loop */ }
+    if (analyticsError) {
+      /* error handled by continuing loop */
+    }
   }
 }
 

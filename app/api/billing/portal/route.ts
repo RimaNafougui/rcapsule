@@ -18,7 +18,7 @@ export async function POST() {
 
     const supabase = getSupabaseServer();
 
-    const { data: user, error: dbError } = await supabase
+    const { data: user, error: _dbError } = await supabase
       .from("User")
       .select("stripe_customer_id")
       .eq("id", session.user.id)
@@ -37,7 +37,7 @@ export async function POST() {
     });
 
     return NextResponse.json({ url: portalSession.url });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to create portal session" },
       { status: 500 },

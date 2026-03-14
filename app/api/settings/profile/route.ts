@@ -60,7 +60,7 @@ export async function GET(_req: Request) {
     };
 
     return NextResponse.json(sanitizedUser);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch profile settings" },
       { status: 500 },
@@ -140,7 +140,7 @@ export async function PUT(req: Request) {
     }
 
     return NextResponse.json(user);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update profile" },
       { status: 500 },

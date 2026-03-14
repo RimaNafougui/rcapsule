@@ -49,7 +49,7 @@ export async function PATCH(
     if (error) throw error;
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update report" },
       { status: 500 },

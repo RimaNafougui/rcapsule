@@ -98,7 +98,6 @@ function LoginFormContent() {
       >
         <Input
           isRequired
-          classNames={{ inputWrapper: "h-12" }}
           description="You can use your email or username"
           label="Email or Username"
           labelPlacement="outside"
@@ -110,7 +109,6 @@ function LoginFormContent() {
         />
         <Input
           isRequired
-          classNames={{ inputWrapper: "h-12" }}
           endContent={
             <button
               aria-label={isVisible ? "Hide password" : "Show password"}

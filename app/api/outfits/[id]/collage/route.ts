@@ -65,7 +65,7 @@ export async function GET(
       outfitName: outfit.name,
       clothes: clothes,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch outfit data" },
       { status: 500 },

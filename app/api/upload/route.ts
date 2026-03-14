@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       url: urlData.publicUrl,
       path: fileName,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 },
@@ -117,7 +117,7 @@ export async function DELETE(req: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete file" },
       { status: 500 },

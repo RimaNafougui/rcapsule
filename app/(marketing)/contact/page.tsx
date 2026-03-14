@@ -73,8 +73,8 @@ export default function ContactPage() {
                 Note on Scraping
               </h3>
               <p className="text-sm text-default-500">
-                If a specific store isn&apos;t importing correctly, please send us
-                the URL. We update our scrapers weekly.
+                If a specific store isn&apos;t importing correctly, please send
+                us the URL. We update our scrapers weekly.
               </p>
             </div>
           </div>

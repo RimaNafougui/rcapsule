@@ -21,8 +21,9 @@ export default function AboutPage() {
           Fashion is Chaos. <br /> We bring Order.
         </h1>
         <p className="text-xl md:text-2xl font-light text-default-600 max-w-3xl">
-          We believe a great wardrobe isn&apos;t about having more clothes—it&apos;s about
-          knowing exactly what you have, where it is, and how to wear it.
+          We believe a great wardrobe isn&apos;t about having more
+          clothes—it&apos;s about knowing exactly what you have, where it is,
+          and how to wear it.
         </p>
       </section>
 
@@ -46,9 +47,9 @@ export default function AboutPage() {
             because we can&apos;t see what we already own.
           </p>
           <p>
-            We built this tool to shift the paradigm from &quot;consumption&quot; to
-            &quot;curation.&quot; By digitizing your collection, you regain control over
-            your style and your spending.
+            We built this tool to shift the paradigm from
+            &quot;consumption&quot; to &quot;curation.&quot; By digitizing your
+            collection, you regain control over your style and your spending.
           </p>
         </div>
       </section>

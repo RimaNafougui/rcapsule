@@ -66,7 +66,7 @@ export async function GET(req: Request) {
     if (error) throw error;
 
     return NextResponse.json({ comments: comments || [], total: count || 0 });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch comments" },
       { status: 500 },
@@ -163,7 +163,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(comment, { status: 201 });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to create comment" },
       { status: 500 },

@@ -1051,8 +1051,9 @@ export default function EditOutfitPage() {
           </ModalHeader>
           <ModalBody>
             <p className="text-default-600">
-              Are you sure you want to delete <strong>&quot;{formData.name}&quot;</strong>
-              ? This cannot be undone.
+              Are you sure you want to delete{" "}
+              <strong>&quot;{formData.name}&quot;</strong>? This cannot be
+              undone.
             </p>
           </ModalBody>
           <ModalFooter>

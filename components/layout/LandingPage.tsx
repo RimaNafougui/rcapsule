@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  AnimatePresence,
+} from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import {
   ArrowRight,
@@ -48,9 +54,33 @@ function useCountUp(end: number, duration = 2000) {
 }
 
 /* ========================================
+   PAGE LOADER
+   ======================================== */
+function PageLoader() {
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 bg-background flex items-center justify-center"
+      exit={{
+        y: "-100%",
+        transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1] },
+      }}
+    >
+      <motion.span
+        animate={{ opacity: 1 }}
+        className="text-[10px] font-bold uppercase tracking-[0.5em] text-foreground"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        rcapsule
+      </motion.span>
+    </motion.div>
+  );
+}
+
+/* ========================================
    SECTION 1: HERO
    ======================================== */
-function HeroSection() {
+function HeroSection({ ready }: { ready: boolean }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -144,7 +174,7 @@ function HeroSection() {
 
       {/* Content */}
       <motion.div
-        animate="visible"
+        animate={ready ? "visible" : "hidden"}
         className="w-full max-w-5xl mx-auto z-10"
         initial="hidden"
         variants={staggerContainer}
@@ -1123,9 +1153,21 @@ function FinalCTA() {
    MAIN LANDING PAGE
    ======================================== */
 export default function LandingPage() {
+  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 450);
+
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="flex flex-col bg-background text-foreground">
-      <HeroSection />
+      <AnimatePresence onExitComplete={() => setReady(true)}>
+        {loading && <PageLoader />}
+      </AnimatePresence>
+      <HeroSection ready={ready} />
       <CategoryStrip />
       <StatsBar />
       <FeatureBentoGrid />

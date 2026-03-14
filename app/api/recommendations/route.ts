@@ -420,7 +420,9 @@ export async function POST(req: Request) {
         expiresat: new Date(new Date().setHours(23, 59, 59, 999)).toISOString(), // Lowercase
       });
 
-    if (insertError) { /* non-critical: storage failed, return data anyway */ }
+    if (insertError) {
+      /* non-critical: storage failed, return data anyway */
+    }
 
     const remaining = DAILY_LIMIT - (usageCount ?? 0) - 1;
 

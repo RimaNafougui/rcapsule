@@ -8,10 +8,10 @@ export default function PrivacyPage() {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-3">1. Overview</h2>
         <p className="text-gray-700 leading-relaxed">
-          The Capsule Extension (&quot;we&quot;, &quot;us&quot;) is designed to help you save
-          clothing items from third-party websites to your personal digital
-          wardrobe. We respect your privacy and only collect data necessary to
-          perform this function.
+          The Capsule Extension (&quot;we&quot;, &quot;us&quot;) is designed to
+          help you save clothing items from third-party websites to your
+          personal digital wardrobe. We respect your privacy and only collect
+          data necessary to perform this function.
         </p>
       </section>
 

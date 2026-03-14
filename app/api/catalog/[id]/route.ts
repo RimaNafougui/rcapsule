@@ -31,7 +31,7 @@ export async function GET(
       popularityCount: data.clothes?.[0]?.count ?? 0,
       clothes: undefined,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch product" },
       { status: 500 },

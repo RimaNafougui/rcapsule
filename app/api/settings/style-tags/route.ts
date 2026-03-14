@@ -43,7 +43,7 @@ export async function PATCH(req: Request) {
       .eq("id", session.user.id);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to save style tags" },
       { status: 500 },

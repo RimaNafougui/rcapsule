@@ -63,7 +63,7 @@ export async function GET(req: Request) {
       total: count || 0,
       unreadCount: unreadCount || 0,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch notifications" },
       { status: 500 },
@@ -93,7 +93,7 @@ export async function PATCH(req: Request) {
       .eq("isRead", false);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update notifications" },
       { status: 500 },

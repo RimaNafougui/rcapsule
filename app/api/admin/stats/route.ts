@@ -103,7 +103,7 @@ export async function GET(_req: Request) {
       topBrands,
       itemsByCategory,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch stats" },
       { status: 500 },

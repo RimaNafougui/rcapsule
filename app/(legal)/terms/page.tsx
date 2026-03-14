@@ -33,9 +33,9 @@ export default function TermsPage() {
             2. Auto-Import Tool
           </h2>
           <p className="mb-4">
-            Our &quot;Auto-Import&quot; feature is provided as a convenience tool. It
-            retrieves publicly available metadata (images, prices, descriptions)
-            from product URLs provided by you.
+            Our &quot;Auto-Import&quot; feature is provided as a convenience
+            tool. It retrieves publicly available metadata (images, prices,
+            descriptions) from product URLs provided by you.
           </p>
           <ul className="list-disc pl-5 space-y-2 text-default-500">
             <li>
@@ -73,9 +73,10 @@ export default function TermsPage() {
             4. Limitation of Liability
           </h2>
           <p>
-            The service is provided &quot;as is.&quot; We are not liable for any data loss
-            or service interruptions. While we strive for 99% uptime and secure
-            backups, we encourage you to keep copies of important data.
+            The service is provided &quot;as is.&quot; We are not liable for any
+            data loss or service interruptions. While we strive for 99% uptime
+            and secure backups, we encourage you to keep copies of important
+            data.
           </p>
         </section>
       </div>

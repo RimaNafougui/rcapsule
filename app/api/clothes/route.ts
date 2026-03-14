@@ -211,7 +211,9 @@ export async function POST(req: Request) {
         .from("WardrobeClothes")
         .insert(wardrobeEntries);
 
-      if (junctionError) { /* error is non-critical; wardrobe association failed */ }
+      if (junctionError) {
+        /* error is non-critical; wardrobe association failed */
+      }
     }
 
     const { data: clothingWithWardrobes } = await supabase

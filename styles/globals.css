@@ -33,9 +33,14 @@ html {
   color: hsl(var(--heroui-foreground));
 }
 
-*:focus-visible {
+*:focus-visible:not(input):not(textarea):not(select) {
   outline: 2px solid currentColor;
   outline-offset: 2px;
+}
+
+/* Remove HeroUI's black/white focus border on all inputs */
+[data-slot="input-wrapper"]:focus-within {
+  border-color: hsl(var(--heroui-default-300)) !important;
 }
 
 /* ===== WARDROBE PAGE SHARED STYLES ===== */

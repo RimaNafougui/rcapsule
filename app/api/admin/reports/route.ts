@@ -62,7 +62,7 @@ export async function GET(req: Request) {
       limit,
       offset,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch reports" },
       { status: 500 },
