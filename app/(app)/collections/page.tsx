@@ -130,15 +130,15 @@ export default function CollectionsPage() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div className="wardrobe-page-container min-h-screen">
       {/* Header */}
-      <header className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
-          Collections
-        </h1>
-        <p className="text-default-500 text-sm uppercase tracking-widest">
-          Organize your wardrobe by season, occasion, or mood
-        </p>
+      <header className="wardrobe-page-header">
+        <div>
+          <h1 className="wardrobe-page-title">Collections</h1>
+          <p className="wardrobe-page-subtitle">
+            Organize your wardrobe by season, occasion, or mood
+          </p>
+        </div>
       </header>
 
       {/* Toolbar */}
@@ -305,7 +305,7 @@ export default function CollectionsPage() {
                     classNames={{
                       base: "bg-background/80 backdrop-blur-sm rounded-none",
                       content:
-                        "text-[10px] font-bold uppercase tracking-widest",
+                        "text-[10px] font-display font-light tracking-normal",
                     }}
                     size="sm"
                     startContent={
@@ -321,7 +321,7 @@ export default function CollectionsPage() {
                 </div>
               </CardBody>
               <CardHeader className="px-0 pt-4 flex-col items-start">
-                <h3 className="text-lg font-bold uppercase tracking-tighter">
+                <h3 className="text-lg font-bold uppercase tracking-normal">
                   {wardrobe.title}
                 </h3>
                 <p className="text-xs text-default-400 uppercase tracking-widest">
@@ -361,13 +361,14 @@ export default function CollectionsPage() {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-lg font-bold uppercase tracking-tighter">
+                  <h3 className="text-lg font-bold uppercase tracking-normal">
                     {wardrobe.title}
                   </h3>
                   <Chip
                     classNames={{
                       base: "rounded-none h-5",
-                      content: "text-[9px] font-bold uppercase tracking-widest",
+                      content:
+                        "text-[9px] font-display font-light tracking-normal",
                     }}
                     size="sm"
                     startContent={

@@ -4,7 +4,7 @@ export default function TermsPage() {
   return (
     <div className="w-full max-w-3xl mx-auto px-6 py-16">
       <div className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+        <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
           Terms & Privacy
         </h1>
         <p className="text-default-500 text-sm uppercase tracking-widest">

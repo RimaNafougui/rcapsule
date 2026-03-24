@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const staticRoutes = [
+    "/discover",
     "/about",
     "/contact",
     "/terms",
@@ -27,7 +28,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}${path}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
-    priority: path === "/about" || path === "/contact" ? 0.6 : 0.4,
+    priority:
+      path === "/discover"
+        ? 0.8
+        : path === "/about" || path === "/contact"
+          ? 0.6
+          : 0.4,
   }));
 
   const baseRoutes = [

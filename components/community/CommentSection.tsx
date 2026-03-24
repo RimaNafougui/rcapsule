@@ -159,7 +159,7 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
 
   return (
     <div>
-      <h2 className="text-sm font-bold uppercase tracking-widest mb-6">
+      <h2 className="text-sm font-display font-light tracking-normal mb-6">
         Comments ({total})
       </h2>
 

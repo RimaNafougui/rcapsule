@@ -212,7 +212,7 @@ export default function PublicOutfitPage() {
   if (notFound || !outfit || !author) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
-        <h1 className="text-3xl font-black uppercase tracking-tighter italic">
+        <h1 className="text-3xl font-display font-light tracking-normal">
           Look Not Found
         </h1>
         <p className="text-default-500">
@@ -268,7 +268,7 @@ export default function PublicOutfitPage() {
         <div className="flex flex-col gap-6">
           {/* Header */}
           <div>
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic leading-none mb-4">
+            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal leading-none mb-4">
               {outfit.name}
             </h1>
 
@@ -332,7 +332,7 @@ export default function PublicOutfitPage() {
           {/* Items breakdown */}
           {items.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-3">
+              <h2 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
                 Pieces in This Look
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

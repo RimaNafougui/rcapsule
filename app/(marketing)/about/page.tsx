@@ -17,7 +17,7 @@ export default function AboutPage() {
     <div className="w-full max-w-5xl mx-auto px-6 py-16">
       {/* Hero */}
       <section className="mb-20">
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] mb-8">
+        <h1 className="text-5xl md:text-7xl font-display font-light tracking-normal leading-[0.9] mb-8">
           Fashion is Chaos. <br /> We bring Order.
         </h1>
         <p className="text-xl md:text-2xl font-light text-default-600 max-w-3xl">
@@ -32,10 +32,12 @@ export default function AboutPage() {
       {/* The Problem */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-default-400 mb-4">
+          <h2 className="text-sm font-bold uppercase tracking-normal text-default-400 mb-4">
             The Reality
           </h2>
-          <div className="text-8xl font-black text-foreground mb-2">20%</div>
+          <div className="text-8xl font-display font-light text-foreground mb-2">
+            20%
+          </div>
           <p className="text-lg font-medium">
             The average person wears only 20% of their closet 80% of the time.
           </p>
@@ -56,7 +58,7 @@ export default function AboutPage() {
 
       {/* The Mission */}
       <section className="bg-content2 rounded-2xl p-8 md:p-12 text-center">
-        <h2 className="text-2xl font-bold uppercase tracking-widest mb-4">
+        <h2 className="text-2xl font-display font-light tracking-normal mb-4">
           Our Philosophy
         </h2>
         <p className="max-w-2xl mx-auto text-default-600 mb-8">

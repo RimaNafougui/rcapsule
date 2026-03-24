@@ -180,7 +180,7 @@ function HeroSection({ ready }: { ready: boolean }) {
         variants={staggerContainer}
       >
         <motion.h1
-          className="text-[clamp(2rem,8vw,7rem)] font-black uppercase tracking-tighter italic leading-[0.9] mb-6 md:mb-8"
+          className="text-[clamp(2rem,8vw,7rem)] font-display font-light tracking-normal leading-[0.9] mb-6 md:mb-8"
           variants={fadeInUp}
         >
           The Social Network <br />
@@ -290,7 +290,7 @@ function StatsBar() {
           <div className="text-center">
             <span
               ref={stat1.ref}
-              className="text-2xl md:text-3xl font-black tracking-tighter"
+              className="text-2xl md:text-3xl font-display font-light tracking-normal"
             >
               {stat1.count.toLocaleString()}+
             </span>
@@ -302,7 +302,7 @@ function StatsBar() {
           <div className="text-center">
             <span
               ref={stat2.ref}
-              className="text-2xl md:text-3xl font-black tracking-tighter"
+              className="text-2xl md:text-3xl font-display font-light tracking-normal"
             >
               {stat2.count.toLocaleString()}+
             </span>
@@ -314,7 +314,7 @@ function StatsBar() {
           <div className="text-center">
             <span
               ref={stat3.ref}
-              className="text-2xl md:text-3xl font-black tracking-tighter"
+              className="text-2xl md:text-3xl font-display font-light tracking-normal"
             >
               {stat3.count.toLocaleString()}+
             </span>
@@ -326,7 +326,7 @@ function StatsBar() {
           <div className="text-center">
             <span
               ref={stat4.ref}
-              className="text-2xl md:text-3xl font-black tracking-tighter"
+              className="text-2xl md:text-3xl font-display font-light tracking-normal"
             >
               {stat4.count.toLocaleString()}+
             </span>
@@ -348,7 +348,7 @@ function FeatureBentoGrid() {
     <section className="py-[var(--spacing-section)] px-4 md:px-6">
       <Container size="xl">
         <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-8 md:mb-12 text-center"
+          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: 20 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -374,7 +374,7 @@ function FeatureBentoGrid() {
 
             <div className="relative z-10 h-full flex flex-col justify-between">
               <div className="space-y-3 md:space-y-4 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic">
+                <h3 className="text-2xl md:text-3xl font-display font-light tracking-normal">
                   Track What You Actually Wear
                 </h3>
                 <p className="text-sm md:text-base text-default-500 font-medium">
@@ -417,7 +417,7 @@ function FeatureBentoGrid() {
             </div>
 
             <div>
-              <h3 className="text-lg md:text-xl font-bold uppercase tracking-widest mb-1">
+              <h3 className="text-lg md:text-xl font-display font-light tracking-normal mb-1">
                 Total Valuation
               </h3>
               <p className="opacity-40 text-xs">
@@ -459,7 +459,7 @@ function FeatureBentoGrid() {
           >
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-lg md:text-xl font-bold uppercase tracking-widest mb-1">
+                <h3 className="text-lg md:text-xl font-display font-light tracking-normal mb-1">
                   Color DNA
                 </h3>
                 <p className="text-default-500 text-xs">
@@ -519,7 +519,7 @@ function FeatureBentoGrid() {
           >
             <div className="flex justify-between items-start">
               <div className="space-y-3 md:space-y-4 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic">
+                <h3 className="text-2xl md:text-3xl font-display font-light tracking-normal">
                   Build &amp; Plan Outfits
                 </h3>
                 <p className="text-sm md:text-base text-default-500 font-medium">
@@ -593,7 +593,7 @@ function ValuationCounter() {
   return (
     <span
       ref={counter.ref}
-      className="text-3xl md:text-4xl font-mono font-light tracking-tighter"
+      className="text-3xl md:text-4xl font-mono font-light tracking-normal"
     >
       ${counter.count.toLocaleString()}
     </span>
@@ -601,7 +601,197 @@ function ValuationCounter() {
 }
 
 /* ========================================
-   SECTION 5: CATALOG MARQUEE
+   SECTION 5: FROM THE HOUSES
+   ======================================== */
+const HOUSE_DROPS = [
+  {
+    house: "Burberry",
+    collection: "The Heritage Edit",
+    season: "FW 25",
+    tag: "Just Dropped",
+    img: "https://assets.burberry.com/is/image/Burberryltd/9FAB380E-9232-4CAA-8BE7-B5974480F779?$BBY_V3_UNSHARP_SL_1$&wid=4000&hei=4000",
+    href: "/catalog/brand/Burberry",
+  },
+  {
+    house: "Acne Studios",
+    collection: "Oversized Leather",
+    season: "FW 25",
+    tag: "New Arrival",
+    img: "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw55929c47/images/A7/A70220-/2000x/A70220-900_Y.jpg?sw=1500&sh=2250",
+    href: "/catalog/brand/Acne Studios",
+  },
+  {
+    house: "Max Mara",
+    collection: "Silk & Structure",
+    season: "SS 26",
+    tag: "New Season",
+    img: "https://b2c-media.maxmara.com/sys-master/m0/MM/2026/1/6101026306004/s3details/6101026306004-w-msecalle_normal.webp#product",
+    href: "/catalog/brand/Max Mara",
+  },
+  {
+    house: "Toteme",
+    collection: "Sharp Tailoring",
+    season: "FW 25",
+    tag: "Editor's Pick",
+    img: "https://www.mytheresa.com/media/1094/1238/100/64/P00825738.jpg",
+    href: "/catalog/brand/Toteme",
+  },
+  {
+    house: "Aritzia",
+    collection: "The Fall Edit",
+    season: "FW 25",
+    tag: "New Arrival",
+    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1800/f25_a05_128542_9166_off_a",
+    href: "/catalog/brand/Aritzia",
+  },
+  {
+    house: "Aritzia",
+    collection: "Spring Essentials",
+    season: "SS 26",
+    tag: "New Season",
+    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/s26_a08_132084_1274_off_a",
+    href: "/catalog/brand/Aritzia",
+  },
+];
+
+function FromTheHouses() {
+  return (
+    <section className="py-[var(--spacing-section)] px-4 md:px-6 bg-foreground text-background overflow-hidden">
+      <Container size="xl">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
+          >
+            <p className="text-[10px] uppercase tracking-[0.4em] opacity-40 mb-3">
+              SS 26 · FW 25 · Pre-Fall
+            </p>
+            <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal leading-none">
+              From the Houses
+            </h2>
+          </motion.div>
+          <motion.div
+            className="flex items-center gap-4"
+            initial={{ opacity: 0 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1 }}
+          >
+            <p className="text-sm opacity-50 max-w-xs">
+              The season&apos;s standout drops from the world&apos;s most
+              influential fashion houses.
+            </p>
+            <DSButton
+              as="a"
+              className="bg-background text-foreground hover:opacity-90 flex-shrink-0"
+              href="/catalog"
+              size="sm"
+              variant="primary"
+            >
+              All Brands
+            </DSButton>
+          </motion.div>
+        </div>
+
+        {/* Featured drop (large) + side grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 mb-4">
+          {/* Large featured card */}
+          <motion.a
+            className="group relative overflow-hidden border border-background/10 block"
+            href={HOUSE_DROPS[0].href}
+            initial={{ opacity: 0, y: 30 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
+          >
+            <div className="relative aspect-[3/4] md:aspect-[4/5]">
+              <Image
+                fill
+                unoptimized
+                alt={HOUSE_DROPS[0].collection}
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                src={HOUSE_DROPS[0].img}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+            </div>
+            <div className="absolute bottom-0 left-0 p-6 md:p-8">
+              <span className="text-[9px] uppercase tracking-[0.4em] opacity-50 mb-2 block">
+                {HOUSE_DROPS[0].tag} · {HOUSE_DROPS[0].season}
+              </span>
+              <p className="text-2xl md:text-3xl font-display font-light tracking-normal leading-tight">
+                {HOUSE_DROPS[0].house}
+              </p>
+              <p className="text-sm opacity-60 mt-1">
+                {HOUSE_DROPS[0].collection}
+              </p>
+              <div className="flex items-center gap-2 mt-4 text-xs font-display font-light tracking-normal opacity-0 group-hover:opacity-100 transition-opacity">
+                Explore <ArrowRight size={14} />
+              </div>
+            </div>
+          </motion.a>
+
+          {/* 2×2 side grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {HOUSE_DROPS.slice(1, 5).map((drop, i) => (
+              <motion.a
+                key={drop.house + drop.collection}
+                className="group relative overflow-hidden border border-background/10 block"
+                href={drop.href}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ delay: i * 0.08 }}
+                viewport={{ once: true }}
+                whileInView={{ opacity: 1, y: 0 }}
+              >
+                <div className="relative aspect-[3/4]">
+                  <Image
+                    fill
+                    unoptimized
+                    alt={drop.collection}
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    src={drop.img}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                </div>
+                <div className="absolute bottom-0 left-0 p-3 md:p-4">
+                  <span className="text-[8px] uppercase tracking-[0.3em] opacity-40 block mb-0.5">
+                    {drop.tag}
+                  </span>
+                  <p className="text-sm md:text-base font-display font-light tracking-normal leading-tight">
+                    {drop.house}
+                  </p>
+                  <p className="text-[10px] opacity-50 truncate">
+                    {drop.collection}
+                  </p>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+
+        {/* Slim bottom strip — latest season tag */}
+        <motion.div
+          className="flex items-center justify-between border-t border-background/10 pt-4"
+          initial={{ opacity: 0 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1 }}
+        >
+          <p className="text-[10px] uppercase tracking-[0.3em] opacity-30">
+            Updated weekly · SS 26 collections now live
+          </p>
+          <a
+            className="text-[10px] uppercase tracking-[0.3em] opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
+            href="/catalog"
+          >
+            Browse all <ArrowRight size={10} />
+          </a>
+        </motion.div>
+      </Container>
+    </section>
+  );
+}
+
+/* ========================================
+   SECTION 6: CATALOG MARQUEE
    ======================================== */
 const CATALOG_ROW_1 = [
   {
@@ -738,7 +928,7 @@ function CatalogMarquee() {
       <Container size="xl">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 px-4 md:px-0">
           <motion.h2
-            className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic"
+            className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal"
             initial={{ opacity: 0, y: 20 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -792,7 +982,7 @@ function CatalogMarquee() {
 }
 
 /* ========================================
-   SECTION 6: HOW IT WORKS
+   SECTION 7: HOW IT WORKS
    ======================================== */
 function HowItWorks() {
   const steps = [
@@ -823,7 +1013,7 @@ function HowItWorks() {
     <section className="py-[var(--spacing-section)] px-4 md:px-6">
       <Container size="xl">
         <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-12 md:mb-16 text-center"
+          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-12 md:mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -850,7 +1040,7 @@ function HowItWorks() {
               <div className="text-[10px] uppercase tracking-widest text-default-400 mb-2">
                 Step {step.number}
               </div>
-              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter italic mb-3">
+              <h3 className="text-xl md:text-2xl font-display font-light tracking-normal mb-3">
                 {step.title}
               </h3>
               <p className="text-sm text-default-500 max-w-xs mx-auto leading-relaxed">
@@ -865,7 +1055,7 @@ function HowItWorks() {
 }
 
 /* ========================================
-   SECTION 7: WISHLIST + COLLECTIONS
+   SECTION 8: WISHLIST + COLLECTIONS
    ======================================== */
 const WISHLIST_ITEMS = [
   { name: "Linen Blazer", brand: "COS", price: "$195", bg: "bg-stone-200" },
@@ -922,7 +1112,7 @@ function WishlistCollections() {
     <section className="py-[var(--spacing-section)] px-4 md:px-6 bg-default-50 border-y border-default-200">
       <Container size="xl">
         <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-8 md:mb-12 text-center"
+          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: 20 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -942,7 +1132,7 @@ function WishlistCollections() {
                 <div className="p-2 border border-default-200 bg-default-50">
                   <Heart size={18} />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter italic">
+                <h3 className="text-lg font-display font-light tracking-normal">
                   Wishlist
                 </h3>
               </div>
@@ -993,7 +1183,7 @@ function WishlistCollections() {
                 <div className="p-2 border border-current/20 bg-current/10">
                   <BookOpen className="opacity-80" size={18} />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter italic">
+                <h3 className="text-lg font-display font-light tracking-normal">
                   Collections
                 </h3>
               </div>
@@ -1039,7 +1229,7 @@ function WishlistCollections() {
 }
 
 /* ========================================
-   SECTION 8: TESTIMONIALS
+   SECTION 9: TESTIMONIALS
    ======================================== */
 const TESTIMONIALS = [
   {
@@ -1067,7 +1257,7 @@ function TestimonialsSection() {
     <section className="py-[var(--spacing-section)] px-4 md:px-6">
       <Container size="xl">
         <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-10 md:mb-14 text-center"
+          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-10 md:mb-14 text-center"
           initial={{ opacity: 0, y: 20 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1110,7 +1300,7 @@ function TestimonialsSection() {
 }
 
 /* ========================================
-   SECTION 9: FINAL CTA
+   SECTION 10: FINAL CTA
    ======================================== */
 function FinalCTA() {
   return (
@@ -1122,7 +1312,7 @@ function FinalCTA() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic">
+          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal">
             Join a Community That Takes Fashion Seriously.
           </h2>
           <p className="text-sm md:text-base opacity-60 max-w-xl mx-auto">
@@ -1171,6 +1361,7 @@ export default function LandingPage() {
       <CategoryStrip />
       <StatsBar />
       <FeatureBentoGrid />
+      <FromTheHouses />
       <CatalogMarquee />
       <HowItWorks />
       <WishlistCollections />

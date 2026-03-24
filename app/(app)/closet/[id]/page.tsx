@@ -356,11 +356,11 @@ function ViewMode({
     <div className="space-y-8 animate-in fade-in duration-300">
       <div>
         {item.brand && (
-          <h2 className="text-sm font-bold uppercase tracking-widest text-default-500 mb-2">
+          <h2 className="text-sm font-display font-light tracking-normal text-default-500 mb-2">
             {item.brand}
           </h2>
         )}
-        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2 leading-none break-words">
+        <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2 leading-none break-words">
           {item.name}
         </h1>
 
@@ -415,7 +415,7 @@ function ViewMode({
 
       {item.colors && item.colors.length > 0 && (
         <div>
-          <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
             Colors
           </span>
           <div className="flex gap-2">
@@ -433,7 +433,7 @@ function ViewMode({
 
       {(item.style || item.silhouette || item.pattern || item.fit) && (
         <div>
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-3">
+          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
             Style Details
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -454,7 +454,7 @@ function ViewMode({
       )}
       {item.materials && (
         <div>
-          <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
             Material Composition
           </span>
           <p className="text-sm whitespace-pre-wrap">{item.materials}</p>
@@ -463,7 +463,7 @@ function ViewMode({
 
       {(item.purchaseLocation || item.purchaseType) && (
         <div>
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-3">
+          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
             Purchase Info
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -481,7 +481,7 @@ function ViewMode({
         <div className="space-y-4">
           {item.careInstructions && (
             <div>
-              <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+              <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
                 Care Instructions
               </span>
               <p className="text-sm text-default-600 whitespace-pre-wrap">
@@ -491,7 +491,7 @@ function ViewMode({
           )}
           {item.sustainability && (
             <div>
-              <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+              <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
                 Sustainability
               </span>
               <p className="text-sm text-default-600 whitespace-pre-wrap">
@@ -504,7 +504,7 @@ function ViewMode({
 
       {item.placesToWear && item.placesToWear.length > 0 && (
         <div className="pt-2">
-          <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
             Best For
           </span>
           <div className="flex flex-wrap gap-2">
@@ -522,7 +522,7 @@ function ViewMode({
 
       {item.tags && item.tags.length > 0 && (
         <div>
-          <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
             Tags
           </span>
           <div className="flex flex-wrap gap-2">
@@ -542,7 +542,7 @@ function ViewMode({
 
       {(item.timesworn !== undefined || item.lastwornat) && (
         <div className="bg-default-50 p-4 rounded-lg">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-3">
+          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
             Wear Statistics
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -563,10 +563,10 @@ function ViewMode({
               item.timesworn &&
               item.timesworn > 0 && (
                 <div className="col-span-2 mt-2 pt-3 border-t border-default-200">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-default-400 block mb-1">
+                  <span className="text-[10px] font-display font-light tracking-normal text-default-400 block mb-1">
                     Cost Per Wear
                   </span>
-                  <p className="text-2xl font-black tracking-tighter">
+                  <p className="text-2xl font-display font-light tracking-normal">
                     ${(item.price / item.timesworn).toFixed(2)}
                     <span className="text-sm font-normal text-default-400 ml-1">
                       / wear
@@ -587,7 +587,7 @@ function ViewMode({
         {item.link && (
           <Button
             as="a"
-            className="w-full bg-foreground text-background font-bold uppercase tracking-widest"
+            className="w-full bg-foreground text-background font-display font-light tracking-normal"
             endContent={<ArrowTopRightOnSquareIcon className="w-4 h-4" />}
             href={item.link}
             radius="sm"
@@ -636,7 +636,7 @@ function DetailItem({
 }) {
   return (
     <div>
-      <span className="block text-[10px] font-bold uppercase tracking-widest text-default-400 mb-1">
+      <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-1">
         {label}
       </span>
       <span className={`text-lg ${capitalize ? "capitalize" : ""}`}>
@@ -663,7 +663,7 @@ function EditMode({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 bg-content1 p-1 sm:p-6 rounded-lg max-h-[800px] overflow-y-auto">
       <div className="flex justify-between items-center border-b border-divider pb-4 sticky top-0 bg-content1 z-10">
-        <h2 className="text-xl font-bold uppercase tracking-tighter">
+        <h2 className="text-xl font-bold uppercase tracking-normal">
           Edit Piece
         </h2>
         <Button color="danger" size="sm" variant="light" onPress={onCancel}>
@@ -673,7 +673,7 @@ function EditMode({
 
       {/* REPLACED: Single ImageUpload Component */}
       <div className="pb-4 border-b border-divider">
-        <h3 className="text-xs font-bold uppercase tracking-widest mb-3 text-default-500">
+        <h3 className="text-xs font-display font-light tracking-normal mb-3 text-default-500">
           Visual
         </h3>
         <div className="w-full aspect-[3/4] sm:aspect-video bg-content2 border border-dashed border-default-300 rounded-lg overflow-hidden relative">
@@ -1182,7 +1182,7 @@ function EditMode({
 
       <Button
         fullWidth
-        className="h-12 font-bold uppercase tracking-widest mt-4 shadow-lg shadow-primary/20"
+        className="h-12 font-display font-light tracking-normal mt-4 shadow-lg shadow-primary/20"
         color="primary"
         isLoading={saving}
         radius="sm"

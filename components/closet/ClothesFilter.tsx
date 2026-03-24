@@ -167,7 +167,7 @@ export default function ClothesFilter({
   };
 
   const itemClasses = {
-    title: "text-xs font-bold uppercase tracking-widest text-foreground",
+    title: "text-xs font-display font-light tracking-normal text-foreground",
     trigger: "py-4",
     content: "pb-4 pl-1",
   };
@@ -175,7 +175,7 @@ export default function ClothesFilter({
   return (
     <div className="w-full h-full flex flex-col bg-background border-r border-divider pr-4">
       <div className="flex justify-between items-center mb-6 pt-1">
-        <h3 className="text-xl font-black uppercase tracking-tighter italic">
+        <h3 className="text-xl font-display font-light tracking-normal">
           Refine
         </h3>
         <Button
@@ -270,7 +270,7 @@ export default function ClothesFilter({
       <div className="pt-6 mt-auto">
         <Button
           fullWidth
-          className="font-bold uppercase tracking-widest h-12 text-xs shadow-lg shadow-primary/20"
+          className="font-display font-light tracking-normal h-12 text-xs shadow-lg shadow-primary/20"
           color="primary"
           radius="none"
           onPress={handleApplyFilters}

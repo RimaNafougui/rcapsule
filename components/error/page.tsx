@@ -22,7 +22,7 @@ export default function Error({
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background">
       <div className="max-w-md w-full space-y-6 text-center">
         <div className="space-y-2">
-          <h1 className="text-4xl font-black uppercase tracking-tighter italic">
+          <h1 className="text-4xl font-display font-light tracking-normal">
             Oops!
           </h1>
           <h2 className="text-xl font-light text-default-600">
@@ -44,7 +44,7 @@ export default function Error({
 
         <div className="flex gap-4 justify-center">
           <Button
-            className="font-bold uppercase tracking-widest"
+            className="font-display font-light tracking-normal"
             color="primary"
             radius="none"
             onPress={reset}

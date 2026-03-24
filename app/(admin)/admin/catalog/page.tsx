@@ -34,7 +34,7 @@ const fetcher = (url: string) =>
   });
 
 const itemClasses = {
-  title: "text-xs font-bold uppercase tracking-widest",
+  title: "text-xs font-display font-light tracking-normal",
   trigger: "py-3",
   content: "pb-3 pl-1",
 };
@@ -167,7 +167,7 @@ export default function AdminCatalogPage() {
             <Card>
               <CardBody className="p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold uppercase tracking-widest">
+                  <span className="text-xs font-display font-light tracking-normal">
                     Filters
                   </span>
                   {hasActiveFilters && (

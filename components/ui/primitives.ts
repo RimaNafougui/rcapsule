@@ -1,7 +1,7 @@
 import { tv } from "tailwind-variants";
 
 export const display = tv({
-  base: "font-black uppercase tracking-tighter italic leading-[0.9]",
+  base: "font-display font-light tracking-[0.1em] leading-[0.9]",
   variants: {
     size: {
       sm: "text-[clamp(2rem,5vw,3.5rem)]",
@@ -18,7 +18,7 @@ export const display = tv({
 });
 
 export const title = tv({
-  base: "font-black uppercase tracking-tighter italic leading-tight",
+  base: "font-display font-light tracking-[0.1em] leading-tight",
   variants: {
     size: {
       sm: "text-[clamp(1.125rem,2vw,1.5rem)]",
@@ -35,7 +35,7 @@ export const title = tv({
 });
 
 export const heading = tv({
-  base: "font-bold uppercase tracking-widest",
+  base: "font-display font-light tracking-[0.2em]",
   variants: {
     size: {
       sm: "text-xs",
@@ -67,7 +67,7 @@ export const subtitle = tv({
 });
 
 export const label = tv({
-  base: "text-[clamp(0.625rem,0.8vw,0.75rem)] font-bold uppercase tracking-widest text-default-500",
+  base: "text-[clamp(0.625rem,0.8vw,0.75rem)] font-display font-light tracking-[0.2em] text-default-500",
 });
 
 export const caption = tv({

@@ -110,7 +110,7 @@ export default function Footer() {
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
             {footerLinks.map((section) => (
               <div key={section.title} className="flex flex-col gap-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/50">
+                <h3 className="text-xs font-display font-light tracking-normal text-foreground/50">
                   {section.title}
                 </h3>
                 <ul className="flex flex-col gap-3">

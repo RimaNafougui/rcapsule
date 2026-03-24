@@ -160,7 +160,7 @@ export default function WeatherWidget({
       >
         <MapPinIcon className="w-6 h-6 text-default-400" />
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-default-600">
+          <p className="text-xs font-display font-light tracking-normal text-default-600">
             Location Required
           </p>
           {!compact && (
@@ -191,7 +191,7 @@ export default function WeatherWidget({
       >
         <div className="flex items-center gap-2 text-danger">
           <ExclamationTriangleIcon className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-widest">
+          <span className="text-xs font-display font-light tracking-normal">
             Unavailable
           </span>
         </div>
@@ -222,7 +222,7 @@ export default function WeatherWidget({
         <div className="flex-1 min-w-0 flex justify-between items-center">
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="font-bold text-xl tracking-tight">
+              <span className="font-bold text-xl tracking-normal">
                 {weather.current.temperature}°
               </span>
               <span className="text-[10px] uppercase tracking-widest text-default-500 truncate max-w-[100px]">
@@ -249,7 +249,7 @@ export default function WeatherWidget({
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-widest text-default-900 flex items-center gap-2">
+          <h3 className="text-sm font-display font-light tracking-normal text-default-900 flex items-center gap-2">
             <MapPinIcon className="w-4 h-4" />
             {location.city}
           </h3>
@@ -273,12 +273,12 @@ export default function WeatherWidget({
           )}
         </div>
         <div className="flex items-start">
-          <span className="text-7xl font-black italic tracking-tighter text-default-900 leading-none">
+          <span className="text-7xl font-display font-light tracking-normal text-default-900 leading-none">
             {weather.current.temperature}
           </span>
           <span className="text-xl font-light text-default-400 mt-2">°</span>
         </div>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-default-500 mt-2">
+        <p className="text-xs font-bold uppercase tracking-normal text-default-500 mt-2">
           {weather.current.description}
         </p>
       </div>
@@ -311,7 +311,7 @@ export default function WeatherWidget({
         weather.isHot ||
         weather.needsLayers) && (
         <div className="mt-6 space-y-2">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-default-300">
+          <p className="text-[9px] font-display font-light tracking-normal text-default-300">
             Daily Forecast
           </p>
           <div className="flex flex-wrap gap-2">

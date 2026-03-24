@@ -117,7 +117,7 @@ export default function PricingPage() {
         type="application/ld+json"
       />
       <header className="text-center mb-16 pt-8">
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-2">
+        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-2">
           The Membership
         </h1>
         <div className="text-xs uppercase tracking-widest text-default-500">
@@ -198,7 +198,7 @@ export default function PricingPage() {
           variant="bordered"
         >
           <div className="mb-10 text-center md:text-left">
-            <span className="font-bold uppercase tracking-widest text-xs mb-2 block text-default-500">
+            <span className="font-display font-light tracking-normal text-xs mb-2 block text-default-500">
               The Digital Closet
             </span>
             <h2 className="font-display italic text-3xl font-light">
@@ -207,7 +207,7 @@ export default function PricingPage() {
           </div>
 
           <div className="mb-10 h-16 flex items-baseline justify-center md:justify-start">
-            <span className="text-5xl font-light tracking-tighter">$0</span>
+            <span className="text-5xl font-light tracking-normal">$0</span>
             <span className="text-default-400 text-xs ml-3 uppercase tracking-widest">
               / Forever
             </span>
@@ -223,7 +223,7 @@ export default function PricingPage() {
           </DSButton>
 
           <div className="space-y-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-default-400 mb-4 block">
+            <span className="text-xs font-display font-light tracking-normal text-default-400 mb-4 block">
               Core Features
             </span>
             <div className="space-y-4">
@@ -246,7 +246,7 @@ export default function PricingPage() {
           </div>
 
           <div className="mb-10 text-center md:text-left">
-            <span className="font-bold uppercase tracking-widest text-xs mb-2 block opacity-60">
+            <span className="font-display font-light tracking-normal text-xs mb-2 block opacity-60">
               The Pocket Stylist
             </span>
             <h2 className="font-display italic text-3xl font-light">
@@ -259,7 +259,7 @@ export default function PricingPage() {
               <motion.span
                 key={billingCycle}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-5xl font-light tracking-tighter"
+                className="text-5xl font-light tracking-normal"
                 exit={{ opacity: 0, y: -10 }}
                 initial={{ opacity: 0, y: 10 }}
               >
@@ -290,7 +290,7 @@ export default function PricingPage() {
           </DSButton>
 
           <div className="space-y-5">
-            <span className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4 block">
+            <span className="text-xs font-display font-light tracking-normal opacity-40 mb-4 block">
               Styling Suite
             </span>
             <div className="space-y-4">

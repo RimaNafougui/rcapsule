@@ -57,7 +57,7 @@ function CheckoutSuccessContent() {
           magic background removal, and weather-smart styling.
         </p>
         <Button
-          className="font-bold uppercase tracking-widest"
+          className="font-display font-light tracking-normal"
           radius="none"
           onPress={() => router.push("/closet")}
         >

@@ -50,7 +50,7 @@ const CATALOG_SORT_OPTIONS = [
 const LIMIT = 24;
 
 const itemClasses = {
-  title: "text-xs font-bold uppercase tracking-widest text-foreground",
+  title: "text-xs font-display font-light tracking-normal text-foreground",
   trigger: "py-4",
   content: "pb-4 pl-1",
 };
@@ -187,7 +187,9 @@ export default function CatalogPage() {
   const filterContent = (
     <div className="w-full h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xs font-bold uppercase tracking-widest">Filters</h3>
+        <h3 className="text-xs font-display font-light tracking-normal">
+          Filters
+        </h3>
         {hasActiveFilters && (
           <button
             className="text-[10px] text-default-400 hover:text-red-500 uppercase tracking-wide flex items-center gap-1"
@@ -368,7 +370,7 @@ export default function CatalogPage() {
               <div className="flex flex-col items-center gap-3 mt-12">
                 {!allLoaded && (
                   <Button
-                    className="uppercase tracking-[0.2em] font-medium px-12"
+                    className="uppercase tracking-normal font-medium px-12"
                     isDisabled={isLoadingMore}
                     isLoading={isLoadingMore}
                     radius="none"

@@ -82,7 +82,7 @@ export default async function BrandPage({ params }: Props) {
     <div className="py-8">
       {/* Back */}
       <Link
-        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-default-500 hover:text-foreground transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-xs font-display font-light tracking-normal text-default-500 hover:text-foreground transition-colors mb-8"
         href="/catalog"
       >
         <ArrowLeftIcon className="w-4 h-4" />
@@ -91,7 +91,7 @@ export default async function BrandPage({ params }: Props) {
 
       {/* Brand header */}
       <div className="mb-10 pb-8 border-b border-default-200">
-        <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-black uppercase tracking-tighter italic leading-none mb-4">
+        <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-display font-light tracking-normal leading-none mb-4">
           {brandName}
         </h1>
 

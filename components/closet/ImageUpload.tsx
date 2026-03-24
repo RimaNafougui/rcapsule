@@ -356,7 +356,7 @@ export function ImageUpload({
               ) : (
                 <>
                   <CloudArrowUpIcon className="w-12 h-12 text-default-400 mb-3" />
-                  <p className="text-sm text-default-600 font-bold uppercase tracking-widest">
+                  <p className="text-sm text-default-600 font-display font-light tracking-normal">
                     Click to upload
                   </p>
                   <p className="text-xs text-default-400 mt-2">

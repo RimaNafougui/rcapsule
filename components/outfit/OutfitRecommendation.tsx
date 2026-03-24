@@ -171,7 +171,7 @@ export default function OutfitRecommendation({
       <div className="w-full border border-default-200 p-6 space-y-6">
         <div className="flex items-center gap-2 pb-2 border-b border-default-100">
           <SparklesIcon className="w-4 h-4 text-default-900" />
-          <h3 className="font-bold uppercase tracking-widest text-sm">
+          <h3 className="font-display font-light tracking-normal text-sm">
             Curating Look...
           </h3>
         </div>
@@ -193,7 +193,7 @@ export default function OutfitRecommendation({
       <div className="w-full border border-danger/20 bg-danger-50/50 p-6">
         <div className="flex items-center gap-2 pb-4 border-b border-danger/10 mb-4">
           <InformationCircleIcon className="w-5 h-5 text-danger" />
-          <h3 className="font-bold uppercase tracking-widest text-sm text-danger">
+          <h3 className="font-display font-light tracking-normal text-sm text-danger">
             Recommendation Unavailable
           </h3>
         </div>
@@ -259,10 +259,10 @@ export default function OutfitRecommendation({
               <SparklesIcon className="w-5 h-5 text-default-900" />
             </div>
             <div>
-              <h3 className="font-black uppercase italic tracking-tighter text-xl leading-none">
+              <h3 className="font-display font-light tracking-normal text-xl leading-none">
                 Daily Edit
               </h3>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-default-400 mt-1">
+              <p className="text-[10px] font-display font-light tracking-normal text-default-400 mt-1">
                 {data.weather.temperature}°C • {data.weather.description}
                 {remaining !== null && (
                   <span className="ml-2 text-primary">
@@ -363,7 +363,7 @@ export default function OutfitRecommendation({
           {/* EDITORIAL TEXT */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-2">
+              <h4 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
                 Stylist&apos;s Notes
               </h4>
               <p className="text-sm font-serif italic leading-relaxed text-default-700">
@@ -373,7 +373,7 @@ export default function OutfitRecommendation({
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-1">
+                <h4 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-1">
                   Forecast Match
                 </h4>
                 <p className="text-xs uppercase font-bold tracking-wide border-l-2 border-primary pl-2 text-primary">
@@ -455,10 +455,10 @@ export default function OutfitRecommendation({
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1 py-6">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-default-400 font-bold">
+            <span className="text-[10px] uppercase tracking-normal text-default-400 font-bold">
               Collection Analysis
             </span>
-            <h3 className="font-black text-2xl uppercase italic tracking-tighter">
+            <h3 className="font-display font-light text-2xl tracking-normal">
               Outfit Breakdown
             </h3>
           </ModalHeader>
@@ -490,7 +490,7 @@ export default function OutfitRecommendation({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-default-900 border-b border-default-200 pb-2">
+                <h4 className="text-[10px] font-bold uppercase tracking-normal text-default-900 border-b border-default-200 pb-2">
                   Why It Works
                 </h4>
                 <p className="text-sm text-default-600 leading-relaxed">
@@ -499,7 +499,7 @@ export default function OutfitRecommendation({
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-default-900 border-b border-default-200 pb-2">
+                <h4 className="text-[10px] font-bold uppercase tracking-normal text-default-900 border-b border-default-200 pb-2">
                   Styling Tips
                 </h4>
                 <p className="text-sm text-default-600 leading-relaxed">
@@ -511,7 +511,7 @@ export default function OutfitRecommendation({
             <div className="mt-6 p-4 bg-default-50 border border-default-100 flex items-start gap-3">
               <SunIcon className="w-5 h-5 text-default-900 mt-0.5" />
               <div>
-                <h5 className="text-[10px] font-bold uppercase tracking-widest text-default-900">
+                <h5 className="text-[10px] font-display font-light tracking-normal text-default-900">
                   Weather Context
                 </h5>
                 <p className="text-xs text-default-600 mt-1">

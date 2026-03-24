@@ -183,7 +183,7 @@ export default function OutfitsPage() {
           </div>
         }
         suggestions={suggestions}
-        title="LOOKBOOK"
+        title="Lookbook"
         viewMode={viewMode}
         onAddNew={() => router.push("/outfits/new")}
         onClearHistory={clearHistory}
@@ -327,12 +327,12 @@ export default function OutfitsPage() {
                 <div className="space-y-1">
                   <div className="flex justify-between items-start">
                     <h3
-                      className={`font-bold uppercase tracking-tight leading-none ${viewMode === "gallery" ? "text-sm" : "text-lg"}`}
+                      className={`font-bold uppercase tracking-normal leading-none ${viewMode === "gallery" ? "text-sm" : "text-lg"}`}
                     >
                       {outfit.name}
                     </h3>
                     {outfit.timesWorn > 0 && viewMode === "grid" && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                      <span className="text-[10px] font-display font-light tracking-normal text-default-400">
                         Worn {outfit.timesWorn}x
                       </span>
                     )}

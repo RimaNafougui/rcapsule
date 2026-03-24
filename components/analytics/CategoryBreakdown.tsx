@@ -14,7 +14,7 @@ export function CategoryBreakdown({
     <div className="bg-background border border-default-200 p-8">
       {/* Header */}
       <div className="mb-8 pb-4 border-b border-default-200">
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground-600 mb-1">
+        <h3 className="text-[11px] font-display font-light tracking-normal text-foreground-600 mb-1">
           Category Analysis
         </h3>
         <p className="text-xs text-default-500 font-light italic">
@@ -32,7 +32,7 @@ export function CategoryBreakdown({
                 <span className="text-[10px] font-bold text-default-500 w-6">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="text-base font-black uppercase italic tracking-tight text-foreground">
+                <span className="text-base font-display font-light tracking-normal text-foreground">
                   {cat.name}
                 </span>
               </div>
@@ -56,7 +56,7 @@ export function CategoryBreakdown({
             </div>
 
             {/* Metadata */}
-            <div className="flex justify-between text-[9px] text-default-500 uppercase tracking-[0.1em]">
+            <div className="flex justify-between text-[9px] text-default-500 uppercase tracking-normal">
               <span>Avg ${cat.avgPrice.toFixed(0)}</span>
               <span>{cat.wears} total wears</span>
             </div>

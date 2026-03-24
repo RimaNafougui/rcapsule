@@ -143,97 +143,96 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="py-8 max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-black uppercase tracking-tighter italic">
-            Notifications
-          </h1>
+    <div className="wardrobe-page-container min-h-screen">
+      <div className="max-w-2xl mx-auto">
+        <header className="wardrobe-page-header">
+          <div>
+            <h1 className="wardrobe-page-title">Notifications</h1>
+            {unreadCount > 0 && (
+              <p className="wardrobe-page-subtitle">{unreadCount} unread</p>
+            )}
+          </div>
           {unreadCount > 0 && (
-            <p className="text-default-500 text-sm mt-1">
-              {unreadCount} unread
-            </p>
-          )}
-        </div>
-        {unreadCount > 0 && (
-          <Button
-            className="uppercase font-bold tracking-wider text-xs"
-            isLoading={markingRead}
-            radius="none"
-            size="sm"
-            startContent={<CheckIcon className="w-4 h-4" />}
-            variant="bordered"
-            onPress={markAllRead}
-          >
-            Mark all read
-          </Button>
-        )}
-      </div>
-
-      {notifications.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-200">
-          <BellIcon className="w-12 h-12 text-default-300 mb-4" />
-          <p className="text-default-400 text-sm">No notifications yet.</p>
-          <p className="text-default-300 text-xs mt-1">
-            When people like or comment on your looks, you&apos;ll see it here.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {notifications.map((notif) => (
-            <button
-              key={notif.id}
-              className={`w-full text-left flex items-start gap-4 p-4 border transition-colors ${
-                notif.isRead
-                  ? "border-default-200 bg-background"
-                  : "border-default-300 bg-default-50"
-              }`}
-              onClick={() => {
-                if (!notif.isRead) markOneRead(notif.id);
-                if (notif.actor?.username && notif.type === "follow") {
-                  router.push(`/u/${notif.actor.username}`);
-                }
-              }}
+            <Button
+              className="uppercase font-bold tracking-wider text-xs"
+              isLoading={markingRead}
+              radius="none"
+              size="sm"
+              startContent={<CheckIcon className="w-4 h-4" />}
+              variant="bordered"
+              onPress={markAllRead}
             >
-              {/* Icon */}
-              <div className="w-8 h-8 flex items-center justify-center bg-default-100 flex-shrink-0 mt-0.5">
-                {NOTIF_ICONS[notif.type] || <BellIcon className="w-4 h-4" />}
-              </div>
+              Mark all read
+            </Button>
+          )}
+        </header>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  {notif.actor && (
-                    <Link
-                      href={`/u/${notif.actor.username}`}
-                      onClick={(e) => e.stopPropagation()}
+        {notifications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-200">
+            <BellIcon className="w-12 h-12 text-default-300 mb-4" />
+            <p className="text-default-400 text-sm">No notifications yet.</p>
+            <p className="text-default-300 text-xs mt-1">
+              When people like or comment on your looks, you&apos;ll see it
+              here.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {notifications.map((notif) => (
+              <button
+                key={notif.id}
+                className={`w-full text-left flex items-start gap-4 p-4 border transition-colors ${
+                  notif.isRead
+                    ? "border-default-200 bg-background"
+                    : "border-default-300 bg-default-50"
+                }`}
+                onClick={() => {
+                  if (!notif.isRead) markOneRead(notif.id);
+                  if (notif.actor?.username && notif.type === "follow") {
+                    router.push(`/u/${notif.actor.username}`);
+                  }
+                }}
+              >
+                {/* Icon */}
+                <div className="w-8 h-8 flex items-center justify-center bg-default-100 flex-shrink-0 mt-0.5">
+                  {NOTIF_ICONS[notif.type] || <BellIcon className="w-4 h-4" />}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    {notif.actor && (
+                      <Link
+                        href={`/u/${notif.actor.username}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Avatar
+                          className="w-6 h-6"
+                          name={notif.actor.name || notif.actor.username}
+                          src={notif.actor.image || undefined}
+                        />
+                      </Link>
+                    )}
+                    <p
+                      className={`text-sm ${notif.isRead ? "text-default-600" : "text-foreground font-medium"}`}
                     >
-                      <Avatar
-                        className="w-6 h-6"
-                        name={notif.actor.name || notif.actor.username}
-                        src={notif.actor.image || undefined}
-                      />
-                    </Link>
-                  )}
-                  <p
-                    className={`text-sm ${notif.isRead ? "text-default-600" : "text-foreground font-medium"}`}
-                  >
-                    {getNotifText(notif)}
+                      {getNotifText(notif)}
+                    </p>
+                  </div>
+                  <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
+                    {formatTimeAgo(notif.createdAt)}
                   </p>
                 </div>
-                <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
-                  {formatTimeAgo(notif.createdAt)}
-                </p>
-              </div>
 
-              {/* Unread dot */}
-              {!notif.isRead && (
-                <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+                {/* Unread dot */}
+                {!notif.isRead && (
+                  <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

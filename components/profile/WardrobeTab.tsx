@@ -73,7 +73,7 @@ export default function WardrobeTab({
       {/* RESPONSIVE HEADER: Column on mobile, Row on desktop */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-widest">
+          <h2 className="text-xl font-display font-light tracking-normal">
             Curated Collections
           </h2>
           <p className="text-xs text-default-400 mt-1">
@@ -123,7 +123,7 @@ export default function WardrobeTab({
               </div>
             </CardBody>
             <CardHeader className="px-0 pt-4 flex-col items-start">
-              <h3 className="text-lg font-bold uppercase tracking-tighter">
+              <h3 className="text-lg font-bold uppercase tracking-normal">
                 {wardrobe.title}
               </h3>
               <p className="text-xs text-default-400 uppercase tracking-widest">

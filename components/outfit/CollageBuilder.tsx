@@ -360,7 +360,7 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
             </PopoverTrigger>
             <PopoverContent className="p-2">
               <div className="space-y-1">
-                <p className="text-xs font-bold uppercase tracking-widest text-default-500 pb-1">
+                <p className="text-xs font-display font-light tracking-normal text-default-500 pb-1">
                   Canvas Size
                 </p>
                 {CANVAS_PRESETS.map((preset) => (

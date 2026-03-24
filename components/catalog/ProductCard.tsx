@@ -88,7 +88,7 @@ export default function ProductCard({
         href={`/catalog/${product.id}`}
       >
         <div className="flex justify-between w-full items-baseline">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-default-500">
+          <p className="text-[10px] font-display font-light tracking-normal text-default-500">
             {product.brand || "Unknown Brand"}
           </p>
           {product.originalprice && (

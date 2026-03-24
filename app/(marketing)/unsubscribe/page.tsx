@@ -41,7 +41,7 @@ function UnsubscribeContent() {
           <>
             <CheckCircleIcon className="w-14 h-14 text-success mx-auto" />
             <div className="space-y-2">
-              <h1 className="text-2xl font-black uppercase tracking-tighter italic">
+              <h1 className="text-2xl font-display font-light tracking-normal">
                 You&apos;re unsubscribed.
               </h1>
               <p className="text-default-500 text-sm">
@@ -63,7 +63,7 @@ function UnsubscribeContent() {
           <>
             <XCircleIcon className="w-14 h-14 text-danger mx-auto" />
             <div className="space-y-2">
-              <h1 className="text-2xl font-black uppercase tracking-tighter italic">
+              <h1 className="text-2xl font-display font-light tracking-normal">
                 Something went wrong.
               </h1>
               <p className="text-default-500 text-sm">
@@ -85,7 +85,7 @@ function UnsubscribeContent() {
           <>
             <XCircleIcon className="w-14 h-14 text-warning mx-auto" />
             <div className="space-y-2">
-              <h1 className="text-2xl font-black uppercase tracking-tighter italic">
+              <h1 className="text-2xl font-display font-light tracking-normal">
                 Invalid link.
               </h1>
               <p className="text-default-500 text-sm">

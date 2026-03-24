@@ -45,7 +45,7 @@ export function InsightsCard({ insights }: { insights: Insight[] }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="border-b border-default-200 dark:border-default-700 pb-4">
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground-600">
+        <h3 className="text-[11px] font-display font-light tracking-normal text-foreground-600">
           Wardrobe Intelligence
         </h3>
       </div>

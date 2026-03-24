@@ -153,7 +153,7 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
         onClick={handleCardClick}
       >
         <div className="flex justify-between w-full items-baseline">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-default-500">
+          <p className="text-[10px] font-display font-light tracking-normal text-default-500">
             {item.brand || "Unbranded"}
           </p>
           {item.price && (

@@ -43,7 +43,7 @@ export function StatsCard({
         </p>
 
         {/* Value */}
-        <p className="text-4xl font-black tracking-tight mb-2 text-[#171717] dark:text-[#EDEDED] italic">
+        <p className="text-4xl font-display font-light tracking-normal mb-2 text-[#171717] dark:text-[#EDEDED] italic">
           {value}
         </p>
 
@@ -64,7 +64,7 @@ export function StatsCard({
             ) : (
               <ArrowTrendingDownIcon className="w-3.5 h-3.5" />
             )}
-            <span className="text-[10px] tracking-[0.1em]">{trend}</span>
+            <span className="text-[10px] tracking-normal">{trend}</span>
           </div>
         )}
       </CardBody>

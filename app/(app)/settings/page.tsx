@@ -259,7 +259,13 @@ export default function SettingsPage() {
   return (
     <div className="w-full max-w-5xl mx-auto px-6 py-12">
       {/* HEADER */}
-      <div className="flex items-center gap-4 mb-12">
+      <header className="wardrobe-page-header">
+        <div>
+          <h1 className="wardrobe-page-title">Settings</h1>
+          <p className="wardrobe-page-subtitle">
+            Manage account, profile &amp; visibility
+          </p>
+        </div>
         <Button
           isIconOnly
           radius="full"
@@ -268,15 +274,7 @@ export default function SettingsPage() {
         >
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
-            Settings
-          </h1>
-          <p className="text-xs uppercase tracking-widest text-default-500">
-            Manage account, profile & visibility
-          </p>
-        </div>
-      </div>
+      </header>
 
       {/* MESSAGE BANNER */}
       {message.text && (
@@ -328,7 +326,7 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
                   <UserCircleIcon className="w-6 h-6" /> Profile Details
                 </h2>
                 <Divider className="my-4" />
@@ -450,7 +448,7 @@ export default function SettingsPage() {
           {activeTab === "socials" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
                   <AtSymbolIcon className="w-6 h-6" /> Social Connections
                 </h2>
                 <Divider className="my-4" />
@@ -521,7 +519,7 @@ export default function SettingsPage() {
           {activeTab === "preferences" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
                   <AdjustmentsHorizontalIcon className="w-6 h-6" /> App
                   Preferences
                 </h2>
@@ -640,7 +638,7 @@ export default function SettingsPage() {
           {activeTab === "subscription" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
                   <CreditCardIcon className="w-6 h-6" /> Subscription
                 </h2>
                 <Divider className="my-4" />
@@ -653,11 +651,11 @@ export default function SettingsPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <SparklesIcon className="w-5 h-5" />
-                          <span className="text-xs font-bold uppercase tracking-widest opacity-60">
+                          <span className="text-xs font-display font-light tracking-normal opacity-60">
                             Current Plan
                           </span>
                         </div>
-                        <h3 className="text-3xl font-black uppercase italic tracking-tighter">
+                        <h3 className="text-3xl font-display font-light tracking-normal">
                           Premium
                         </h3>
                       </div>
@@ -715,7 +713,7 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
                   <ShieldCheckIcon className="w-6 h-6" /> Password & Auth
                 </h2>
                 <Divider className="my-4" />

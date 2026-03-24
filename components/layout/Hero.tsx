@@ -19,7 +19,7 @@ export default function Hero() {
           </span>
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground-500">
+        <h1 className="text-6xl md:text-7xl font-display font-light tracking-normal mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground-500">
           Your Closet, <br />
           <span className="text-primary">Perfectly Organized.</span>
         </h1>

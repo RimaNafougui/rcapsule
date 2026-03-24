@@ -141,7 +141,7 @@ export default function OutfitDetailPage() {
               </Chip>
             )}
           </div>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+          <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
             {outfit.name}
           </h1>
           {outfit.description && (
@@ -170,7 +170,7 @@ export default function OutfitDetailPage() {
             )}
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest mb-6">
+            <h3 className="text-xs font-display font-light tracking-normal mb-6">
               Deconstructed Look
             </h3>
             <div className="space-y-4">
@@ -197,10 +197,10 @@ export default function OutfitDetailPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                    <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                       {item.brand || item.category}
                     </p>
-                    <p className="font-medium uppercase tracking-tight group-hover:underline">
+                    <p className="font-medium uppercase tracking-normal group-hover:underline">
                       {item.name}
                     </p>
                   </div>

@@ -26,7 +26,7 @@ export function ColorPalette({ colors }: { colors: ColorStat[] }) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xs font-bold uppercase tracking-widest text-default-500 mb-4">
+      <h3 className="text-xs font-display font-light tracking-normal text-default-500 mb-4">
         Color Analysis
       </h3>
       <div className="space-y-3">

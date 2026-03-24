@@ -76,7 +76,7 @@ function LoginFormContent() {
       initial={{ opacity: 0, y: 10 }}
     >
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-extrabold tracking-tighter uppercase italic">
+        <h2 className="text-3xl font-display font-light tracking-normal">
           Welcome Back
         </h2>
         <p className="text-default-500 text-sm tracking-wide">

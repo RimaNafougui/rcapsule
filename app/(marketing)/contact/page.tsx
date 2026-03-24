@@ -42,7 +42,7 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Left Side: Contact Info */}
         <div>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+          <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
             Get in Touch
           </h1>
           <p className="text-default-500 mb-8 text-lg">
@@ -85,7 +85,7 @@ export default function ContactPage() {
           {succeeded ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12 animate-in fade-in zoom-in duration-300">
               <CheckCircleIcon className="w-16 h-16 text-success" />
-              <h3 className="text-2xl font-bold uppercase tracking-tight">
+              <h3 className="text-2xl font-bold uppercase tracking-normal">
                 Message Sent
               </h3>
               <p className="text-default-500">
@@ -143,7 +143,7 @@ export default function ContactPage() {
 
               <Button
                 fullWidth
-                className="font-bold uppercase tracking-widest h-12 shadow-lg shadow-primary/20"
+                className="font-display font-light tracking-normal h-12 shadow-lg shadow-primary/20"
                 color="primary"
                 isLoading={submitting}
                 radius="sm"

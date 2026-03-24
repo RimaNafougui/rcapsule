@@ -25,7 +25,7 @@ export function SectionHeader({
       )}
     >
       <div>
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic">
+        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal">
           {title}
         </h1>
         {subtitle && (

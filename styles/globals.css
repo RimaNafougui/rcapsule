@@ -75,11 +75,10 @@ html {
 }
 
 .wardrobe-page-title {
+  font-family: var(--font-display);
   font-size: var(--text-h1);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.05em;
-  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0em;
 }
 
 .wardrobe-page-subtitle {
@@ -124,11 +123,10 @@ html {
 }
 
 .wardrobe-category-title {
+  font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-  letter-spacing: -0.05em;
+  font-weight: 300;
+  letter-spacing: 0em;
 }
 
 .wardrobe-category-count {

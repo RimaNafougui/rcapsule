@@ -109,7 +109,7 @@ export default function ProfileHeader({
             {/* Top Row: Name & Handle */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-black uppercase tracking-tighter italic">
+                <h1 className="text-3xl font-display font-light tracking-normal">
                   {user.name}
                 </h1>
                 <div className="flex items-center gap-2 text-default-500">
@@ -227,19 +227,19 @@ export default function ProfileHeader({
         <div className="hidden md:grid grid-cols-4 gap-4 py-8 border-t border-default-200">
           <div className="space-y-1">
             <p className="text-4xl font-light">{stats.items}</p>
-            <p className="text-xs font-bold uppercase tracking-widest text-default-400">
+            <p className="text-xs font-display font-light tracking-normal text-default-400">
               Total Items
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-4xl font-light">{stats.wardrobes}</p>
-            <p className="text-xs font-bold uppercase tracking-widest text-default-400">
+            <p className="text-xs font-display font-light tracking-normal text-default-400">
               Collections
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-4xl font-light">{stats.outfits}</p>
-            <p className="text-xs font-bold uppercase tracking-widest text-default-400">
+            <p className="text-xs font-display font-light tracking-normal text-default-400">
               Created Looks
             </p>
           </div>
@@ -247,7 +247,7 @@ export default function ProfileHeader({
             <p className="text-4xl font-light">
               ${stats.totalValue.toLocaleString()}
             </p>
-            <p className="text-xs font-bold uppercase tracking-widest text-default-400">
+            <p className="text-xs font-display font-light tracking-normal text-default-400">
               Closet Value
             </p>
           </div>

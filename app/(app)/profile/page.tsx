@@ -201,7 +201,7 @@ export default function ProfilePage() {
                 {/* Color DNA */}
                 <div className="bg-background border border-default-200 p-6 shadow-sm">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-default-500">
+                    <h3 className="text-sm font-display font-light tracking-normal text-default-500">
                       Color DNA
                     </h3>
                     <p className="text-xs text-default-400 mt-1">
@@ -219,7 +219,7 @@ export default function ProfilePage() {
 
                 {/* Top Designers */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-default-500">
+                  <h3 className="text-sm font-display font-light tracking-normal text-default-500">
                     Top Designers
                   </h3>
                   <div className="flex flex-col gap-2">
@@ -246,11 +246,11 @@ export default function ProfilePage() {
                             <span className="text-xs font-bold text-default-300 w-4">
                               0{index + 1}
                             </span>
-                            <span className="text-lg font-black uppercase italic tracking-tighter text-foreground group-hover:translate-x-2 transition-transform duration-300">
+                            <span className="text-lg font-display font-light tracking-normal text-foreground group-hover:translate-x-2 transition-transform duration-300">
                               {brand}
                             </span>
                           </div>
-                          <span className="text-[10px] font-bold uppercase tracking-widest bg-content2 px-2 py-1 text-default-500 rounded-sm">
+                          <span className="text-[10px] font-display font-light tracking-normal bg-content2 px-2 py-1 text-default-500 rounded-sm">
                             {count} {count === 1 ? "Item" : "Items"}
                           </span>
                         </div>
@@ -270,7 +270,7 @@ export default function ProfilePage() {
               {/* Recently Acquired */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-default-500">
+                  <h3 className="text-sm font-display font-light tracking-normal text-default-500">
                     Recently Acquired
                   </h3>
                 </div>
@@ -341,7 +341,7 @@ export default function ProfilePage() {
                 {/* Header / Utility Bar */}
                 <div className="flex justify-between items-end">
                   <div>
-                    <h2 className="text-2xl font-black uppercase italic tracking-tighter">
+                    <h2 className="text-2xl font-display font-light tracking-normal">
                       Daily Curator
                     </h2>
                     <p className="text-xs text-default-400 uppercase tracking-widest mt-1">
@@ -372,7 +372,7 @@ export default function ProfilePage() {
 
                     <div className="md:col-span-2 h-64 border border-default-200 bg-content1 flex flex-col items-center justify-center gap-6 relative overflow-hidden group">
                       <div className="z-10 text-center space-y-2">
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-default-400">
+                        <p className="text-xs font-bold uppercase tracking-normal text-default-400">
                           Ready to dress?
                         </p>
                         <Button
@@ -410,7 +410,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-3 max-w-md">
-                  <h2 className="text-3xl font-black uppercase italic tracking-tighter">
+                  <h2 className="text-3xl font-display font-light tracking-normal">
                     Unlock The Edit
                   </h2>
                   <p className="text-default-500 text-sm">

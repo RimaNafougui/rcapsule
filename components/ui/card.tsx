@@ -67,7 +67,7 @@ export function FeatureCard({
   return (
     <DSCard hoverable className={className} variant="feature">
       {icon && <div className="mb-4">{icon}</div>}
-      <h3 className="font-bold uppercase tracking-widest text-sm mb-2">
+      <h3 className="font-display font-light tracking-normal text-sm mb-2">
         {title}
       </h3>
       <p className="text-sm text-default-500 leading-relaxed">{description}</p>
@@ -96,7 +96,7 @@ export function StatCard({
       <div className="text-[10px] uppercase tracking-widest opacity-60 mb-1">
         {label}
       </div>
-      <div className="text-3xl md:text-4xl font-mono font-light tracking-tighter">
+      <div className="text-3xl md:text-4xl font-mono font-light tracking-normal">
         {value}
       </div>
       {subtitle && <div className="text-xs opacity-40 mt-1">{subtitle}</div>}

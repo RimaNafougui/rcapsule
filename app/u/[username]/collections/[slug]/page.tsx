@@ -143,7 +143,7 @@ export default function PublicCollectionPage() {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-black uppercase tracking-tighter italic">
+          <h1 className="text-3xl font-display font-light tracking-normal">
             Collection Not Found
           </h1>
           <p className="text-default-500 max-w-sm mx-auto">
@@ -256,7 +256,7 @@ export default function PublicCollectionPage() {
               </div>
 
               {/* TITLE */}
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white drop-shadow-2xl leading-none mb-6">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none mb-6">
                 {collection.title}
               </h1>
 
@@ -421,11 +421,11 @@ export default function PublicCollectionPage() {
 
                 <div className="space-y-1">
                   {item.brand && (
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                    <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                       {item.brand}
                     </p>
                   )}
-                  <h3 className="text-sm font-medium uppercase tracking-tight truncate">
+                  <h3 className="text-sm font-medium uppercase tracking-normal truncate">
                     {item.name}
                   </h3>
                   <p className="text-xs text-default-400 capitalize">

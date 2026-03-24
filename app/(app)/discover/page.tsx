@@ -86,7 +86,6 @@ export default function DiscoverPage() {
         setHasMore(newOutfits.length === LIMIT);
         setOffset(currentOffset + newOutfits.length);
       } catch {
-        // Silent fail — show empty state
       } finally {
         setLoading(false);
         setLoadingMore(false);
@@ -112,23 +111,23 @@ export default function DiscoverPage() {
   };
 
   return (
-    <div className="py-8 min-h-screen">
+    <div className="wardrobe-page-container min-h-screen">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-2">
-          Discover
-        </h1>
-        <p className="text-default-500 text-sm">
-          Real outfits from real people. Find your next inspiration.
-        </p>
-      </div>
+      <header className="wardrobe-page-header">
+        <div>
+          <h1 className="wardrobe-page-title">Discover</h1>
+          <p className="wardrobe-page-subtitle">
+            Real outfits from real people. Find your next inspiration.
+          </p>
+        </div>
+      </header>
 
       {/* Tabs */}
       <div className="flex items-center gap-1 border-b border-default-200 mb-6">
         {(["trending", "recent", "following"] as SortTab[]).map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-3 text-xs font-bold uppercase tracking-widest transition-colors relative ${
+            className={`px-4 py-3 text-xs font-display font-light tracking-normal transition-colors relative ${
               activeTab === tab
                 ? "text-foreground"
                 : "text-default-400 hover:text-default-600"
@@ -243,7 +242,7 @@ function OutfitCard({ outfit }: { outfit: FeedOutfit }) {
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute bottom-0 left-0 w-full p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-            <p className="text-white font-bold uppercase tracking-tight text-xs truncate">
+            <p className="text-white font-bold uppercase tracking-normal text-xs truncate">
               {outfit.name}
             </p>
           </div>

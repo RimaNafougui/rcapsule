@@ -9,7 +9,7 @@ export default function RefundPolicyPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
       <header className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+        <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
           Refund Policy
         </h1>
         <p className="text-default-500 text-sm">
@@ -20,7 +20,7 @@ export default function RefundPolicyPage() {
       <div className="prose prose-neutral dark:prose-invert max-w-none space-y-8">
         {/* Overview */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Overview
           </h2>
           <p className="text-default-600">
@@ -33,7 +33,7 @@ export default function RefundPolicyPage() {
 
         {/* 7-Day Guarantee */}
         <section className="border border-default-200 p-6 bg-default-50">
-          <h2 className="text-xl font-bold uppercase tracking-tight mb-4">
+          <h2 className="text-xl font-bold uppercase tracking-normal mb-4">
             7-Day Money-Back Guarantee
           </h2>
           <p className="text-default-600 mb-4">
@@ -51,7 +51,7 @@ export default function RefundPolicyPage() {
 
         {/* How to Request */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             How to Request a Refund
           </h2>
           <p className="text-default-600 mb-4">
@@ -79,7 +79,7 @@ export default function RefundPolicyPage() {
 
         {/* Subscription Cancellation */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Subscription Cancellation
           </h2>
           <p className="text-default-600 mb-4">
@@ -105,7 +105,7 @@ export default function RefundPolicyPage() {
 
         {/* Refunds After 7 Days */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Refunds After 7 Days
           </h2>
           <p className="text-default-600 mb-4">
@@ -132,7 +132,7 @@ export default function RefundPolicyPage() {
 
         {/* Annual Subscriptions */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Annual Subscriptions
           </h2>
           <p className="text-default-600">
@@ -146,7 +146,7 @@ export default function RefundPolicyPage() {
 
         {/* Payment Processing */}
         <section>
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Payment Processing
           </h2>
           <p className="text-default-600">
@@ -165,7 +165,7 @@ export default function RefundPolicyPage() {
 
         {/* Contact */}
         <section className="border-t border-default-200 pt-8 mt-8">
-          <h2 className="text-xl font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-bold uppercase tracking-normal">
             Questions?
           </h2>
           <p className="text-default-600 mb-4">

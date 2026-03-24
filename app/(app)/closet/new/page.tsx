@@ -190,7 +190,7 @@ export default function NewItemPage() {
             <ArrowLeftIcon className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
               New Acquisition
             </h1>
             <p className="text-xs uppercase tracking-widest text-default-500">

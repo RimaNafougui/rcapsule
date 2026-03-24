@@ -197,7 +197,7 @@ export default function CatalogItemPage({
         <div className="flex-1 space-y-6">
           {/* Brand + badges */}
           <div className="flex items-center gap-3 flex-wrap">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-default-500">
+            <p className="text-xs font-bold uppercase tracking-normal text-default-500">
               {product.brand}
             </p>
             <Chip radius="none" size="sm" variant="flat">
@@ -229,7 +229,7 @@ export default function CatalogItemPage({
           {/* Description */}
           {product.description && (
             <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-default-400">
+              <h2 className="text-[10px] font-bold uppercase tracking-normal mb-2 text-default-400">
                 Description
               </h2>
               <p className="text-sm font-light text-default-600 leading-relaxed">
@@ -241,7 +241,7 @@ export default function CatalogItemPage({
           {/* Materials */}
           {product.materials && (
             <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-default-400">
+              <h2 className="text-[10px] font-bold uppercase tracking-normal mb-2 text-default-400">
                 Materials
               </h2>
               <p className="text-sm font-light text-default-600">
@@ -253,7 +253,7 @@ export default function CatalogItemPage({
           {/* Colors */}
           {product.colors && product.colors.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-default-400">
+              <h2 className="text-[10px] font-bold uppercase tracking-normal mb-2 text-default-400">
                 Colors
               </h2>
               <div className="flex gap-2 flex-wrap">
@@ -269,7 +269,7 @@ export default function CatalogItemPage({
           {/* Sustainability */}
           {product.sustainability && (
             <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-default-400">
+              <h2 className="text-[10px] font-bold uppercase tracking-normal mb-2 text-default-400">
                 Sustainability
               </h2>
               <p className="text-sm font-light text-default-600">

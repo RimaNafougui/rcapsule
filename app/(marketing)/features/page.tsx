@@ -74,7 +74,7 @@ export default function FeaturesPage() {
   return (
     <Container className="py-16">
       <div className="text-center max-w-2xl mx-auto mb-16">
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-black uppercase tracking-tighter italic mb-2">
+        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-2">
           Built for the Community. <br /> Powered by the Technology.
         </h1>
         <p className="text-default-500 uppercase tracking-widest text-sm">
@@ -83,7 +83,7 @@ export default function FeaturesPage() {
       </div>
 
       <div className="mb-6">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-default-400 mb-6">
+        <h2 className="text-xs font-display font-light tracking-normal text-default-400 mb-6">
           Community
         </h2>
         <motion.div
@@ -107,7 +107,7 @@ export default function FeaturesPage() {
       </div>
 
       <div className="mb-16">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-default-400 mb-6">
+        <h2 className="text-xs font-display font-light tracking-normal text-default-400 mb-6">
           Tools
         </h2>
         <motion.div

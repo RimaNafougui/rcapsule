@@ -442,7 +442,7 @@ export default function EditOutfitPage() {
             <ArrowLeftIcon className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic mb-2">
+            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
               Edit Look
             </h1>
             <p className="text-xs uppercase tracking-widest text-default-500">
@@ -592,7 +592,7 @@ export default function EditOutfitPage() {
           )}
 
           <div className="border border-danger-200 p-4">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-danger mb-3">
+            <h4 className="text-xs font-display font-light tracking-normal text-danger mb-3">
               Danger Zone
             </h4>
             <Button
@@ -611,7 +611,7 @@ export default function EditOutfitPage() {
 
         <div className="lg:col-span-7 space-y-12">
           <section className="space-y-6">
-            <h3 className="text-xs font-bold uppercase tracking-widest border-b border-divider pb-2">
+            <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
               Look Details
             </h3>
             <Input
@@ -679,7 +679,7 @@ export default function EditOutfitPage() {
 
           <section className="space-y-6">
             <div className="flex justify-between items-end border-b border-divider pb-2">
-              <h3 className="text-xs font-bold uppercase tracking-widest">
+              <h3 className="text-xs font-display font-light tracking-normal">
                 Pieces ({selectedClothes.length})
               </h3>
               <Button
@@ -782,7 +782,7 @@ export default function EditOutfitPage() {
 
           {availableWardrobes.length > 0 && (
             <section className="space-y-6">
-              <h3 className="text-xs font-bold uppercase tracking-widest border-b border-divider pb-2">
+              <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
                 Collections
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -899,7 +899,7 @@ export default function EditOutfitPage() {
                   return (
                     <div key={category} className="mb-8">
                       <div className="flex items-center gap-3 mb-4 pb-2 border-b border-default-200">
-                        <h4 className="text-xs font-bold uppercase tracking-widest">
+                        <h4 className="text-xs font-display font-light tracking-normal">
                           {category}
                         </h4>
                         <Chip className="text-[10px]" size="sm" variant="flat">

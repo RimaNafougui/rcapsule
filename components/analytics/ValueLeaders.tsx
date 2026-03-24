@@ -7,7 +7,7 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
       {/* Best Value - Editorial Style */}
       <div className="bg-[#2d4530]/5 border-l-4 border-[#2d4530] p-6">
         <div className="mb-6">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2d4530] mb-1">
+          <h3 className="text-[11px] font-display font-light tracking-normal text-[#2d4530] mb-1">
             Investment Pieces
           </h3>
           <p className="text-xs text-[#6b7884] italic">
@@ -45,7 +45,7 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
       {/* Needs Attention */}
       <div className="bg-[#5e4b3b]/5 border-l-4 border-[#5e4b3b] p-6">
         <div className="mb-6">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#5e4b3b] mb-1">
+          <h3 className="text-[11px] font-display font-light tracking-normal text-[#5e4b3b] mb-1">
             Wardrobe Edit
           </h3>
           <p className="text-xs text-[#6b7884] italic">

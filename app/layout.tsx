@@ -13,19 +13,20 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 
 // app/layout.tsx
 export const metadata: Metadata = {
+  metadataBase: new URL("https://rcapsule.com"),
   title: {
-    default: "Rcapsule — Your Digital Closet",
+    default: "Rcapsule — Your Digital Wardrobe",
     template: `%s | Rcapsule`,
   },
   description:
-    "Organize your wardrobe and plan outfits with ease using Rcapsule.",
+    "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Rcapsule — Your Digital Closet",
+    title: "Rcapsule — Your Digital Wardrobe",
     description:
-      "Organize your wardrobe and plan outfits with ease using Rcapsule.",
+      "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
     url: "https://rcapsule.com",
     siteName: "Rcapsule",
     type: "website",
@@ -33,12 +34,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rcapsule — Your Digital Closet",
-    description: "Organize your wardrobe and plan outfits with ease.",
+    title: "Rcapsule — Your Digital Wardrobe",
+    description:
+      "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://rcapsule.com",
+    canonical: "/",
   },
 };
 

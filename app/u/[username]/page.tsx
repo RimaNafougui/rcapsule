@@ -223,7 +223,7 @@ export default function PublicProfilePage() {
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
         <NoSymbolIcon className="w-16 h-16 text-default-300" />
         <div className="space-y-2">
-          <h1 className="text-3xl font-black uppercase tracking-tighter italic">
+          <h1 className="text-3xl font-display font-light tracking-normal">
             Profile Not Found
           </h1>
           <p className="text-default-500 max-w-sm mx-auto">
@@ -281,7 +281,7 @@ export default function PublicProfilePage() {
                 {/* Text Details */}
                 <div className="space-y-2">
                   <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 justify-center md:justify-start">
-                    <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic">
+                    <h1 className="text-3xl md:text-5xl font-display font-light tracking-normal">
                       {profile.name || profile.username}
                     </h1>
                     {profile.isVerified && (
@@ -470,7 +470,7 @@ export default function PublicProfilePage() {
               <div className="flex justify-center md:justify-start gap-8 md:gap-12 mt-8 md:mt-6">
                 <div className="text-center md:text-left">
                   <p className="text-2xl font-light">{profile.followerCount}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                     Followers
                   </p>
                 </div>
@@ -478,7 +478,7 @@ export default function PublicProfilePage() {
                   <p className="text-2xl font-light">
                     {profile.followingCount}
                   </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                     Following
                   </p>
                 </div>
@@ -486,7 +486,7 @@ export default function PublicProfilePage() {
                   <p className="text-2xl font-light">
                     {profile.publicOutfitCount}
                   </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                     Looks
                   </p>
                 </div>
@@ -494,7 +494,7 @@ export default function PublicProfilePage() {
                   <p className="text-2xl font-light">
                     {profile.publicWardrobeCount}
                   </p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                     Collections
                   </p>
                 </div>
@@ -556,7 +556,7 @@ export default function PublicProfilePage() {
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="absolute bottom-0 left-0 w-full p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <p className="text-white font-bold uppercase tracking-tight text-sm truncate">
+                            <p className="text-white font-bold uppercase tracking-normal text-sm truncate">
                               {outfit.name}
                             </p>
                             <div className="flex items-center gap-2 text-white/80 text-xs mt-1">
@@ -603,7 +603,7 @@ export default function PublicProfilePage() {
                           )}
                           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
                           <div className="absolute bottom-0 left-0 w-full p-6">
-                            <h3 className="text-white text-xl font-black uppercase italic tracking-tighter">
+                            <h3 className="text-white text-xl font-display font-light tracking-normal">
                               {wardrobe.title}
                             </h3>
                             <div className="flex items-center gap-4 text-white/90 text-xs font-medium mt-2 uppercase tracking-widest">

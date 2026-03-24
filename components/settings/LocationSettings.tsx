@@ -187,7 +187,7 @@ export default function LocationSettings() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
       <div>
-        <h2 className="text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+        <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
           <MapPinIcon className="w-6 h-6" /> Location & Weather
         </h2>
         <Divider className="my-4" />
@@ -221,13 +221,13 @@ export default function LocationSettings() {
         <div className="space-y-6">
           <div className="border border-default-200 p-6 bg-content1 h-full flex flex-col justify-between">
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest text-default-500 mb-2">
+              <h3 className="text-sm font-display font-light tracking-normal text-default-500 mb-2">
                 Current Status
               </h3>
               {location?.isSet ? (
                 <div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-black uppercase italic tracking-tighter">
+                    <span className="text-3xl font-display font-light tracking-normal">
                       {location.city}
                     </span>
                     <span className="text-lg font-light text-default-400 uppercase">
@@ -281,7 +281,7 @@ export default function LocationSettings() {
         <div className="space-y-8">
           {/* Manual Input Section */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-default-500">
+            <h3 className="text-sm font-display font-light tracking-normal text-default-500">
               Manual Entry
             </h3>
             <div className="flex flex-col gap-4">

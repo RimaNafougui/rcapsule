@@ -212,7 +212,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0, y: 10 }}
           >
             <div className="mb-8">
-              <h1 className="text-3xl font-black uppercase tracking-tighter italic mb-2">
+              <h1 className="text-3xl font-display font-light tracking-normal mb-2">
                 What&apos;s Your Style?
               </h1>
               <p className="text-default-500 text-sm">
@@ -232,7 +232,7 @@ export default function OnboardingPage() {
               <div className="space-y-6">
                 {orderedCategories.map((category) => (
                   <div key={category}>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-default-400 mb-3 capitalize">
+                    <p className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3 capitalize">
                       {category}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -268,7 +268,7 @@ export default function OnboardingPage() {
 
             <div className="mt-10 flex gap-3">
               <Button
-                className="flex-1 h-12 font-bold uppercase tracking-widest"
+                className="flex-1 h-12 font-display font-light tracking-normal"
                 color="primary"
                 isDisabled={selectedTags.length < 3}
                 isLoading={savingTags}
@@ -300,7 +300,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0, y: 10 }}
           >
             <div className="mb-8">
-              <h1 className="text-3xl font-black uppercase tracking-tighter italic mb-2">
+              <h1 className="text-3xl font-display font-light tracking-normal mb-2">
                 People Who Share Your Taste
               </h1>
               <p className="text-default-500 text-sm">
@@ -379,7 +379,7 @@ export default function OnboardingPage() {
 
             <div className="mt-10 flex gap-3">
               <Button
-                className="flex-1 h-12 font-bold uppercase tracking-widest"
+                className="flex-1 h-12 font-display font-light tracking-normal"
                 color="primary"
                 radius="none"
                 onPress={() => setStep(2)}
@@ -410,7 +410,7 @@ export default function OnboardingPage() {
               <div className="w-16 h-16 bg-foreground text-background flex items-center justify-center mx-auto mb-6">
                 <Check size={32} />
               </div>
-              <h1 className="text-3xl font-black uppercase tracking-tighter italic mb-3">
+              <h1 className="text-3xl font-display font-light tracking-normal mb-3">
                 You&apos;re All Set.
               </h1>
               <p className="text-default-500 text-sm max-w-sm mx-auto">

@@ -156,7 +156,7 @@ export const AppNavbar = ({ user }: { user: any }) => {
                 <NavbarMenuItem key={`${item.label}-${index}`}>
                   <NextLink
                     className={clsx(
-                      "w-full text-2xl font-light uppercase tracking-tighter py-2 transition-opacity duration-200",
+                      "w-full text-2xl font-light uppercase tracking-normal py-2 transition-opacity duration-200",
                       pathname === item.href ? "opacity-100" : "opacity-60",
                     )}
                     href={item.href}
@@ -171,7 +171,7 @@ export const AppNavbar = ({ user }: { user: any }) => {
                 <>
                   <NavbarMenuItem>
                     <NextLink
-                      className="text-2xl font-light uppercase tracking-tighter py-2"
+                      className="text-2xl font-light uppercase tracking-normal py-2"
                       href="/login"
                       onClick={() => setIsMenuOpen()}
                     >
@@ -180,7 +180,7 @@ export const AppNavbar = ({ user }: { user: any }) => {
                   </NavbarMenuItem>
                   <NavbarMenuItem>
                     <NextLink
-                      className="text-2xl font-light uppercase tracking-tighter py-2"
+                      className="text-2xl font-light uppercase tracking-normal py-2"
                       href="/signup"
                       onClick={() => setIsMenuOpen()}
                     >

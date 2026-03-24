@@ -405,7 +405,7 @@ export default function CalendarTracker({
           <div className="bg-default-100 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
             <PlusIcon className="w-6 h-6 text-default-500" />
           </div>
-          <p className="text-sm font-bold uppercase tracking-widest text-default-400">
+          <p className="text-sm font-display font-light tracking-normal text-default-400">
             Log Outfit for {format(currentDate, "MMM do")}
           </p>
         </div>
@@ -444,7 +444,7 @@ export default function CalendarTracker({
                           </Chip>
                         )}
                       </div>
-                      <h4 className="font-black text-2xl uppercase italic">
+                      <h4 className="font-display font-light text-2xl tracking-normal">
                         {entry.data.name}
                       </h4>
                       {entry.data.description && (
@@ -544,7 +544,7 @@ export default function CalendarTracker({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter min-w-[200px]">
+          <h2 className="text-2xl md:text-3xl font-display font-light tracking-normal min-w-[200px]">
             {getHeaderTitle()}
           </h2>
           <div className="flex gap-1 bg-default-100 rounded-full p-1">
@@ -638,7 +638,7 @@ export default function CalendarTracker({
             <span className="text-xs uppercase tracking-widest text-default-400">
               {selectedDate && format(selectedDate, "EEEE, MMMM do, yyyy")}
             </span>
-            <h3 className="font-black text-2xl uppercase italic">
+            <h3 className="font-display font-light text-2xl tracking-normal">
               {isEditing ? "Modify Log" : "Log Outfit"}
             </h3>
           </ModalHeader>
@@ -651,7 +651,7 @@ export default function CalendarTracker({
 
             <div className="flex flex-col md:flex-row h-full">
               <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-default-100 p-6 bg-default-50/50">
-                <p className="text-xs font-bold uppercase tracking-widest text-default-500 mb-4">
+                <p className="text-xs font-display font-light tracking-normal text-default-500 mb-4">
                   Select Outfit
                 </p>
 
@@ -788,7 +788,7 @@ export default function CalendarTracker({
               Cancel
             </Button>
             <Button
-              className="font-bold uppercase tracking-widest px-8"
+              className="font-display font-light tracking-normal px-8"
               color="primary"
               isDisabled={!selectedOutfitId}
               isLoading={submitting}

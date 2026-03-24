@@ -1,7 +1,7 @@
 export const Logo = () => (
   <div className="flex items-center gap-2">
     <div className="flex flex-col leading-none">
-      <span className="text-xl font-extrabold tracking-tighter text-inherit uppercase">
+      <span className="text-xl font-display font-light tracking-normal text-inherit uppercase">
         RCapsule
       </span>
       <span className="text-[10px] tracking-[0.3em] font-light uppercase opacity-70 ml-0.5">

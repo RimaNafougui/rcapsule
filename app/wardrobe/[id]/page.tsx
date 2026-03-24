@@ -289,7 +289,7 @@ export default function WardrobePage() {
                   </span>
                 </div>
                 {/* Title */}
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white drop-shadow-2xl leading-none">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none">
                   {wardrobe.title}
                 </h1>
 
@@ -412,11 +412,11 @@ export default function WardrobePage() {
                 {/* Details */}
                 <div className="space-y-1">
                   {item.brand && (
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                    <p className="text-[10px] font-display font-light tracking-normal text-default-400">
                       {item.brand}
                     </p>
                   )}
-                  <h3 className="text-sm font-medium uppercase tracking-tight truncate">
+                  <h3 className="text-sm font-medium uppercase tracking-normal truncate">
                     {item.name}
                   </h3>
                   <div className="flex gap-2 items-center">
@@ -440,7 +440,7 @@ export default function WardrobePage() {
               }}
             >
               <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
-              <span className="text-xs font-bold uppercase tracking-widest text-default-400 mt-2">
+              <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
                 Add Piece
               </span>
             </div>
