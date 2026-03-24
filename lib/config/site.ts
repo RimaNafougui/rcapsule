@@ -20,6 +20,10 @@ export const siteConfig = {
       href: "/wishlist",
     },
     {
+      label: "Collections",
+      href: "/collections",
+    },
+    {
       label: "Catalog",
       href: "/catalog",
     },
@@ -48,10 +52,6 @@ export const siteConfig = {
     {
       label: "Wishlist",
       href: "/wishlist",
-    },
-    {
-      label: "Collections",
-      href: "/collections",
     },
     {
       label: "Settings",

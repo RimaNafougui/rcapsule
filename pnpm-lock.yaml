@@ -134,6 +134,9 @@ importers:
       '@heroui/user':
         specifier: 2.2.22
         version: 2.2.22(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.11))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@heroui/theme@2.4.23(tailwindcss@4.1.11))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@next/third-parties':
+        specifier: ^16.2.1
+        version: 16.2.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
       '@react-aria/ssr':
         specifier: 3.9.10
         version: 3.9.10(react@19.2.1)
@@ -1627,6 +1630,12 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@next/third-parties@16.2.1':
+    resolution: {integrity: sha512-XyeT9WVBUdVXMrKFz0wTSrMc+O5JN2B08yU7JpK8YJiP/qBgc3q1kIfjop/pdnhT4W4oLjwXaqrMh7uWaoYILQ==}
+    peerDependencies:
+      next: ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0-beta.0
+      react: ^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -5537,6 +5546,9 @@ packages:
   text-segmentation@1.0.3:
     resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}
 
+  third-party-capital@1.0.20:
+    resolution: {integrity: sha512-oB7yIimd8SuGptespDAZnNkzIz+NWaJCu2RMsbs4Wmp9zSDUM8Nhi3s2OOcqYuv3mN4hitXc8DVx+LyUmbUDiA==}
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -7612,6 +7624,12 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.1.6':
     optional: true
+
+  '@next/third-parties@16.2.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
+    dependencies:
+      next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      react: 19.2.1
+      third-party-capital: 1.0.20
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -12116,6 +12134,8 @@ snapshots:
   text-segmentation@1.0.3:
     dependencies:
       utrie: 1.0.2
+
+  third-party-capital@1.0.20: {}
 
   tinybench@2.9.0: {}
 
