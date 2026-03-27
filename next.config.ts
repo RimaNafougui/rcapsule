@@ -94,4 +94,7 @@ export default withSentryConfig(nextConfig, {
   disableLogger: true,
 
   automaticVercelMonitors: true,
+
+  // Never let Sentry upload failures break the build (e.g. in CI with a stub token)
+  errorHandler: () => {},
 });

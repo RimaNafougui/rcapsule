@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 
 const schema = z.object({
   email: z.string().email(),
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     // Mark the contact as unsubscribed in Resend Audience.
     // contacts.create is an upsert — if the email already exists it updates it.
     if (process.env.RESEND_AUDIENCE_ID) {
-      await resend.contacts.create({
+      await getResend().contacts.create({
         email,
         audienceId: process.env.RESEND_AUDIENCE_ID,
         unsubscribed: true,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { sendWelcome, syncContact } from "@/lib/email/loops";
 import { publicLimiter } from "@/lib/ratelimit";
 
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   try {
     // Add to Resend Audience (contact list) if configured
     if (process.env.RESEND_AUDIENCE_ID) {
-      await resend.contacts.create({
+      await getResend().contacts.create({
         email,
         audienceId: process.env.RESEND_AUDIENCE_ID,
         unsubscribed: false,
