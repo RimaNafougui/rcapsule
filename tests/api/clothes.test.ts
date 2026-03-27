@@ -27,6 +27,12 @@ vi.mock("@/lib/supabase-server", () => ({
   getSupabaseServer: () => ({ from: mockFrom }),
 }));
 
+vi.mock("@/lib/redis", () => ({
+  cacheDel: vi.fn().mockResolvedValue(undefined),
+  analyticsKey: vi.fn((id: string) => `analytics:v1:${id}`),
+  ownedClothesKey: vi.fn((id: string) => `clothes:owned:v1:${id}`),
+}));
+
 function makeRequest(url: string, options?: RequestInit) {
   return new Request(url, options);
 }

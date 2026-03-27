@@ -31,14 +31,12 @@ export const metadata: Metadata = {
     url: "https://rcapsule.com",
     siteName: "Rcapsule",
     type: "website",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rcapsule — Your Digital Wardrobe",
+    title: "Rcapsule",
     description:
       "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "/",
