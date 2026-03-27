@@ -276,7 +276,7 @@ export default function ClosetPage() {
           )
         }
         suggestions={suggestions}
-        title="Capsule"
+        title="Closet"
         viewMode={viewMode}
         onAddNew={() => router.push("/closet/new")}
         onClearHistory={clearHistory}

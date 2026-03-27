@@ -183,7 +183,7 @@ export default function OutfitsPage() {
           </div>
         }
         suggestions={suggestions}
-        title="Lookbook"
+        title="Outfits"
         viewMode={viewMode}
         onAddNew={() => router.push("/outfits/new")}
         onClearHistory={clearHistory}
