@@ -25,7 +25,10 @@ export const clothesPostSchema = z.object({
   price: z.union([z.number(), z.string(), z.null()]).optional(),
   status: z.string().nullable().optional(),
   colors: z.array(z.string()).nullable().optional(),
-  season: z.union([z.string(), z.array(z.string())]).nullable().optional(),
+  season: z
+    .union([z.string(), z.array(z.string())])
+    .nullable()
+    .optional(),
   size: z.string().nullable().optional(),
   link: z.string().nullable().optional(),
   imageUrl: z.string().nullable().optional(),

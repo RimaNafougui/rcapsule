@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import {
   sendEmailVerification,
   sendPasswordReset,
   sendEmailChange,
-  sendWelcome,
   syncContact,
 } from "@/lib/email/loops";
 
@@ -54,17 +54,21 @@ function buildConfirmationUrl(
   redirectTo?: string,
 ) {
   const url = new URL(`${APP_URL}/auth/confirm`);
+
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", type);
   if (redirectTo) url.searchParams.set("next", redirectTo);
+
   return url.toString();
 }
 
 function buildResetUrl(tokenHash: string) {
   const url = new URL(`${APP_URL}/auth/confirm`);
+
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", "recovery");
   url.searchParams.set("next", "/account/reset-password");
+
   return url.toString();
 }
 
@@ -73,6 +77,7 @@ function buildResetUrl(tokenHash: string) {
 export async function POST(req: NextRequest) {
   // Verify the hook secret to ensure the request is from Supabase
   const authHeader = req.headers.get("authorization");
+
   if (HOOK_SECRET && authHeader !== `Bearer ${HOOK_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -137,6 +142,7 @@ export async function POST(req: NextRequest) {
         if (!data.token_hash) break;
 
         const resetUrl = buildResetUrl(data.token_hash);
+
         await sendPasswordReset({ email, firstName, resetUrl });
         break;
       }
@@ -184,6 +190,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[auth-hook] Failed to send email:", err);
+
     // Return 500 so Supabase knows delivery failed and can retry
     return NextResponse.json(
       { error: "Email delivery failed" },

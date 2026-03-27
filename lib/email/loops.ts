@@ -1,4 +1,3 @@
-import { LoopsClient } from "loops";
 import type {
   EmailVerificationPayload,
   PasswordResetPayload,
@@ -13,6 +12,8 @@ import type {
   LoopsContactProperties,
 } from "./types";
 
+import { LoopsClient } from "loops";
+
 // ─── Client ───────────────────────────────────────────────────────────────────
 
 let _loops: LoopsClient | null = null;
@@ -24,6 +25,7 @@ function getLoops(): LoopsClient {
     }
     _loops = new LoopsClient(process.env.LOOPS_API_KEY);
   }
+
   return _loops;
 }
 

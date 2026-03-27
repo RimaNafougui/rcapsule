@@ -5,6 +5,8 @@
 // Usage: copy the imports and the handleStripeLoopsEvents call into your
 // existing /app/api/webhooks/stripe/route.ts file.
 
+import Stripe from "stripe";
+
 import {
   sendInvoiceReceipt,
   sendSubscriptionStarted,
@@ -12,7 +14,6 @@ import {
   sendSubscriptionUpdated,
   syncContact,
 } from "@/lib/email/loops";
-import Stripe from "stripe";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -40,8 +41,10 @@ async function getCustomer(
     process.env.STRIPE_SECRET_KEY!,
   );
   const customer = await stripe.customers.retrieve(customerId);
+
   if (customer.deleted) return { email: null, name: null };
   const c = customer as Stripe.Customer;
+
   return {
     email: c.email ?? null,
     name: c.name ?? null, // coerce undefined → null
@@ -63,6 +66,7 @@ export async function handleStripeLoopsEvents(event: Stripe.Event) {
 
       // invoice.customer_email is the correct field in stripe@17+
       const email = invoice.customer_email;
+
       if (!email) break;
 
       const lineItem = invoice.lines.data[0];
@@ -88,6 +92,7 @@ export async function handleStripeLoopsEvents(event: Stripe.Event) {
     case "customer.subscription.created": {
       const subscription = event.data.object as Stripe.Subscription;
       const customer = await getCustomer(subscription.customer as string);
+
       if (!customer.email) break;
 
       const item = subscription.items.data[0];
@@ -122,6 +127,7 @@ export async function handleStripeLoopsEvents(event: Stripe.Event) {
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
       const customer = await getCustomer(subscription.customer as string);
+
       if (!customer.email) break;
 
       const item = subscription.items.data[0];
@@ -156,6 +162,7 @@ export async function handleStripeLoopsEvents(event: Stripe.Event) {
       if (!previousAttributes?.items) break;
 
       const customer = await getCustomer(subscription.customer as string);
+
       if (!customer.email) break;
 
       const newItem = subscription.items.data[0];

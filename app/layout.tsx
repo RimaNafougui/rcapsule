@@ -16,7 +16,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 export const metadata: Metadata = {
   metadataBase: new URL("https://rcapsule.com"),
   title: {
-    default: "Rcapsule — Your Digital Wardrobe",
+    default: "Rcapsule",
     template: `%s | Rcapsule`,
   },
   description:
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Rcapsule — Your Digital Wardrobe",
+    title: "Rcapsule",
     description:
       "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
     url: "https://rcapsule.com",
