@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import { createClient } from "@supabase/supabase-js";
 
 import { asUserId } from "@/types/branded";
+import { syncContact } from "@/lib/email/loops";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -205,6 +206,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           }
 
           user.id = userId;
+
+          syncContact({
+            email: user.email!,
+            firstName: user.name?.split(" ")[0],
+            userId: String(userId),
+            planTier: "free",
+            signedUpAt: new Date().toISOString(),
+          }).catch(() => {});
 
           return true;
         } catch (error) {

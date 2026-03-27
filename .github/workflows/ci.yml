@@ -61,6 +61,8 @@ jobs:
           AUTH_SECRET: test-auth-secret-32-chars-minimum!!
           STRIPE_SECRET_KEY: sk_test_fake
           NEXT_PUBLIC_SITE_URL: https://rcapsule.com
+          LOOPS_API_KEY: test-loops-key
+          SUPABASE_HOOK_SECRET: test-hook-secret
 
       # ── Build ─────────────────────────────────────────────────────────────
       - name: Build
@@ -84,3 +86,5 @@ jobs:
           OPENAI_API_KEY: test-key
           SENTRY_AUTH_TOKEN: test-sentry-token
           NEXT_PUBLIC_SENTRY_DSN: https://test@sentry.io/0
+          LOOPS_API_KEY: test-loops-key
+          SUPABASE_HOOK_SECRET: test-hook-secret

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { resend, FROM_EMAIL } from "@/lib/resend";
-import { NewsletterWelcome } from "@/emails/NewsletterWelcome";
+import { resend } from "@/lib/resend";
+import { sendWelcome, syncContact } from "@/lib/email/loops";
 import { publicLimiter } from "@/lib/ratelimit";
 
 const schema = z.object({
@@ -37,20 +37,14 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Send welcome email
-    const { error } = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: "You're on the list.",
-      react: NewsletterWelcome({ email }),
-    });
+    // Send welcome email via Loops
+    await sendWelcome({ email });
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Failed to send email" },
-        { status: 500 },
-      );
-    }
+    syncContact({
+      email,
+      planTier: "free",
+      signedUpAt: new Date().toISOString(),
+    }).catch(() => {});
 
     return NextResponse.json({ success: true });
   } catch (_err) {

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { signupSchema } from "@/lib/validations/schemas";
 import { authLimiter, getIdentifier, rateLimitResponse } from "@/lib/ratelimit";
+import { syncContact } from "@/lib/email/loops";
 
 export async function POST(req: Request) {
   const { success, reset } = await authLimiter().limit(getIdentifier(req));
@@ -106,6 +107,14 @@ export async function POST(req: Request) {
         }
       }
     }
+
+    syncContact({
+      email: authData.user.email!,
+      firstName: name?.split(" ")[0],
+      userId: authData.user.id,
+      planTier: "free",
+      signedUpAt: new Date().toISOString(),
+    }).catch((err) => console.error("[loops] contact sync failed:", err));
 
     return NextResponse.json(
       {

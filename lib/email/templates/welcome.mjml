@@ -1,0 +1,121 @@
+<mjml>
+  <mj-head>
+    <mj-title>Welcome to RCapsule</mj-title>
+    <mj-font name="Plus Jakarta Sans" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" />
+      <mj-body background-color="#FAFAFA" />
+      <mj-section background-color="#FFFFFF" padding="0" />
+      <mj-text color="#525252" font-size="15px" line-height="1.7" padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#FAFAFA">
+
+    <mj-section background-color="#FAFAFA" padding="32px 0 0">
+      <mj-column><mj-text> </mj-text></mj-column>
+    </mj-section>
+
+    <mj-section background-color="#FFFFFF" border="1px solid #E5E5E5" padding="0">
+      <mj-column padding="0">
+
+        <!-- Header — inverted for welcome -->
+        <mj-text padding="28px 40px" background-color="#171717">
+          <span style="font-size:18px;font-weight:700;letter-spacing:0.08em;color:#FFFFFF;text-transform:uppercase;">RCAPSULE</span>
+        </mj-text>
+
+        <!-- Hero text -->
+        <mj-text padding="40px 40px 0">
+          <p style="margin:0 0 16px;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A3A3A3;">Welcome</p>
+          <h1 style="margin:0 0 16px;font-size:32px;font-weight:300;color:#171717;line-height:1.2;letter-spacing:-0.02em;">Your wardrobe,<br/>curated.</h1>
+          <p style="margin:0 0 24px;width:32px;height:1px;background-color:#171717;font-size:0;line-height:0;"> </p>
+          <p style="margin:0 0 16px;">Hi {DATA_VARIABLE:firstName},</p>
+          <p style="margin:0 0 32px;">Welcome to RCapsule. You now have a beautifully organized space to catalogue your wardrobe, discover outfit ideas, and build a more intentional closet — one piece at a time.</p>
+        </mj-text>
+
+        <!-- Get started label -->
+        <mj-text padding="0 40px 16px">
+          <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A3A3A3;">Get started</p>
+        </mj-text>
+
+        <!-- Step 1 -->
+        <mj-text padding="0 40px 16px">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="32" valign="top" style="padding-top:2px;">
+                <span style="display:inline-block;width:24px;height:24px;background-color:#171717;color:#FFFFFF;font-size:11px;font-weight:700;text-align:center;line-height:24px;">1</span>
+              </td>
+              <td style="padding-left:12px;">
+                <p style="margin:0 0 2px;font-size:14px;font-weight:600;color:#171717;">Add your first item</p>
+                <p style="margin:0;font-size:13px;color:#737373;line-height:1.5;">Upload a photo, add details, and start building your digital closet.</p>
+              </td>
+            </tr>
+          </table>
+        </mj-text>
+
+        <!-- Step 2 -->
+        <mj-text padding="0 40px 16px">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="32" valign="top" style="padding-top:2px;">
+                <span style="display:inline-block;width:24px;height:24px;background-color:#171717;color:#FFFFFF;font-size:11px;font-weight:700;text-align:center;line-height:24px;">2</span>
+              </td>
+              <td style="padding-left:12px;">
+                <p style="margin:0 0 2px;font-size:14px;font-weight:600;color:#171717;">Create an outfit</p>
+                <p style="margin:0;font-size:13px;color:#737373;line-height:1.5;">Mix and match pieces into outfits you can log and revisit anytime.</p>
+              </td>
+            </tr>
+          </table>
+        </mj-text>
+
+        <!-- Step 3 -->
+        <mj-text padding="0 40px 32px">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="32" valign="top" style="padding-top:2px;">
+                <span style="display:inline-block;width:24px;height:24px;background-color:#171717;color:#FFFFFF;font-size:11px;font-weight:700;text-align:center;line-height:24px;">3</span>
+              </td>
+              <td style="padding-left:12px;">
+                <p style="margin:0 0 2px;font-size:14px;font-weight:600;color:#171717;">Explore Discover</p>
+                <p style="margin:0;font-size:13px;color:#737373;line-height:1.5;">See how others are styling their wardrobes and get inspired.</p>
+              </td>
+            </tr>
+          </table>
+        </mj-text>
+
+        <!-- CTA -->
+        <mj-button
+          href="https://rcapsule.com/closet"
+          background-color="#171717"
+          color="#FFFFFF"
+          font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="13px"
+          font-weight="600"
+          letter-spacing="0.08em"
+          text-transform="uppercase"
+          border-radius="0"
+          padding="0 40px 40px"
+          inner-padding="14px 32px"
+          align="left"
+        >
+          Open My Closet
+        </mj-button>
+
+        <!-- Footer -->
+        <mj-text padding="24px 40px" border-top="1px solid #E5E5E5" background-color="#FAFAFA" font-size="11px" color="#A3A3A3" line-height="1.6">
+          <p style="margin:0 0 8px;letter-spacing:0.06em;text-transform:uppercase;">RCapsule · Your digital wardrobe</p>
+          <p style="margin:0;">
+            You received this because you created an RCapsule account.<br/>
+<a href="https://rcapsule.com/privacy" style="color:#737373;">Privacy Policy</a>
+          </p>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#FAFAFA" padding="0 0 32px">
+      <mj-column><mj-text> </mj-text></mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
