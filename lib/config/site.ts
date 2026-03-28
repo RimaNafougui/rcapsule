@@ -4,20 +4,16 @@ export const siteConfig = {
   /** Logged-in navbar links (core actions only) */
   navItems: [
     {
-      label: "Discover",
-      href: "/discover",
-    },
-    {
       label: "Closet",
       href: "/closet",
     },
     {
-      label: "Outfits",
-      href: "/outfits",
-    },
-    {
       label: "Wishlist",
       href: "/wishlist",
+    },
+    {
+      label: "Outfits",
+      href: "/outfits",
     },
     {
       label: "Collections",
@@ -26,6 +22,10 @@ export const siteConfig = {
     {
       label: "Catalog",
       href: "/catalog",
+    },
+    {
+      label: "Discover",
+      href: "/discover",
     },
   ],
   /** Logged-out navbar links (marketing / conversion) */
@@ -37,10 +37,6 @@ export const siteConfig = {
     {
       label: "Features",
       href: "/features",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
     },
   ],
   /** Profile dropdown items (logged in) */
