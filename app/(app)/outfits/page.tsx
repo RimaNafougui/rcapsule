@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Image, Spinner, Switch } from "@heroui/react";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
+import useSWR from "swr";
 
 // Import your WardrobeHeader component
 // Note: Ensure the path matches where you saved the header component
@@ -28,13 +29,11 @@ interface Outfit {
   createdAt: string;
 }
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
 export default function OutfitsPage() {
   const { status } = useSession();
   const router = useRouter();
-
-  // --- Data State ---
-  const [outfits, setOutfits] = useState<Outfit[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // --- Header/Filter State ---
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,27 +48,18 @@ export default function OutfitsPage() {
   // --- Search History Hook ---
   const { history, addSearch, clearHistory } = useSearchHistory();
 
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/login");
-    else if (status === "authenticated") fetchOutfits();
-  }, [status, router]);
+  // --- Data via SWR ---
+  const {
+    data: outfits = [],
+    isLoading: swrLoading,
+    mutate,
+  } = useSWR<Outfit[]>(
+    status === "authenticated" ? "/api/outfits" : null,
+    fetcher,
+    { dedupingInterval: 30_000, revalidateOnFocus: true },
+  );
 
-  const fetchOutfits = async () => {
-    try {
-      const response = await fetch("/api/outfits");
-
-      if (response.ok) {
-        const data = await response.json();
-
-        setOutfits(Array.isArray(data) ? data : []);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load outfits. Please refresh.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loading = status === "loading" || swrLoading;
 
   const toggleFavorite = async (
     e: React.MouseEvent,
@@ -77,6 +67,13 @@ export default function OutfitsPage() {
     currentStatus: boolean,
   ) => {
     e.stopPropagation();
+    // Optimistic update
+    mutate(
+      outfits.map((o) =>
+        o.id === outfitId ? { ...o, isFavorite: !currentStatus } : o,
+      ),
+      false,
+    );
     try {
       const response = await fetch(`/api/outfits/${outfitId}`, {
         method: "PUT",
@@ -84,19 +81,12 @@ export default function OutfitsPage() {
         body: JSON.stringify({ isFavorite: !currentStatus }),
       });
 
-      if (response.ok) {
-        setOutfits((prev) =>
-          prev.map((outfit) =>
-            outfit.id === outfitId
-              ? { ...outfit, isFavorite: !currentStatus }
-              : outfit,
-          ),
-        );
-      } else {
+      if (!response.ok) {
+        mutate(); // revert
         toast.error("Failed to update favourite.");
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
+      mutate(); // revert
       toast.error("Failed to update favourite.");
     }
   };

@@ -10,6 +10,7 @@ const protectedRoutes = [
   "/wishlist",
   "/calendar",
   "/collections",
+  "/studio",
 ];
 
 const guestRoutes = [
@@ -46,6 +47,7 @@ export const config = {
     "/outfits/:path*",
     "/wishlist/:path*",
     "/calendar/:path*",
+    "/studio/:path*",
 
     "/login",
     "/signup",

@@ -7,7 +7,7 @@ import { handleStripeLoopsEvents } from "./loops-extension";
 import { cacheGet, cacheSet } from "@/lib/redis";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-12-15.clover",
+  apiVersion: "2026-02-25.clover",
 });
 
 const supabase = createClient(

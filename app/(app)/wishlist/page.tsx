@@ -68,7 +68,8 @@ export default function WishlistPage() {
     status === "authenticated" ? "/api/clothes?status=wishlist" : null,
     fetcher,
     {
-      revalidateOnFocus: true, // Auto-refresh when tab is focused
+      dedupingInterval: 30_000,
+      revalidateOnFocus: true,
     },
   );
 

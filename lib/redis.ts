@@ -94,3 +94,21 @@ export const OWNED_CLOTHES_TTL = 180;
 export function ownedClothesKey(userId: string) {
   return `clothes:owned:v1:${userId}`;
 }
+
+/** Clothes list page (owned or wishlist). TTL: 2 minutes. */
+export const CLOTHES_LIST_TTL = 120;
+export function clothesListKey(userId: string, status: "owned" | "wishlist") {
+  return `clothes:list:${status}:v1:${userId}`;
+}
+
+/** Outfits list. TTL: 2 minutes. */
+export const OUTFITS_TTL = 120;
+export function outfitsKey(userId: string) {
+  return `outfits:v1:${userId}`;
+}
+
+/** Wardrobes list. TTL: 5 minutes. */
+export const WARDROBES_TTL = 300;
+export function wardrobesKey(userId: string) {
+  return `wardrobes:v1:${userId}`;
+}

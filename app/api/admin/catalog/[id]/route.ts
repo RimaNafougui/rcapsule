@@ -136,6 +136,16 @@ export async function DELETE(
 
   try {
     const supabase = getSupabaseServer();
+
+    // Null out the FK on any Clothes rows that reference this product
+    // so PostgreSQL's foreign-key constraint doesn't block the delete.
+    const { error: unlinkError } = await supabase
+      .from("Clothes")
+      .update({ globalproductid: null })
+      .eq("globalproductid", id);
+
+    if (unlinkError) throw unlinkError;
+
     const { error } = await supabase
       .from("GlobalProduct")
       .delete()
@@ -144,7 +154,8 @@ export async function DELETE(
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (_error) {
+  } catch (err) {
+    console.error("[DELETE /api/admin/catalog]", err);
     return NextResponse.json(
       { error: "Failed to delete product" },
       { status: 500 },

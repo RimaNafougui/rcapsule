@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import {
+  cacheGet,
+  cacheSet,
+  cacheDel,
+  wardrobesKey,
+  WARDROBES_TTL,
+} from "@/lib/redis";
 
 export async function GET(req: Request) {
   try {
@@ -15,6 +22,14 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "100"), 100);
     const offset = parseInt(searchParams.get("offset") || "0");
+    const userId = session.user.id;
+
+    const isDefaultPage = limit === 100 && offset === 0;
+    if (isDefaultPage) {
+      const cached = await cacheGet(wardrobesKey(userId));
+      if (cached) return NextResponse.json(cached);
+    }
+
     const supabase = getSupabaseServer();
 
     const { data: wardrobes, error } = await supabase
@@ -43,6 +58,10 @@ export async function GET(req: Request) {
       createdAt: wardrobe.createdAt,
       updatedAt: wardrobe.updatedAt,
     }));
+
+    if (isDefaultPage) {
+      await cacheSet(wardrobesKey(userId), wardrobesWithCount, WARDROBES_TTL);
+    }
 
     return NextResponse.json(wardrobesWithCount);
   } catch (error) {
@@ -86,6 +105,8 @@ export async function POST(req: Request) {
     if (error) {
       throw error;
     }
+
+    await cacheDel(wardrobesKey(session.user.id));
 
     return NextResponse.json(wardrobe, { status: 201 });
   } catch (error) {

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { categories } from "@/lib/data";
+
 export const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -20,7 +22,7 @@ export const signupSchema = z.object({
 
 export const clothesPostSchema = z.object({
   name: z.string().min(1, "Name is required").max(200),
-  category: z.string().min(1, "Category is required"),
+  category: z.enum(categories, { error: "Invalid category" }),
   brand: z.string().nullable().optional(),
   price: z.union([z.number(), z.string(), z.null()]).optional(),
   status: z.string().nullable().optional(),

@@ -1,9 +1,10 @@
 "use client";
 import type { Wardrobe } from "@/lib/database.type";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import useSWR from "swr";
 import {
   Button,
   Card,
@@ -31,16 +32,24 @@ import {
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
 export default function CollectionsPage() {
   const { status } = useSession();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Data State
-  const [wardrobes, setWardrobes] = useState<
-    (Wardrobe & { clothesCount?: number })[]
-  >([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: wardrobes = [],
+    isLoading,
+    mutate,
+  } = useSWR<(Wardrobe & { clothesCount?: number })[]>(
+    status === "authenticated" ? "/api/wardrobes" : null,
+    fetcher,
+    { dedupingInterval: 30_000, revalidateOnFocus: true },
+  );
+  const loading = status === "loading" || isLoading;
   const [createLoading, setCreateLoading] = useState(false);
 
   // UI State
@@ -56,31 +65,6 @@ export default function CollectionsPage() {
     coverImage: "",
   });
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    } else if (status === "authenticated") {
-      fetchWardrobes();
-    }
-  }, [status, router]);
-
-  const fetchWardrobes = async () => {
-    try {
-      const res = await fetch("/api/wardrobes");
-
-      if (res.ok) {
-        const data = await res.json();
-
-        setWardrobes(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch wardrobes:", error);
-      toast.error("Failed to load collections. Please refresh.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleCreate = async () => {
     if (!newWardrobe.title.trim()) return;
 
@@ -93,7 +77,7 @@ export default function CollectionsPage() {
       });
 
       if (res.ok) {
-        fetchWardrobes();
+        await mutate();
         onClose();
         setNewWardrobe({
           title: "",

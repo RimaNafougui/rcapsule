@@ -42,7 +42,10 @@ import {
   CursorArrowRaysIcon,
   Square2StackIcon,
   CheckIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
+
+import { toast } from "sonner";
 
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { CANVAS_PRESETS } from "@/lib/hooks/collage/types";
@@ -58,6 +61,7 @@ interface CollageBuilderProps {
 
 export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [removingBgId, setRemovingBgId] = useState<string | null>(null);
   const [toolMode, setToolMode] = useState<ToolMode>("select");
   const [canvasSize, setCanvasSize] = useState({ width: 600, height: 800 });
   const {
@@ -171,6 +175,32 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [handleUndo, handleRedo, selectedId, removeItem, setSelectedId]);
+
+  const handleRemoveBg = async (uniqueId: string) => {
+    const item = canvasItems.find((i) => i.uniqueId === uniqueId);
+
+    if (!item?.imageUrl) return;
+    setRemovingBgId(uniqueId);
+    try {
+      const res = await fetch("/api/remove-bg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: item.imageUrl }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.image) {
+        updateItem(uniqueId, { imageUrl: data.image });
+        toast.success("Background removed");
+      } else {
+        toast.error(data.error || "Background removal failed");
+      }
+    } catch {
+      toast.error("Background removal failed");
+    } finally {
+      setRemovingBgId(null);
+    }
+  };
 
   const handleCanvasMouseDown = (e: React.MouseEvent) => {
     handlePanMouseDown(e, toolMode);
@@ -481,18 +511,20 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
           >
             <div
               ref={canvasRef}
-              className="relative bg-white shadow-xl"
+              className="relative shadow-xl"
               style={{
                 width: canvasSize.width,
                 height: canvasSize.height,
                 transform: `scale(${canvasZoom})`,
                 transformOrigin: "center center",
                 backgroundImage: showGrid
-                  ? `linear-gradient(to right, #f0f0f0 1px, transparent 1px), linear-gradient(to bottom, #f0f0f0 1px, transparent 1px)`
-                  : undefined,
+                  ? `linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px)`
+                  : "none",
                 backgroundSize: showGrid
                   ? `${gridSize}px ${gridSize}px`
-                  : undefined,
+                  : "auto",
+                backgroundColor: "#ffffff",
               }}
             >
               {canvasItems.length === 0 && (
@@ -581,6 +613,21 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
                             }}
                           >
                             <ScissorsIcon className="w-3 h-3" />
+                          </button>
+                          <button
+                            className="absolute -bottom-3 -left-3 bg-secondary text-white rounded-full p-1 shadow-md z-50 hover:scale-110 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={removingBgId === item.uniqueId}
+                            title="Remove background"
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              handleRemoveBg(item.uniqueId);
+                            }}
+                          >
+                            {removingBgId === item.uniqueId ? (
+                              <span className="w-3 h-3 block animate-spin border border-white border-t-transparent rounded-full" />
+                            ) : (
+                              <SparklesIcon className="w-3 h-3" />
+                            )}
                           </button>
                         </>
                       )}
@@ -799,6 +846,72 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
                   Vertical
                 </Button>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <p className="text-[10px] uppercase tracking-widest text-default-400">
+                  Rotation
+                </p>
+                <span className="text-[10px] text-default-500">
+                  {Math.round(selectedItem.rotation)}°
+                </span>
+              </div>
+              <Slider
+                className="max-w-full"
+                maxValue={180}
+                minValue={-180}
+                size="sm"
+                step={1}
+                value={selectedItem.rotation}
+                onChange={(val) =>
+                  updateItem(
+                    selectedItem.uniqueId,
+                    { rotation: val as number },
+                    false,
+                  )
+                }
+                onChangeEnd={(val) =>
+                  updateItem(selectedItem.uniqueId, {
+                    rotation: val as number,
+                  })
+                }
+              />
+              <Button
+                fullWidth
+                radius="none"
+                size="sm"
+                variant="flat"
+                onPress={() =>
+                  updateItem(selectedItem.uniqueId, { rotation: 0 })
+                }
+              >
+                Reset Rotation
+              </Button>
+            </div>
+
+            <Divider />
+
+            <div className="space-y-2">
+              <p className="text-[10px] uppercase tracking-widest text-default-400">
+                Background
+              </p>
+              <Button
+                fullWidth
+                color="secondary"
+                isLoading={removingBgId === selectedItem.uniqueId}
+                radius="none"
+                size="sm"
+                startContent={
+                  removingBgId !== selectedItem.uniqueId && (
+                    <SparklesIcon className="w-4 h-4" />
+                  )
+                }
+                variant="flat"
+                onPress={() => handleRemoveBg(selectedItem.uniqueId)}
+              >
+                Remove Background
+              </Button>
             </div>
 
             <Divider />

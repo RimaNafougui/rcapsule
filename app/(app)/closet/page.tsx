@@ -70,7 +70,8 @@ export default function ClosetPage() {
     status === "authenticated" ? "/api/clothes?status=owned" : null,
     fetcher,
     {
-      revalidateOnFocus: true, // This enables the auto-refresh on window focus
+      dedupingInterval: 30_000,
+      revalidateOnFocus: true,
     },
   );
 

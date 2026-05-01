@@ -227,6 +227,7 @@ export default function WardrobeHeader({
 
         {/* Sort Select */}
         <Select
+          id="wardrobe-sort-select"
           aria-label="Sort by"
           className="w-full sm:w-40"
           classNames={{

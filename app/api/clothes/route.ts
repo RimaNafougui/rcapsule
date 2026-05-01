@@ -4,7 +4,15 @@ import * as Sentry from "@sentry/nextjs";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { clothesPostSchema } from "@/lib/validations/schemas";
-import { cacheDel, analyticsKey, ownedClothesKey } from "@/lib/redis";
+import {
+  cacheGet,
+  cacheSet,
+  cacheDel,
+  analyticsKey,
+  ownedClothesKey,
+  clothesListKey,
+  CLOTHES_LIST_TTL,
+} from "@/lib/redis";
 
 export async function GET(req: Request) {
   return await Sentry.startSpan(
@@ -59,6 +67,18 @@ export async function GET(req: Request) {
           return NextResponse.json(clothes);
         } else {
           // 2. FETCHING ALL CLOTHES (Main Closet / Wishlist)
+          const isCacheableStatus =
+            (statusFilter === "owned" || statusFilter === "wishlist") &&
+            offset === 0 &&
+            limit === 200;
+
+          if (isCacheableStatus) {
+            const cached = await cacheGet(
+              clothesListKey(userId, statusFilter as "owned" | "wishlist"),
+            );
+            if (cached) return NextResponse.json(cached);
+          }
+
           let query = supabase
             .from("Clothes")
             .select(
@@ -96,6 +116,14 @@ export async function GET(req: Request) {
           span?.setAttribute("result_count", clothes?.length || 0);
           span?.setAttribute("query_type", "all_clothes");
           span?.setAttribute("status_filter", statusFilter || "all");
+
+          if (isCacheableStatus) {
+            await cacheSet(
+              clothesListKey(userId, statusFilter as "owned" | "wishlist"),
+              clothes || [],
+              CLOTHES_LIST_TTL,
+            );
+          }
 
           return NextResponse.json(clothes || []);
         }
@@ -231,9 +259,13 @@ export async function POST(req: Request) {
       .eq("id", clothing.id)
       .single();
 
-    // Invalidate analytics and owned-clothes caches so the next read
-    // reflects the new item immediately.
-    await cacheDel(analyticsKey(userId), ownedClothesKey(userId));
+    // Invalidate all affected caches so the next read reflects the new item.
+    await cacheDel(
+      analyticsKey(userId),
+      ownedClothesKey(userId),
+      clothesListKey(userId, "owned"),
+      clothesListKey(userId, "wishlist"),
+    );
 
     return NextResponse.json(clothingWithWardrobes || clothing, {
       status: 201,

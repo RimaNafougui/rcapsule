@@ -4,7 +4,8 @@ import type { Clothes, Wardrobe, Outfit } from "@/lib/database.type";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import useSWR from "swr";
 import {
   Tabs,
   Tab,
@@ -48,11 +49,24 @@ export default function ProfilePage() {
   const router = useRouter();
   const isPremium = user?.subscription_status === "premium";
 
-  // Data State
-  const [loading, setLoading] = useState(true);
-  const [wardrobes, setWardrobes] = useState<ExtendedWardrobe[]>([]);
-  const [clothes, setClothes] = useState<Clothes[]>([]);
-  const [outfits, setOutfits] = useState<Outfit[]>([]);
+  // Data via SWR — reuses the same keys as Collections, Closet, and Outfits pages
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
+  const isAuth = status === "authenticated";
+  const { data: wardrobes = [], isLoading: wardrobesLoading } = useSWR<
+    ExtendedWardrobe[]
+  >(isAuth ? "/api/wardrobes" : null, fetcher, { dedupingInterval: 30_000 });
+  const { data: clothes = [], isLoading: clothesLoading } = useSWR<Clothes[]>(
+    isAuth ? "/api/clothes?status=owned" : null,
+    fetcher,
+    { dedupingInterval: 30_000 },
+  );
+  const { data: outfits = [], isLoading: outfitsLoading } = useSWR<Outfit[]>(
+    isAuth ? "/api/outfits" : null,
+    fetcher,
+    { dedupingInterval: 30_000 },
+  );
+  const loading =
+    status === "loading" || wardrobesLoading || clothesLoading || outfitsLoading;
 
   // UI State
   const [showRecommendation, setShowRecommendation] = useState(false);
@@ -63,35 +77,6 @@ export default function ProfilePage() {
   } = useDisclosure();
   const { analytics, isLoading: analyticsLoading } = useAnalytics();
 
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/login");
-    else if (status === "authenticated") fetchProfileData();
-  }, [status, router]);
-
-  const fetchProfileData = async () => {
-    try {
-      const [wardrobesRes, clothesRes, outfitsRes] = await Promise.all([
-        fetch("/api/wardrobes"),
-        fetch("/api/clothes?status=owned"),
-        fetch("/api/outfits"),
-      ]);
-
-      if (wardrobesRes.ok && clothesRes.ok) {
-        const wData = await wardrobesRes.json();
-        const cData = await clothesRes.json();
-        const oData = outfitsRes.ok ? await outfitsRes.json() : [];
-
-        setWardrobes(wData);
-        setClothes(cData);
-        setOutfits(oData);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load profile data. Please refresh.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // --- CALCULATION LOGIC ---
   const dashboardStats = useMemo(() => {

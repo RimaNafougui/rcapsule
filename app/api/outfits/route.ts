@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { outfitPostSchema } from "@/lib/validations/schemas";
+import {
+  cacheGet,
+  cacheSet,
+  cacheDel,
+  outfitsKey,
+  OUTFITS_TTL,
+} from "@/lib/redis";
 
 export async function GET(req: Request) {
   try {
@@ -15,6 +22,16 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "100"), 100);
     const offset = parseInt(searchParams.get("offset") || "0");
+
+    // Only cache the default first page (no pagination params)
+    const isDefaultPage = limit === 100 && offset === 0;
+    const userId = session.user.id;
+
+    if (isDefaultPage) {
+      const cached = await cacheGet(outfitsKey(userId));
+      if (cached) return NextResponse.json(cached);
+    }
+
     const supabase = getSupabaseServer();
 
     const { data: outfits, error } = await supabase
@@ -45,6 +62,10 @@ export async function GET(req: Request) {
         .filter(Boolean),
       itemCount: outfit.OutfitClothes?.length || 0,
     }));
+
+    if (isDefaultPage) {
+      await cacheSet(outfitsKey(userId), transformedOutfits, OUTFITS_TTL);
+    }
 
     return NextResponse.json(transformedOutfits);
   } catch (_error) {
@@ -132,6 +153,8 @@ export async function POST(req: Request) {
         /* non-critical: wardrobe association failed */
       }
     }
+
+    await cacheDel(outfitsKey(session.user.id));
 
     return NextResponse.json(outfit, { status: 201 });
   } catch (_error) {
