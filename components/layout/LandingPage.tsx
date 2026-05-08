@@ -1343,10 +1343,15 @@ function FinalCTA() {
    MAIN LANDING PAGE
    ======================================== */
 export default function LandingPage() {
-  const [loading, setLoading] = useState(true);
+  // hasMounted is false on the server — loader only runs on the client so
+  // Googlebot receives fully-visible HTML without the fullscreen overlay.
+  const [hasMounted, setHasMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
+    setLoading(true);
     const t = setTimeout(() => setLoading(false), 450);
 
     return () => clearTimeout(t);
@@ -1357,7 +1362,7 @@ export default function LandingPage() {
       <AnimatePresence onExitComplete={() => setReady(true)}>
         {loading && <PageLoader />}
       </AnimatePresence>
-      <HeroSection ready={ready} />
+      <HeroSection ready={!hasMounted || ready} />
       <CategoryStrip />
       <StatsBar />
       <FeatureBentoGrid />
