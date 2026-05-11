@@ -84,7 +84,7 @@ export const AppNavbar = ({ user }: { user: any }) => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "text-sm uppercase tracking-widest font-medium relative transition-opacity duration-200",
+                    "text-sm  tracking-widest font-medium relative transition-opacity duration-200",
                     isActive ? "opacity-100" : "opacity-60 hover:opacity-100",
                   )}
                   href={item.href}

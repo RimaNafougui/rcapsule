@@ -212,7 +212,7 @@ export default function EditOutfitPage() {
     try {
       const [clothesRes, wardrobesRes, outfitRes] = await Promise.all([
         fetch("/api/clothes?status=owned"),
-        fetch("/api/wardrobes"),
+        fetch("/api/collections"),
         fetch(`/api/outfits/${outfitId}`),
       ]);
 

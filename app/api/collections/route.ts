@@ -1,4 +1,4 @@
-// app/api/wardrobes/route.ts
+// app/api/collections/route.ts
 import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
@@ -56,6 +56,7 @@ export async function GET(req: Request) {
       description: wardrobe.description,
       isPublic: wardrobe.isPublic,
       coverImage: wardrobe.coverImage,
+      slug: wardrobe.slug,
       clothesCount: wardrobe.WardrobeClothes?.[0]?.count || 0,
       createdAt: wardrobe.createdAt,
       updatedAt: wardrobe.updatedAt,

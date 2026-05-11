@@ -46,6 +46,7 @@ export interface Wardrobe {
   description?: string;
   isPublic: boolean;
   coverImage?: string;
+  slug?: string;
   createdAt: string;
   updatedAt: string;
 }

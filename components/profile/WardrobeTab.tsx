@@ -47,7 +47,7 @@ export default function WardrobeTab({
   const handleCreate = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/wardrobes", {
+      const res = await fetch("/api/collections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newWardrobe),
@@ -100,7 +100,9 @@ export default function WardrobeTab({
             className="bg-transparent group border border-transparent hover:border-default-200 transition-all"
             radius="none"
             shadow="none"
-            onPress={() => router.push(`/wardrobe/${wardrobe.id}`)}
+            onPress={() =>
+              router.push(`/collections/${wardrobe.slug || wardrobe.id}`)
+            }
           >
             <CardBody className="p-0 aspect-[4/3] overflow-hidden relative">
               <Image

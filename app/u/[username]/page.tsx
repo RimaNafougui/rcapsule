@@ -588,7 +588,7 @@ export default function PublicProfilePage() {
                         className="group block"
                         href={`/u/${username}/collections/${wardrobe.slug || wardrobe.id}`}
                       >
-                        <div className="relative aspect-[16/10] bg-default-100 overflow-hidden">
+                        <div className="relative aspect-[4/3] bg-default-100 overflow-hidden">
                           {wardrobe.coverImage ? (
                             <Image
                               removeWrapper
@@ -601,19 +601,29 @@ export default function PublicProfilePage() {
                               Capsule
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
-                          <div className="absolute bottom-0 left-0 w-full p-6">
-                            <h3 className="text-white text-xl font-display font-light tracking-normal">
-                              {wardrobe.title}
-                            </h3>
-                            <div className="flex items-center gap-4 text-white/90 text-xs font-medium mt-2 uppercase tracking-widest">
-                              <span>{wardrobe.itemCount} Items</span>
-                              <span className="flex items-center gap-1">
-                                <HeartIcon className="w-3 h-3" />{" "}
-                                {wardrobe.likeCount}
-                              </span>
-                            </div>
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                        </div>
+
+                        <div className="pt-3 pb-1">
+                          <h3 className="text-sm font-semibold uppercase tracking-widest truncate">
+                            {wardrobe.title}
+                          </h3>
+                          <div className="flex items-center gap-3 mt-1 text-default-400 text-xs">
+                            <span>
+                              {wardrobe.itemCount}{" "}
+                              {wardrobe.itemCount === 1 ? "piece" : "pieces"}
+                            </span>
+                            <span>·</span>
+                            <span className="flex items-center gap-1">
+                              <HeartIcon className="w-3 h-3" />
+                              {wardrobe.likeCount}
+                            </span>
                           </div>
+                          {wardrobe.description && (
+                            <p className="mt-1 text-xs text-default-400 line-clamp-1">
+                              {wardrobe.description}
+                            </p>
+                          )}
                         </div>
                       </Link>
                     ))}

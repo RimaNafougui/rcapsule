@@ -44,7 +44,7 @@ export default function CollectionsPage() {
     isLoading,
     mutate,
   } = useSWR<(Wardrobe & { clothesCount?: number })[]>(
-    status === "authenticated" ? "/api/wardrobes" : null,
+    status === "authenticated" ? "/api/collections" : null,
     fetcher,
     { dedupingInterval: 30_000, revalidateOnFocus: true },
   );
@@ -69,7 +69,7 @@ export default function CollectionsPage() {
 
     setCreateLoading(true);
     try {
-      const res = await fetch("/api/wardrobes", {
+      const res = await fetch("/api/collections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newWardrobe),
@@ -271,7 +271,9 @@ export default function CollectionsPage() {
               className="bg-transparent group border border-transparent hover:border-default-200 transition-all"
               radius="none"
               shadow="none"
-              onPress={() => router.push(`/wardrobe/${wardrobe.id}`)}
+              onPress={() =>
+                router.push(`/collections/${wardrobe.slug || wardrobe.id}`)
+              }
             >
               <CardBody className="p-0 aspect-[4/3] overflow-hidden relative">
                 <Image
@@ -324,10 +326,12 @@ export default function CollectionsPage() {
               className="flex gap-4 p-4 border border-default-200 hover:border-default-400 transition-colors cursor-pointer group"
               role="button"
               tabIndex={0}
-              onClick={() => router.push(`/wardrobe/${wardrobe.id}`)}
+              onClick={() =>
+                router.push(`/collections/${wardrobe.slug || wardrobe.id}`)
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  router.push(`/wardrobe/${wardrobe.id}`);
+                  router.push(`/collections/${wardrobe.slug || wardrobe.id}`);
                 }
               }}
             >

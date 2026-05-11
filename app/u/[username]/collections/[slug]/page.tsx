@@ -324,7 +324,11 @@ export default function PublicCollectionPage() {
                     className="border-white/20 text-white hover:bg-white/10 uppercase font-bold tracking-widest"
                     radius="none"
                     variant="bordered"
-                    onPress={() => router.push(`/wardrobes/${collection.id}`)}
+                    onPress={() =>
+                      router.push(
+                        `/collections/${collection.slug || collection.id}`,
+                      )
+                    }
                   >
                     Edit Collection
                   </Button>

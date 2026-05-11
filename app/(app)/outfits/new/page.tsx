@@ -175,7 +175,7 @@ export default function CreateOutfitPage() {
     try {
       const [clothesRes, wardrobesRes, outfitsRes] = await Promise.all([
         fetch("/api/clothes?status=owned"),
-        fetch("/api/wardrobes"),
+        fetch("/api/collections"),
         fetch("/api/outfits"),
       ]);
 

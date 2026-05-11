@@ -1,11 +1,12 @@
-//app/api/wardrobes/[id]/route.ts
+//app/api/collections/[id]/route.ts
 import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { generateUniqueSlug } from "@/lib/utils/slug";
 
 export async function GET(
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
@@ -18,23 +19,33 @@ export async function GET(
     const { id } = await params;
     const supabase = getSupabaseServer();
 
-    const { data: wardrobeRaw, error } = await supabase
-      .from("Wardrobe")
-      .select(
-        `
-        *,
-        WardrobeClothes (
-          addedAt,
-          notes,
-          clothes:Clothes (*)
-        )
-      `,
+    const WARDROBE_SELECT = `
+      *,
+      WardrobeClothes (
+        addedAt,
+        notes,
+        clothes:Clothes (*)
       )
+    `;
+
+    // Try by ID first, then fall back to slug
+    let { data: wardrobeRaw } = await supabase
+      .from("Wardrobe")
+      .select(WARDROBE_SELECT)
       .eq("id", id)
       .eq("userId", session.user.id)
-      .single();
+      .maybeSingle();
 
-    if (error || !wardrobeRaw) {
+    if (!wardrobeRaw) {
+      ({ data: wardrobeRaw } = await supabase
+        .from("Wardrobe")
+        .select(WARDROBE_SELECT)
+        .eq("slug", id)
+        .eq("userId", session.user.id)
+        .maybeSingle());
+    }
+
+    if (!wardrobeRaw) {
       return NextResponse.json(
         { error: "Wardrobe not found" },
         { status: 404 },
@@ -59,18 +70,14 @@ export async function GET(
           new Date(a.addedToWardrobeAt).getTime(),
       );
 
-    // 2. Calculate Stats (Total Cost & Color Analysis)
+    // 2. Calculate Stats
     let totalValue = 0;
     const colorCounts: Record<string, number> = {};
     let totalColorTags = 0;
 
     clothes.forEach((item: any) => {
-      // Sum Price
-      if (item.price) {
-        totalValue += item.price;
-      }
+      if (item.price) totalValue += item.price;
 
-      // Count Colors
       if (Array.isArray(item.colors)) {
         item.colors.forEach((color: string) => {
           const normalizedColor = color.toLowerCase().trim();
@@ -82,7 +89,6 @@ export async function GET(
       }
     });
 
-    // Format Color Data for Charting/Display
     const colorAnalysis = Object.entries(colorCounts)
       .map(([color, count]) => ({
         color,
@@ -90,11 +96,11 @@ export async function GET(
         percentage:
           totalColorTags > 0 ? Math.round((count / totalColorTags) * 100) : 0,
       }))
-      .sort((a, b) => b.count - a.count); // Sort by most frequent
+      .sort((a, b) => b.count - a.count);
 
     const wardrobe = {
       ...wardrobeRaw,
-      clothes: clothes,
+      clothes,
       stats: {
         totalValue: parseFloat(totalValue.toFixed(2)),
         itemCount: clothes.length,
@@ -115,7 +121,6 @@ export async function GET(
   }
 }
 
-// ... PUT and DELETE handlers remain unchanged ...
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -134,7 +139,16 @@ export async function PUT(
       updatedAt: new Date().toISOString(),
     };
 
-    if (data.title !== undefined) updatePayload.title = data.title;
+    if (data.title !== undefined) {
+      updatePayload.title = data.title;
+      updatePayload.slug = await generateUniqueSlug(
+        supabase,
+        session.user.id,
+        data.title,
+        id,
+      );
+    }
+
     if (data.description !== undefined)
       updatePayload.description = data.description;
     if (data.isPublic !== undefined) updatePayload.isPublic = data.isPublic;
@@ -193,6 +207,7 @@ export async function DELETE(
         { status: 404 },
       );
     }
+
     await supabase.from("WardrobeClothes").delete().eq("wardrobeId", id);
     await supabase.from("WardrobeOutfit").delete().eq("wardrobeId", id);
 
@@ -201,9 +216,7 @@ export async function DELETE(
       .delete()
       .eq("id", id);
 
-    if (deleteError) {
-      throw deleteError;
-    }
+    if (deleteError) throw deleteError;
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -52,6 +52,7 @@ interface ClothingItem {
 
 interface Wardrobe {
   id: string;
+  slug?: string;
   title: string;
   description?: string;
   isPublic: boolean;
@@ -64,11 +65,12 @@ interface Wardrobe {
   };
 }
 
-export default function WardrobePage() {
+export default function CollectionDetailPage() {
   const { status } = useSession();
   const router = useRouter();
   const params = useParams();
-  const wardrobeId = params.id as string;
+  const slugParam = params.slug as string;
+
   const [wardrobe, setWardrobe] = useState<Wardrobe | null>(null);
   const [loading, setLoading] = useState(true);
   const [availableClothes, setAvailableClothes] = useState<ClothingItem[]>([]);
@@ -97,15 +99,15 @@ export default function WardrobePage() {
       fetchWardrobe();
       fetchAvailableClothes();
     }
-  }, [status, router, wardrobeId]);
+  }, [status, router, slugParam]);
 
   const fetchWardrobe = async () => {
     try {
-      const response = await fetch(`/api/wardrobes/${wardrobeId}`);
+      const response = await fetch(`/api/collections/${slugParam}`);
 
       if (response.ok) {
         const data = await response.json();
-        const safeData = {
+        const safeData: Wardrobe = {
           ...data,
           clothes: Array.isArray(data.clothes) ? data.clothes : [],
         };
@@ -118,7 +120,7 @@ export default function WardrobePage() {
           coverImage: data.coverImage || "",
         });
       } else if (response.status === 404) {
-        router.push("/profile");
+        router.push("/collections");
       }
     } catch (error) {
       console.error(error);
@@ -142,9 +144,10 @@ export default function WardrobePage() {
   };
 
   const handleRemoveFromWardrobe = async (clothesId: string) => {
+    if (!wardrobe) return;
     try {
       const response = await fetch(
-        `/api/wardrobes/${wardrobeId}/clothes/${clothesId}`,
+        `/api/collections/${wardrobe.id}/clothes/${clothesId}`,
         { method: "DELETE" },
       );
 
@@ -158,16 +161,26 @@ export default function WardrobePage() {
   };
 
   const handleUpdateWardrobe = async () => {
+    if (!wardrobe) return;
     try {
-      const response = await fetch(`/api/wardrobes/${wardrobeId}`, {
+      const response = await fetch(`/api/collections/${wardrobe.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(wardrobeFormData),
       });
 
       if (response.ok) {
-        fetchWardrobe();
+        const updated = await response.json();
+
         wardrobeModal.onClose();
+        // If the slug changed (title edit), navigate to the new URL
+        const newSlug = updated.slug || wardrobe.id;
+
+        if (newSlug !== slugParam) {
+          router.replace(`/collections/${newSlug}`);
+        } else {
+          fetchWardrobe();
+        }
       }
     } catch (error) {
       console.error(error);
@@ -175,12 +188,13 @@ export default function WardrobePage() {
   };
 
   const handleDeleteWardrobe = async () => {
+    if (!wardrobe) return;
     try {
-      const response = await fetch(`/api/wardrobes/${wardrobeId}`, {
+      const response = await fetch(`/api/collections/${wardrobe.id}`, {
         method: "DELETE",
       });
 
-      if (response.ok) router.push("/profile");
+      if (response.ok) router.push("/collections");
     } catch (error) {
       console.error(error);
     } finally {
@@ -189,8 +203,9 @@ export default function WardrobePage() {
   };
 
   const handleAddExistingItems = async () => {
+    if (!wardrobe) return;
     try {
-      const response = await fetch(`/api/wardrobes/${wardrobeId}/clothes`, {
+      const response = await fetch(`/api/collections/${wardrobe.id}/clothes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ clothesIds: Array.from(selectedExistingItems) }),
@@ -240,28 +255,22 @@ export default function WardrobePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/50 to-black/20" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/50 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
-
         <div className="absolute inset-0 max-w-7xl mx-auto px-6 md:px-8 flex flex-col">
-          {/* Back Button */}
           <div className="pt-8">
             <Button
               isIconOnly
               className="bg-black/30 backdrop-blur-xl text-white border border-white/10 hover:bg-black/50 transition-all"
               radius="full"
               variant="flat"
-              onPress={() => router.push("/profile")}
+              onPress={() => router.push("/collections")}
             >
               <ArrowLeftIcon className="w-5 h-5" />
             </Button>
           </div>
 
-          {/* Main Content */}
           <div className="flex-1 flex items-end pb-12 md:pb-16">
             <div className="w-full flex flex-col md:flex-row md:justify-between md:items-end gap-8">
               <div className="flex-1 space-y-6">
-                {/* Meta Info */}
                 <div className="flex items-center gap-3 flex-wrap">
                   {wardrobe.isPublic ? (
                     <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
@@ -279,6 +288,7 @@ export default function WardrobePage() {
                     {wardrobe.clothes.length === 1 ? "Piece" : "Pieces"}
                   </div>
                 </div>
+
                 <div className="flex items-center gap-2 px-4 py-1.5 text-white text-xs font-bold uppercase">
                   <CurrencyDollarIcon className="w-3.5 h-3.5" />
                   <span>
@@ -288,12 +298,11 @@ export default function WardrobePage() {
                     }) || "$0.00"}
                   </span>
                 </div>
-                {/* Title */}
+
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none">
                   {wardrobe.title}
                 </h1>
 
-                {/* Description */}
                 {wardrobe.description && (
                   <p className="max-w-2xl text-white/90 text-base md:text-lg font-light leading-relaxed drop-shadow-lg">
                     {wardrobe.description}
@@ -301,7 +310,6 @@ export default function WardrobePage() {
                 )}
               </div>
 
-              {/* Menu Actions */}
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
                   <Button
@@ -377,9 +385,8 @@ export default function WardrobePage() {
                   tabIndex={0}
                   onClick={() => router.push(`/closet/${item.id}`)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
+                    if (e.key === "Enter" || e.key === " ")
                       router.push(`/closet/${item.id}`);
-                    }
                   }}
                 >
                   <Image
@@ -409,7 +416,6 @@ export default function WardrobePage() {
                   </div>
                 </div>
 
-                {/* Details */}
                 <div className="space-y-1">
                   {item.brand && (
                     <p className="text-[10px] font-display font-light tracking-normal text-default-400">
@@ -419,11 +425,9 @@ export default function WardrobePage() {
                   <h3 className="text-sm font-medium uppercase tracking-normal truncate">
                     {item.name}
                   </h3>
-                  <div className="flex gap-2 items-center">
-                    {item.price && (
-                      <p className="text-xs text-default-500">${item.price}</p>
-                    )}
-                  </div>
+                  {item.price && (
+                    <p className="text-xs text-default-500">${item.price}</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -434,9 +438,8 @@ export default function WardrobePage() {
               tabIndex={0}
               onClick={addExistingModal.onOpen}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+                if (e.key === "Enter" || e.key === " ")
                   addExistingModal.onOpen();
-                }
               }}
             >
               <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
@@ -448,7 +451,7 @@ export default function WardrobePage() {
         )}
       </div>
 
-      {/* --- EDIT WARDROBE MODAL --- */}
+      {/* EDIT MODAL */}
       <Modal
         isOpen={wardrobeModal.isOpen}
         radius="none"
@@ -474,7 +477,7 @@ export default function WardrobePage() {
                 }
               />
               <Input
-                label="Cover Image"
+                label="Cover Image URL"
                 radius="none"
                 value={wardrobeFormData.coverImage}
                 variant="bordered"
@@ -529,7 +532,7 @@ export default function WardrobePage() {
         </ModalContent>
       </Modal>
 
-      {/* --- ADD EXISTING ITEMS MODAL --- */}
+      {/* ADD EXISTING ITEMS MODAL */}
       <Modal
         isOpen={addExistingModal.isOpen}
         radius="none"
@@ -559,9 +562,8 @@ export default function WardrobePage() {
                       tabIndex={0}
                       onClick={() => toggleItemSelection(item.id)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
+                        if (e.key === "Enter" || e.key === " ")
                           toggleItemSelection(item.id);
-                        }
                       }}
                     >
                       <Image

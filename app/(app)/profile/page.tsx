@@ -53,7 +53,7 @@ export default function ProfilePage() {
   const isAuth = status === "authenticated";
   const { data: wardrobes = [], isLoading: wardrobesLoading } = useSWR<
     ExtendedWardrobe[]
-  >(isAuth ? "/api/wardrobes" : null, fetcher, { dedupingInterval: 30_000 });
+  >(isAuth ? "/api/collections" : null, fetcher, { dedupingInterval: 30_000 });
   const { data: clothes = [], isLoading: clothesLoading } = useSWR<Clothes[]>(
     isAuth ? "/api/clothes?status=owned" : null,
     fetcher,

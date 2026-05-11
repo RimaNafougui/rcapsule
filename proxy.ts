@@ -48,6 +48,7 @@ export const config = {
     "/wishlist/:path*",
     "/calendar/:path*",
     "/studio/:path*",
+    "/collections/:path*",
 
     "/login",
     "/signup",

@@ -1,12 +1,12 @@
-// app/api/wardrobes/[id]/clothes/[clothesId]/route.ts
+// app/api/collections/[id]/clothes/route.ts
 import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 
-export async function DELETE(
+export async function POST(
   req: Request,
-  { params }: { params: Promise<{ id: string; clothesId: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await auth();
@@ -15,7 +15,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id: wardrobeId, clothesId } = await params;
+    const { id: wardrobeId } = await params;
+    const { clothesIds } = await req.json();
     const supabase = getSupabaseServer();
 
     const { data: wardrobe, error: wardrobeError } = await supabase
@@ -31,22 +32,27 @@ export async function DELETE(
       );
     }
 
-    const { error } = await supabase
+    // Add clothes to wardrobe (using upsert to avoid duplicates)
+    const entries = clothesIds.map((clothesId: string) => ({
+      wardrobeId,
+      clothesId,
+    }));
+
+    const { data, error } = await supabase
       .from("WardrobeClothes")
-      .delete()
-      .eq("wardrobeId", wardrobeId)
-      .eq("clothesId", clothesId);
+      .upsert(entries, { onConflict: "wardrobeId,clothesId" })
+      .select();
 
     if (error) {
       throw error;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Error removing clothes from wardrobe:", error);
+    console.error("Error adding clothes to wardrobe:", error);
 
     return NextResponse.json(
-      { error: "Failed to remove clothes" },
+      { error: "Failed to add clothes" },
       { status: 500 },
     );
   }
