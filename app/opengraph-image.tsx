@@ -39,10 +39,54 @@ export default async function OgImage() {
         }}
       >
         {/* Corner marks — editorial detail */}
-        <div style={{ position: "absolute", top: 40, left: 40, width: 24, height: 24, borderTop: "1.5px solid #404040", borderLeft: "1.5px solid #404040", display: "flex" }} />
-        <div style={{ position: "absolute", top: 40, right: 40, width: 24, height: 24, borderTop: "1.5px solid #404040", borderRight: "1.5px solid #404040", display: "flex" }} />
-        <div style={{ position: "absolute", bottom: 40, left: 40, width: 24, height: 24, borderBottom: "1.5px solid #404040", borderLeft: "1.5px solid #404040", display: "flex" }} />
-        <div style={{ position: "absolute", bottom: 40, right: 40, width: 24, height: 24, borderBottom: "1.5px solid #404040", borderRight: "1.5px solid #404040", display: "flex" }} />
+        <div
+          style={{
+            position: "absolute",
+            top: 40,
+            left: 40,
+            width: 24,
+            height: 24,
+            borderTop: "1.5px solid #404040",
+            borderLeft: "1.5px solid #404040",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 40,
+            right: 40,
+            width: 24,
+            height: 24,
+            borderTop: "1.5px solid #404040",
+            borderRight: "1.5px solid #404040",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            left: 40,
+            width: 24,
+            height: 24,
+            borderBottom: "1.5px solid #404040",
+            borderLeft: "1.5px solid #404040",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            right: 40,
+            width: 24,
+            height: 24,
+            borderBottom: "1.5px solid #404040",
+            borderRight: "1.5px solid #404040",
+            display: "flex",
+          }}
+        />
 
         {/* Wordmark */}
         <div

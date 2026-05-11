@@ -31,6 +31,8 @@ vi.mock("@/lib/redis", () => ({
   cacheDel: vi.fn().mockResolvedValue(undefined),
   analyticsKey: vi.fn((id: string) => `analytics:v1:${id}`),
   ownedClothesKey: vi.fn((id: string) => `clothes:owned:v1:${id}`),
+  clothesListKey: vi.fn((id: string, status: string) => `clothes:list:v1:${id}:${status}`),
+  CLOTHES_LIST_TTL: 300,
 }));
 
 function makeRequest(url: string, options?: RequestInit) {
@@ -68,8 +70,8 @@ describe("GET /api/clothes", () => {
 
   it("returns a list of clothes for the authenticated user", async () => {
     const mockClothes = [
-      { id: "c1", name: "T-Shirt", category: "Tops", userId: "user-abc" },
-      { id: "c2", name: "Jeans", category: "Bottoms", userId: "user-abc" },
+      { id: "c1", name: "T-Shirt", category: "t-shirt", userId: "user-abc" },
+      { id: "c2", name: "Jeans", category: "jeans", userId: "user-abc" },
     ];
     mockDbChain.order.mockReturnThis();
     mockDbChain.range = vi.fn().mockResolvedValue({ data: mockClothes, error: null });
@@ -97,7 +99,7 @@ describe("POST /api/clothes", () => {
     const res = await POST(
       makeRequest("https://example.com/api/clothes", {
         method: "POST",
-        body: JSON.stringify({ name: "T-Shirt", category: "Tops" }),
+        body: JSON.stringify({ name: "T-Shirt", category: "t-shirt" }),
       }),
     );
     expect(res.status).toBe(401);
@@ -107,7 +109,7 @@ describe("POST /api/clothes", () => {
     const res = await POST(
       makeRequest("https://example.com/api/clothes", {
         method: "POST",
-        body: JSON.stringify({ category: "Tops" }),
+        body: JSON.stringify({ category: "t-shirt" }),
       }),
     );
     expect(res.status).toBe(400);
@@ -124,14 +126,14 @@ describe("POST /api/clothes", () => {
   });
 
   it("returns 201 with the created item on success", async () => {
-    const createdClothes = { id: "new-id", name: "T-Shirt", category: "Tops", userId: "user-abc" };
+    const createdClothes = { id: "new-id", name: "T-Shirt", category: "t-shirt", userId: "user-abc" };
     mockDbChain.single.mockResolvedValue({ data: createdClothes, error: null });
 
     const res = await POST(
       makeRequest("https://example.com/api/clothes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "T-Shirt", category: "Tops" }),
+        body: JSON.stringify({ name: "T-Shirt", category: "t-shirt" }),
       }),
     );
     expect(res.status).toBe(201);

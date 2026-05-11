@@ -22,7 +22,6 @@ import {
   Switch,
   Spinner,
 } from "@heroui/react";
-import { toast } from "sonner";
 import {
   PlusIcon,
   GlobeAltIcon,

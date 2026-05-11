@@ -29,6 +29,7 @@ export async function GET(req: Request) {
 
     if (isDefaultPage) {
       const cached = await cacheGet(outfitsKey(userId));
+
       if (cached) return NextResponse.json(cached);
     }
 

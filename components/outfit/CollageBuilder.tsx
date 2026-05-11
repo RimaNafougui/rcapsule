@@ -44,7 +44,6 @@ import {
   CheckIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
-
 import { toast } from "sonner";
 
 import ConfirmModal from "@/components/ui/ConfirmModal";

@@ -33,7 +33,10 @@ export async function POST(req: Request) {
   const { imageUrl } = await req.json();
 
   if (!imageUrl || typeof imageUrl !== "string") {
-    return NextResponse.json({ error: "imageUrl is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "imageUrl is required" },
+      { status: 400 },
+    );
   }
 
   try {

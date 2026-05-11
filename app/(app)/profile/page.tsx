@@ -23,7 +23,6 @@ import {
   XMarkIcon,
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
-import { toast } from "sonner";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import { useUser } from "@/lib/contexts/UserContext";
@@ -66,7 +65,10 @@ export default function ProfilePage() {
     { dedupingInterval: 30_000 },
   );
   const loading =
-    status === "loading" || wardrobesLoading || clothesLoading || outfitsLoading;
+    status === "loading" ||
+    wardrobesLoading ||
+    clothesLoading ||
+    outfitsLoading;
 
   // UI State
   const [showRecommendation, setShowRecommendation] = useState(false);
@@ -76,7 +78,6 @@ export default function ProfilePage() {
     onOpenChange: onLocChange,
   } = useDisclosure();
   const { analytics, isLoading: analyticsLoading } = useAnalytics();
-
 
   // --- CALCULATION LOGIC ---
   const dashboardStats = useMemo(() => {

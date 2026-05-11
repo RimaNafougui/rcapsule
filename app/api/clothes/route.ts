@@ -76,6 +76,7 @@ export async function GET(req: Request) {
             const cached = await cacheGet(
               clothesListKey(userId, statusFilter as "owned" | "wishlist"),
             );
+
             if (cached) return NextResponse.json(cached);
           }
 

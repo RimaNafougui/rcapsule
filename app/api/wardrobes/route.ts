@@ -25,8 +25,10 @@ export async function GET(req: Request) {
     const userId = session.user.id;
 
     const isDefaultPage = limit === 100 && offset === 0;
+
     if (isDefaultPage) {
       const cached = await cacheGet(wardrobesKey(userId));
+
       if (cached) return NextResponse.json(cached);
     }
 

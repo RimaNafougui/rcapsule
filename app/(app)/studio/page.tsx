@@ -68,9 +68,13 @@ export default function StudioPage() {
     try {
       // 1. Upload the transparent PNG via the server route (uses service-role key)
       const formData = new FormData();
+
       formData.append("file", pendingFile, "collage.png");
       formData.append("folder", "studio");
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!uploadRes.ok) throw new Error("Upload failed");
 
@@ -112,7 +116,10 @@ export default function StudioPage() {
   return (
     <>
       {/* Break out of the (app) layout container so the studio is full-width */}
-      <div className="-mx-6 flex flex-col" style={{ height: "calc(100vh - 65px)" }}>
+      <div
+        className="-mx-6 flex flex-col"
+        style={{ height: "calc(100vh - 65px)" }}
+      >
         {/* Studio header bar */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-default-200 bg-background/80 backdrop-blur-sm shrink-0">
           <div className="flex items-center gap-3">
@@ -165,7 +172,6 @@ export default function StudioPage() {
           </ModalHeader>
           <ModalBody>
             <Input
-              autoFocus
               isRequired
               label="Outfit name"
               labelPlacement="outside"

@@ -156,6 +156,7 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[DELETE /api/admin/catalog]", err);
+
     return NextResponse.json(
       { error: "Failed to delete product" },
       { status: 500 },
