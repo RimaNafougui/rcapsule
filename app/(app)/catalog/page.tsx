@@ -24,6 +24,7 @@ import ProductCardSkeleton from "@/components/catalog/ProductCardSkeleton";
 import AddToClosetModal from "@/components/catalog/AddToClosetModal";
 import WardrobeHeader, {
   useSearchHistory,
+  type SearchSuggestion,
 } from "@/components/closet/WardrobeHeader";
 
 interface CatalogResponse {
@@ -164,18 +165,28 @@ export default function CatalogPage() {
     addSearch(term);
   };
 
-  const suggestions = useMemo(() => {
+  const suggestions = useMemo((): SearchSuggestion[] => {
     if (!debouncedQuery) return [];
     const lower = debouncedQuery.toLowerCase();
-    const terms = new Set<string>();
+    const seen = new Set<string>();
+    const candidates: SearchSuggestion[] = [];
 
-    products.forEach((p) => {
-      if (p.name.toLowerCase().includes(lower)) terms.add(p.name);
-      if (p.brand?.toLowerCase().includes(lower)) terms.add(p.brand);
-      if (p.category.toLowerCase().includes(lower)) terms.add(p.category);
-    });
+    const add = (value: string | undefined, type: SearchSuggestion["type"]) => {
+      if (!value) return;
+      const key = value.toLowerCase();
+      if (!seen.has(key) && key.includes(lower)) {
+        seen.add(key);
+        candidates.push({ label: value, type });
+      }
+    };
 
-    return Array.from(terms).slice(0, 5);
+    for (const p of products) {
+      add(p.name, "item");
+      add(p.brand, "brand");
+      add(p.category, "category");
+    }
+
+    return candidates.slice(0, 7);
   }, [products, debouncedQuery]);
 
   const hasActiveFilters =
@@ -292,6 +303,7 @@ export default function CatalogPage() {
           )
         }
         suggestions={suggestions}
+        searchPlaceholder="Search catalog"
         title="Catalog"
         viewMode={viewMode}
         onAddNew={() => {}}

@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const displayName = user.name || `@${user.username}`;
-  const title = `${displayName}`;
+  const title = `${displayName} `;
   const description =
     user.bio ||
     `Check out ${displayName}'s wardrobe and outfit inspiration on Rcapsule.`;

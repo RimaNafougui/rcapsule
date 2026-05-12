@@ -13,6 +13,8 @@ import ClothesFilter, {
 } from "@/components/closet/ClothesFilter";
 import WardrobeHeader, {
   useSearchHistory,
+  type SearchSuggestion,
+  type SuggestionType,
 } from "@/components/closet/WardrobeHeader";
 import { ClothingCardSkeleton } from "@/components/closet/ClothingCardSkeleton";
 
@@ -172,18 +174,57 @@ export default function ClosetPage() {
   }, [clothes, filters]);
 
   const searchedClothes = useMemo(() => {
-    if (!searchQuery) return filteredClothes;
-    const lowerQuery = searchQuery.toLowerCase();
+    const query = searchQuery.trim();
+    if (!query) return filteredClothes;
 
-    return filteredClothes.filter((item) => {
-      if (item.name.toLowerCase().includes(lowerQuery)) return true;
-      if (item.brand?.toLowerCase().includes(lowerQuery)) return true;
-      if (item.category.toLowerCase().includes(lowerQuery)) return true;
-      if (item.tags?.some((tag) => tag.toLowerCase().includes(lowerQuery)))
-        return true;
+    const tokens = query.toLowerCase().split(/\s+/);
 
-      return false;
+    const scored = filteredClothes.map((item) => {
+      const seasonStr = Array.isArray(item.season)
+        ? (item.season as string[]).join(" ")
+        : (item.season ?? "");
+
+      const fields: { value: string; weight: number }[] = [
+        { value: item.name, weight: 10 },
+        { value: item.brand ?? "", weight: 8 },
+        { value: item.category, weight: 6 },
+        { value: item.colors.join(" "), weight: 5 },
+        { value: seasonStr, weight: 4 },
+        { value: item.style ?? "", weight: 4 },
+        { value: item.placesToWear.join(" "), weight: 3 },
+        { value: (item.tags ?? []).join(" "), weight: 3 },
+        { value: item.size ?? "", weight: 2 },
+      ];
+
+      let score = 0;
+
+      for (const token of tokens) {
+        let tokenMatched = false;
+
+        for (const { value, weight } of fields) {
+          if (!value) continue;
+          const lower = value.toLowerCase();
+
+          if (lower.includes(token)) {
+            const words = lower.split(/[\s,]+/);
+            const isExactWord = words.includes(token);
+            const isWordStart = words.some((w) => w.startsWith(token));
+            score += weight * (isExactWord ? 3 : isWordStart ? 2 : 1);
+            tokenMatched = true;
+          }
+        }
+
+        // All tokens must match — bail early if any token finds nothing
+        if (!tokenMatched) return { item, score: -1 };
+      }
+
+      return { item, score };
     });
+
+    return scored
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(({ item }) => item);
   }, [filteredClothes, searchQuery]);
 
   const sortedClothes = useMemo(() => {
@@ -206,19 +247,48 @@ export default function ClosetPage() {
     }
   }, [searchedClothes, sortBy]);
 
-  const suggestions = useMemo(() => {
-    if (!searchQuery) return [];
-    const lowerQuery = searchQuery.toLowerCase();
-    const terms = new Set<string>();
+  const suggestions = useMemo((): SearchSuggestion[] => {
+    const query = searchQuery.trim();
+    if (!query) return [];
 
-    filteredClothes.forEach((item) => {
-      if (item.name.toLowerCase().includes(lowerQuery)) terms.add(item.name);
-      if (item.brand?.toLowerCase().includes(lowerQuery)) terms.add(item.brand);
-      if (item.category.toLowerCase().includes(lowerQuery))
-        terms.add(item.category);
-    });
+    const lowerQuery = query.toLowerCase();
+    const seen = new Set<string>();
+    const candidates: { label: string; type: SuggestionType; priority: number }[] = [];
 
-    return Array.from(terms).slice(0, 5);
+    const addCandidate = (
+      value: string | undefined,
+      type: SuggestionType,
+      basePriority: number,
+    ) => {
+      if (!value) return;
+      const key = value.toLowerCase();
+      if (seen.has(key) || !key.includes(lowerQuery)) return;
+      seen.add(key);
+
+      const words = key.split(/[\s,]+/);
+      const isPrefix = key.startsWith(lowerQuery);
+      const isWordStart = words.some((w) => w.startsWith(lowerQuery));
+      candidates.push({
+        label: value,
+        type,
+        priority: basePriority + (isPrefix ? 3 : isWordStart ? 2 : 1),
+      });
+    };
+
+    for (const item of filteredClothes) {
+      addCandidate(item.name, "item", 10);
+      addCandidate(item.brand, "brand", 8);
+      addCandidate(item.category, "category", 6);
+      item.colors.forEach((c) => addCandidate(c, "color", 5));
+      addCandidate(item.style, "style", 4);
+      item.placesToWear.forEach((p) => addCandidate(p, "place", 3));
+      (item.tags ?? []).forEach((t) => addCandidate(t, "tag", 3));
+    }
+
+    return candidates
+      .sort((a, b) => b.priority - a.priority)
+      .slice(0, 7)
+      .map(({ label, type }) => ({ label, type }));
   }, [filteredClothes, searchQuery]);
 
   const clothesByCategory = useMemo(() => {
@@ -277,6 +347,7 @@ export default function ClosetPage() {
           )
         }
         suggestions={suggestions}
+        searchPlaceholder="Search closet"
         title="Closet"
         viewMode={viewMode}
         onAddNew={() => router.push("/closet/new")}

@@ -14,6 +14,7 @@ import useSWR from "swr";
 // Note: Ensure the path matches where you saved the header component
 import WardrobeHeader, {
   useSearchHistory,
+  type SearchSuggestion,
 } from "@/components/closet/WardrobeHeader";
 
 interface Outfit {
@@ -137,13 +138,29 @@ export default function OutfitsPage() {
     return result;
   }, [outfits, searchQuery, filterFavorites, filterSeason, sortBy]);
 
-  // Generate suggestions for autocomplete
-  const suggestions = useMemo(() => {
-    const names = outfits.map((o) => o.name);
-    const seasons = outfits.map((o) => o.season).filter(Boolean) as string[];
+  const suggestions = useMemo((): SearchSuggestion[] => {
+    const query = searchQuery.trim();
+    if (!query) return [];
 
-    return Array.from(new Set([...names, ...seasons])).slice(0, 5);
-  }, [outfits]);
+    const lowerQuery = query.toLowerCase();
+    const seen = new Set<string>();
+    const candidates: SearchSuggestion[] = [];
+
+    for (const outfit of outfits) {
+      const check = (value: string | undefined, type: SearchSuggestion["type"]) => {
+        if (!value) return;
+        const key = value.toLowerCase();
+        if (!seen.has(key) && key.includes(lowerQuery)) {
+          seen.add(key);
+          candidates.push({ label: value, type });
+        }
+      };
+      check(outfit.name, "item");
+      check(outfit.season, "season");
+    }
+
+    return candidates.slice(0, 7);
+  }, [outfits, searchQuery]);
 
   if (loading)
     return (
@@ -173,6 +190,7 @@ export default function OutfitsPage() {
           </div>
         }
         suggestions={suggestions}
+        searchPlaceholder="Search outfits"
         title="Outfits"
         viewMode={viewMode}
         onAddNew={() => router.push("/outfits/new")}

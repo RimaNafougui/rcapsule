@@ -37,6 +37,33 @@ export function useSearchHistory() {
   return { history, addSearch, clearHistory };
 }
 
+// --- Types ---
+export type SuggestionType =
+  | "item"
+  | "brand"
+  | "color"
+  | "category"
+  | "style"
+  | "tag"
+  | "place"
+  | "season";
+
+export interface SearchSuggestion {
+  label: string;
+  type: SuggestionType;
+}
+
+const SUGGESTION_LABELS: Record<SuggestionType, string> = {
+  item: "Item",
+  brand: "Brand",
+  color: "Color",
+  category: "Category",
+  style: "Style",
+  tag: "Tag",
+  place: "Place",
+  season: "Season",
+};
+
 // --- Props Interface ---
 interface SortOption {
   key: string;
@@ -56,7 +83,7 @@ interface WardrobeHeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onSearchSubmit: (term: string) => void;
-  suggestions: string[];
+  suggestions: SearchSuggestion[];
   history: string[];
   onClearHistory: () => void;
   sortBy: string;
@@ -66,6 +93,7 @@ interface WardrobeHeaderProps {
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
   onAddNew: () => void;
+  searchPlaceholder?: string;
   actionLabel?: string;
   sortOptions?: SortOption[];
   showAddButton?: boolean;
@@ -88,6 +116,7 @@ export default function WardrobeHeader({
   showFilters,
   setShowFilters,
   onAddNew,
+  searchPlaceholder = "Search",
   actionLabel = "Add Item",
   sortOptions = DEFAULT_SORT_OPTIONS,
   showAddButton = true,
@@ -138,7 +167,7 @@ export default function WardrobeHeader({
               input:
                 "text-sm font-light placeholder:text-default-400 placeholder:uppercase placeholder:tracking-widest placeholder:text-[10px]",
             }}
-            placeholder="Search Collection"
+            placeholder={searchPlaceholder}
             radius="none"
             startContent={
               <MagnifyingGlassIcon className="w-4 h-4 text-default-400" />
@@ -167,18 +196,18 @@ export default function WardrobeHeader({
                       <p className="text-[10px] uppercase tracking-widest text-default-400 mb-2 px-2">
                         Suggestions
                       </p>
-                      {suggestions.map((term, i) => (
+                      {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
-                          className="w-full text-left px-2 py-2 text-sm font-light hover:bg-default-100 dark:hover:bg-default-200 transition-colors flex items-center justify-between group"
+                          className="w-full text-left px-2 py-1.5 text-sm font-light hover:bg-default-100 dark:hover:bg-default-800 transition-colors flex items-center justify-between gap-2"
                           onClick={() => {
-                            onSearchSubmit(term);
+                            onSearchSubmit(suggestion.label);
                             setIsSearchFocused(false);
                           }}
                         >
-                          <span>{term}</span>
-                          <span className="opacity-0 group-hover:opacity-100 text-[10px] text-default-400 uppercase">
-                            Select
+                          <span>{suggestion.label}</span>
+                          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-default-300 shrink-0">
+                            {SUGGESTION_LABELS[suggestion.type]}
                           </span>
                         </button>
                       ))}

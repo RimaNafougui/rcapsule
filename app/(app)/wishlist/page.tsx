@@ -12,6 +12,8 @@ import ClothesFilter, {
 } from "@/components/closet/ClothesFilter";
 import WardrobeHeader, {
   useSearchHistory,
+  type SearchSuggestion,
+  type SuggestionType,
 } from "@/components/closet/WardrobeHeader";
 import { ClothingCardSkeleton } from "@/components/closet/ClothingCardSkeleton";
 
@@ -203,17 +205,45 @@ export default function WishlistPage() {
     }
   }, [searchedClothes, sortBy]);
 
-  const suggestions = useMemo(() => {
-    if (!searchQuery) return [];
-    const lowerQuery = searchQuery.toLowerCase();
-    const terms = new Set<string>();
+  const suggestions = useMemo((): SearchSuggestion[] => {
+    const query = searchQuery.trim();
+    if (!query) return [];
 
-    filteredClothes.forEach((item) => {
-      if (item.name.toLowerCase().includes(lowerQuery)) terms.add(item.name);
-      if (item.brand?.toLowerCase().includes(lowerQuery)) terms.add(item.brand);
-    });
+    const lowerQuery = query.toLowerCase();
+    const seen = new Set<string>();
+    const candidates: { label: string; type: SuggestionType; priority: number }[] = [];
 
-    return Array.from(terms).slice(0, 5);
+    const addCandidate = (
+      value: string | undefined,
+      type: SuggestionType,
+      basePriority: number,
+    ) => {
+      if (!value) return;
+      const key = value.toLowerCase();
+      if (seen.has(key) || !key.includes(lowerQuery)) return;
+      seen.add(key);
+
+      const words = key.split(/[\s,]+/);
+      const isPrefix = key.startsWith(lowerQuery);
+      const isWordStart = words.some((w) => w.startsWith(lowerQuery));
+      candidates.push({
+        label: value,
+        type,
+        priority: basePriority + (isPrefix ? 3 : isWordStart ? 2 : 1),
+      });
+    };
+
+    for (const item of filteredClothes) {
+      addCandidate(item.name, "item", 10);
+      addCandidate(item.brand, "brand", 8);
+      addCandidate(item.category, "category", 6);
+      item.colors.forEach((c) => addCandidate(c, "color", 5));
+    }
+
+    return candidates
+      .sort((a, b) => b.priority - a.priority)
+      .slice(0, 7)
+      .map(({ label, type }) => ({ label, type }));
   }, [filteredClothes, searchQuery]);
 
   const clothesByCategory = useMemo(() => {
@@ -266,6 +296,7 @@ export default function WishlistPage() {
           )
         }
         suggestions={suggestions}
+        searchPlaceholder="Search wishlist"
         title="Wishlist"
         viewMode={viewMode}
         onAddNew={() => router.push("/closet/new")}
