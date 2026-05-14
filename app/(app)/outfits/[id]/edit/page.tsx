@@ -238,16 +238,22 @@ function EditOutfitPage() {
           try {
             sessionStorage.removeItem(`outfit_draft_${outfitId}`);
             const saved = JSON.parse(draft);
-            if (saved.formData) setFormData({ ...initialFormData, ...saved.formData });
-            if (saved.selectedClothes) setSelectedClothes(saved.selectedClothes);
-            if (saved.selectedWardrobes) setSelectedWardrobes(new Set(saved.selectedWardrobes));
+            if (saved.formData)
+              setFormData({ ...initialFormData, ...saved.formData });
+            if (saved.selectedClothes)
+              setSelectedClothes(saved.selectedClothes);
+            if (saved.selectedWardrobes)
+              setSelectedWardrobes(new Set(saved.selectedWardrobes));
           } catch {
             // ignore corrupt draft
           }
         }
         const returnedImageUrl = searchParams.get("imageUrl");
         if (returnedImageUrl) {
-          setFormData((prev) => ({ ...prev, imageUrl: decodeURIComponent(returnedImageUrl) }));
+          setFormData((prev) => ({
+            ...prev,
+            imageUrl: decodeURIComponent(returnedImageUrl),
+          }));
         }
       } else {
         toast.error("Outfit not found");
@@ -372,7 +378,6 @@ function EditOutfitPage() {
       </div>
     );
   }
-
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8">
@@ -624,12 +629,16 @@ function EditOutfitPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm uppercase tracking-wide">Public Look</p>
-                <p className="text-xs text-default-400 mt-0.5">Share with the community</p>
+                <p className="text-xs text-default-400 mt-0.5">
+                  Share with the community
+                </p>
               </div>
               <Switch
                 isSelected={formData.isPublic}
                 size="sm"
-                onValueChange={(v) => setFormData((prev) => ({ ...prev, isPublic: v }))}
+                onValueChange={(v) =>
+                  setFormData((prev) => ({ ...prev, isPublic: v }))
+                }
               />
             </div>
             {formData.isPublic && (
@@ -639,12 +648,14 @@ function EditOutfitPage() {
                   setFormData((prev) => ({ ...prev, allowComments: v }))
                 }
               >
-                <span className="text-sm uppercase tracking-wide">Allow Comments</span>
+                <span className="text-sm uppercase tracking-wide">
+                  Allow Comments
+                </span>
               </Checkbox>
             )}
             <div>
               <Input
-                classNames={{ inputWrapper: "h-10" }}
+                classNames={{ inputWrapper: "h-15" }}
                 label="Style Tags"
                 placeholder="Type a tag and press Enter"
                 radius="none"
@@ -656,7 +667,10 @@ function EditOutfitPage() {
                     e.preventDefault();
                     const t = tagInput.trim().toLowerCase();
                     if (t && !formData.styleTags.includes(t)) {
-                      setFormData((prev) => ({ ...prev, styleTags: [...prev.styleTags, t] }));
+                      setFormData((prev) => ({
+                        ...prev,
+                        styleTags: [...prev.styleTags, t],
+                      }));
                     }
                     setTagInput("");
                   }
@@ -675,7 +689,9 @@ function EditOutfitPage() {
                           onClick={() =>
                             setFormData((prev) => ({
                               ...prev,
-                              styleTags: prev.styleTags.filter((t) => t !== tag),
+                              styleTags: prev.styleTags.filter(
+                                (t) => t !== tag,
+                              ),
                             }))
                           }
                         >

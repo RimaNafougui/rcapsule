@@ -160,8 +160,11 @@ function CreateOutfitPage() {
 
     if (savedDraft) {
       try {
-        const { formData: f, selectedClothes: sc, selectedWardrobes: sw } =
-          JSON.parse(savedDraft);
+        const {
+          formData: f,
+          selectedClothes: sc,
+          selectedWardrobes: sw,
+        } = JSON.parse(savedDraft);
 
         if (f) setFormData((prev) => ({ ...prev, ...f }));
         if (sc) setSelectedClothes(sc);
@@ -292,8 +295,22 @@ function CreateOutfitPage() {
     setSelectedClothes((prev) => {
       if (prev.some((c) => c.id === item.id)) return prev;
       const isAccessory = [
-        "Bag","Belt","Hat","Scarf","Sunglasses","Jewelry","Beanie","Cap",
-        "Purse","Wallet","Necklace","Earrings","Card Holder","Watch","Bracelet","Ring",
+        "Bag",
+        "Belt",
+        "Hat",
+        "Scarf",
+        "Sunglasses",
+        "Jewelry",
+        "Beanie",
+        "Cap",
+        "Purse",
+        "Wallet",
+        "Necklace",
+        "Earrings",
+        "Card Holder",
+        "Watch",
+        "Bracelet",
+        "Ring",
       ].includes(item.category);
       return isAccessory
         ? [...prev, item]
@@ -623,12 +640,16 @@ function CreateOutfitPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm uppercase tracking-wide">Public Look</p>
-                <p className="text-xs text-default-400 mt-0.5">Share with the community</p>
+                <p className="text-xs text-default-400 mt-0.5">
+                  Share with the community
+                </p>
               </div>
               <Switch
                 isSelected={formData.isPublic}
                 size="sm"
-                onValueChange={(v) => setFormData((prev) => ({ ...prev, isPublic: v }))}
+                onValueChange={(v) =>
+                  setFormData((prev) => ({ ...prev, isPublic: v }))
+                }
               />
             </div>
             {formData.isPublic && (
@@ -638,12 +659,14 @@ function CreateOutfitPage() {
                   setFormData((prev) => ({ ...prev, allowComments: v }))
                 }
               >
-                <span className="text-sm uppercase tracking-wide">Allow Comments</span>
+                <span className="text-sm uppercase tracking-wide">
+                  Allow Comments
+                </span>
               </Checkbox>
             )}
             <div>
               <Input
-                classNames={{ inputWrapper: "h-10" }}
+                classNames={{ inputWrapper: "h-15" }}
                 label="Style Tags"
                 placeholder="Type a tag and press Enter"
                 radius="none"
@@ -655,7 +678,10 @@ function CreateOutfitPage() {
                     e.preventDefault();
                     const t = tagInput.trim().toLowerCase();
                     if (t && !formData.styleTags.includes(t)) {
-                      setFormData((prev) => ({ ...prev, styleTags: [...prev.styleTags, t] }));
+                      setFormData((prev) => ({
+                        ...prev,
+                        styleTags: [...prev.styleTags, t],
+                      }));
                     }
                     setTagInput("");
                   }
@@ -674,7 +700,9 @@ function CreateOutfitPage() {
                           onClick={() =>
                             setFormData((prev) => ({
                               ...prev,
-                              styleTags: prev.styleTags.filter((t) => t !== tag),
+                              styleTags: prev.styleTags.filter(
+                                (t) => t !== tag,
+                              ),
                             }))
                           }
                         >
