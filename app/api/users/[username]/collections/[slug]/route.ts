@@ -109,6 +109,29 @@ export async function GET(
       })
       .filter(Boolean);
 
+    // Get outfits in collection
+    const { data: wardrobeOutfits } = await supabase
+      .from("WardrobeOutfit")
+      .select(
+        `
+        addedAt,
+        outfit:Outfit (
+          id,
+          name,
+          imageUrl,
+          occasion,
+          season,
+          timesWorn
+        )
+      `,
+      )
+      .eq("wardrobeId", wardrobe.id)
+      .order("addedAt", { ascending: false });
+
+    const outfits = (wardrobeOutfits || [])
+      .map((wo: any) => (wo.outfit ? { ...wo.outfit, addedToCollectionAt: wo.addedAt } : null))
+      .filter(Boolean);
+
     // Check if current user has liked/saved this collection
     let isLiked = false;
     let isSaved = false;
@@ -147,6 +170,7 @@ export async function GET(
       collection: {
         ...wardrobe,
         itemCount: clothes.length,
+        outfitCount: outfits.length,
       },
       owner: {
         id: user.id,
@@ -155,6 +179,7 @@ export async function GET(
         image: user.image,
       },
       clothes,
+      outfits,
       isLiked,
       isSaved,
       isOwnCollection,

@@ -89,6 +89,9 @@ export const outfitPostSchema = z.object({
   occasion: z.string().optional(),
   imageUrl: z.string().optional(),
   isFavorite: z.boolean().optional(),
+  isPublic: z.boolean().optional(),
+  allowComments: z.boolean().optional(),
+  styleTags: z.array(z.string()).optional(),
   clothesIds: z.array(z.string()).optional(),
   wardrobeIds: z.array(z.string()).optional(),
 });

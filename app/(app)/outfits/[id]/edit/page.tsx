@@ -11,6 +11,7 @@ import {
   SelectItem,
   Spinner,
   Checkbox,
+  Switch,
   Modal,
   ModalContent,
   ModalHeader,
@@ -29,6 +30,7 @@ import {
   ExclamationTriangleIcon,
   ArrowPathIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 
@@ -103,7 +105,11 @@ function EditOutfitPage() {
     occasion: "",
     imageUrl: "",
     isFavorite: false,
+    isPublic: false,
+    allowComments: false,
+    styleTags: [] as string[],
   });
+  const [tagInput, setTagInput] = useState("");
 
   const addClothesModal = useDisclosure();
   const confirmLeaveModal = useDisclosure();
@@ -203,6 +209,9 @@ function EditOutfitPage() {
           occasion: outfit.occasion || "",
           imageUrl: outfit.imageUrl || "",
           isFavorite: outfit.isFavorite || false,
+          isPublic: outfit.isPublic || false,
+          allowComments: outfit.allowComments || false,
+          styleTags: outfit.styleTags || ([] as string[]),
         };
 
         setFormData(initialFormData);
@@ -605,6 +614,84 @@ function EditOutfitPage() {
             >
               <span className="text-sm uppercase tracking-wide">Favorite</span>
             </Checkbox>
+          </section>
+
+          {/* Visibility Section */}
+          <section className="space-y-6">
+            <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
+              Visibility
+            </h3>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-wide">Public Look</p>
+                <p className="text-xs text-default-400 mt-0.5">Share with the community</p>
+              </div>
+              <Switch
+                isSelected={formData.isPublic}
+                size="sm"
+                onValueChange={(v) => setFormData((prev) => ({ ...prev, isPublic: v }))}
+              />
+            </div>
+            {formData.isPublic && (
+              <Checkbox
+                isSelected={formData.allowComments}
+                onValueChange={(v) =>
+                  setFormData((prev) => ({ ...prev, allowComments: v }))
+                }
+              >
+                <span className="text-sm uppercase tracking-wide">Allow Comments</span>
+              </Checkbox>
+            )}
+            <div>
+              <Input
+                classNames={{ inputWrapper: "h-10" }}
+                label="Style Tags"
+                placeholder="Type a tag and press Enter"
+                radius="none"
+                value={tagInput}
+                variant="bordered"
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const t = tagInput.trim().toLowerCase();
+                    if (t && !formData.styleTags.includes(t)) {
+                      setFormData((prev) => ({ ...prev, styleTags: [...prev.styleTags, t] }));
+                    }
+                    setTagInput("");
+                  }
+                }}
+              />
+              {formData.styleTags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {formData.styleTags.map((tag) => (
+                    <Chip
+                      key={tag}
+                      className="text-[10px] uppercase tracking-wider"
+                      endContent={
+                        <button
+                          className="ml-1"
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              styleTags: prev.styleTags.filter((t) => t !== tag),
+                            }))
+                          }
+                        >
+                          <XMarkIcon className="w-3 h-3" />
+                        </button>
+                      }
+                      radius="full"
+                      size="sm"
+                      variant="flat"
+                    >
+                      #{tag}
+                    </Chip>
+                  ))}
+                </div>
+              )}
+            </div>
           </section>
 
           <section className="space-y-6">

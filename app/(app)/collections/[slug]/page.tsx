@@ -19,6 +19,8 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Tabs,
+  Tab,
 } from "@heroui/react";
 import {
   ArrowLeftIcon,
@@ -41,16 +43,21 @@ interface ClothingItem {
   brand?: string;
   price?: number;
   colors: string[];
-  season?: string;
-  size?: string;
-  link?: string;
   imageUrl?: string;
-  placesToWear: string[];
   addedToWardrobeAt?: string;
-  wardrobeNotes?: string;
 }
 
-interface Wardrobe {
+interface OutfitItem {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  occasion?: string;
+  season?: string;
+  timesWorn?: number;
+  addedToCollectionAt?: string;
+}
+
+interface Collection {
   id: string;
   slug?: string;
   title: string;
@@ -58,6 +65,7 @@ interface Wardrobe {
   isPublic: boolean;
   coverImage?: string;
   clothes: ClothingItem[];
+  outfits: OutfitItem[];
   stats?: {
     totalValue: number;
     itemCount: number;
@@ -71,22 +79,19 @@ export default function CollectionDetailPage() {
   const params = useParams();
   const slugParam = params.slug as string;
 
-  const [wardrobe, setWardrobe] = useState<Wardrobe | null>(null);
+  const [collection, setCollection] = useState<Collection | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("clothes");
   const [availableClothes, setAvailableClothes] = useState<ClothingItem[]>([]);
+  const [availableOutfits, setAvailableOutfits] = useState<OutfitItem[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
-  const wardrobeModal = useDisclosure();
-  const addExistingModal = useDisclosure();
-  const {
-    isOpen: isDeleteOpen,
-    onOpen: onDeleteOpen,
-    onClose: onDeleteClose,
-  } = useDisclosure();
+  const editModal = useDisclosure();
+  const addClothesModal = useDisclosure();
+  const addOutfitsModal = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
-  const [selectedExistingItems, setSelectedExistingItems] = useState<
-    Set<string>
-  >(new Set());
-  const [wardrobeFormData, setWardrobeFormData] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
     isPublic: false,
@@ -96,34 +101,36 @@ export default function CollectionDetailPage() {
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
     else if (status === "authenticated") {
-      fetchWardrobe();
+      fetchCollection();
       fetchAvailableClothes();
+      fetchAvailableOutfits();
     }
   }, [status, router, slugParam]);
 
-  const fetchWardrobe = async () => {
+  const fetchCollection = async () => {
     try {
-      const response = await fetch(`/api/collections/${slugParam}`);
+      const res = await fetch(`/api/collections/${slugParam}`);
 
-      if (response.ok) {
-        const data = await response.json();
-        const safeData: Wardrobe = {
+      if (res.ok) {
+        const data = await res.json();
+        const safe: Collection = {
           ...data,
           clothes: Array.isArray(data.clothes) ? data.clothes : [],
+          outfits: Array.isArray(data.outfits) ? data.outfits : [],
         };
 
-        setWardrobe(safeData);
-        setWardrobeFormData({
+        setCollection(safe);
+        setFormData({
           title: data.title,
           description: data.description || "",
           isPublic: data.isPublic,
           coverImage: data.coverImage || "",
         });
-      } else if (response.status === 404) {
+      } else if (res.status === 404) {
         router.push("/collections");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -131,107 +138,139 @@ export default function CollectionDetailPage() {
 
   const fetchAvailableClothes = async () => {
     try {
-      const response = await fetch("/api/clothes?status=owned");
+      const res = await fetch("/api/clothes?status=owned");
 
-      if (response.ok) {
-        const data = await response.json();
-
-        setAvailableClothes(Array.isArray(data) ? data : []);
-      }
-    } catch (error) {
-      console.error(error);
+      if (res.ok) setAvailableClothes(await res.json());
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  const handleRemoveFromWardrobe = async (clothesId: string) => {
-    if (!wardrobe) return;
+  const fetchAvailableOutfits = async () => {
     try {
-      const response = await fetch(
-        `/api/collections/${wardrobe.id}/clothes/${clothesId}`,
-        { method: "DELETE" },
-      );
+      const res = await fetch("/api/outfits");
 
-      if (response.ok) {
-        fetchWardrobe();
-        fetchAvailableClothes();
+      if (res.ok) {
+        const data = await res.json();
+
+        setAvailableOutfits(Array.isArray(data) ? data : (data.outfits ?? []));
       }
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  const handleUpdateWardrobe = async () => {
-    if (!wardrobe) return;
+  const handleRemoveClothes = async (clothesId: string) => {
+    if (!collection) return;
     try {
-      const response = await fetch(`/api/collections/${wardrobe.id}`, {
+      await fetch(`/api/collections/${collection.id}/clothes/${clothesId}`, { method: "DELETE" });
+      fetchCollection();
+      fetchAvailableClothes();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleRemoveOutfit = async (outfitId: string) => {
+    if (!collection) return;
+    try {
+      await fetch(`/api/collections/${collection.id}/outfits/${outfitId}`, { method: "DELETE" });
+      fetchCollection();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!collection) return;
+    try {
+      const res = await fetch(`/api/collections/${collection.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(wardrobeFormData),
+        body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const updated = await response.json();
+      if (res.ok) {
+        const updated = await res.json();
 
-        wardrobeModal.onClose();
-        // If the slug changed (title edit), navigate to the new URL
-        const newSlug = updated.slug || wardrobe.id;
+        editModal.onClose();
+        const newSlug = updated.slug || collection.id;
 
         if (newSlug !== slugParam) {
           router.replace(`/collections/${newSlug}`);
         } else {
-          fetchWardrobe();
+          fetchCollection();
         }
       }
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  const handleDeleteWardrobe = async () => {
-    if (!wardrobe) return;
+  const handleDelete = async () => {
+    if (!collection) return;
     try {
-      const response = await fetch(`/api/collections/${wardrobe.id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/collections/${collection.id}`, { method: "DELETE" });
 
-      if (response.ok) router.push("/collections");
-    } catch (error) {
-      console.error(error);
+      if (res.ok) router.push("/collections");
+    } catch (e) {
+      console.error(e);
     } finally {
       onDeleteClose();
     }
   };
 
-  const handleAddExistingItems = async () => {
-    if (!wardrobe) return;
+  const handleAddClothes = async () => {
+    if (!collection) return;
     try {
-      const response = await fetch(`/api/collections/${wardrobe.id}/clothes`, {
+      await fetch(`/api/collections/${collection.id}/clothes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clothesIds: Array.from(selectedExistingItems) }),
+        body: JSON.stringify({ clothesIds: Array.from(selectedItems) }),
       });
-
-      if (response.ok) {
-        fetchWardrobe();
-        fetchAvailableClothes();
-        addExistingModal.onClose();
-        setSelectedExistingItems(new Set());
-      }
-    } catch (error) {
-      console.error(error);
+      fetchCollection();
+      fetchAvailableClothes();
+      addClothesModal.onClose();
+      setSelectedItems(new Set());
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  const toggleItemSelection = (itemId: string) => {
-    const newSelection = new Set(selectedExistingItems);
-
-    newSelection.has(itemId)
-      ? newSelection.delete(itemId)
-      : newSelection.add(itemId);
-    setSelectedExistingItems(newSelection);
+  const handleAddOutfits = async () => {
+    if (!collection) return;
+    try {
+      await fetch(`/api/collections/${collection.id}/outfits`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ outfitIds: Array.from(selectedItems) }),
+      });
+      fetchCollection();
+      addOutfitsModal.onClose();
+      setSelectedItems(new Set());
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  if (loading || !wardrobe) {
+  const toggleItem = (id: string) => {
+    const next = new Set(selectedItems);
+
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelectedItems(next);
+  };
+
+  const openAddClothes = () => {
+    setSelectedItems(new Set());
+    addClothesModal.onOpen();
+  };
+
+  const openAddOutfits = () => {
+    setSelectedItems(new Set());
+    addOutfitsModal.onOpen();
+  };
+
+  if (loading || !collection) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Spinner size="lg" />
@@ -239,21 +278,21 @@ export default function CollectionDetailPage() {
     );
   }
 
-  const itemsNotInWardrobe = availableClothes.filter(
-    (item) =>
-      !wardrobe.clothes.some((wardrobeItem) => wardrobeItem.id === item.id),
+  const clothesNotInCollection = availableClothes.filter(
+    (c) => !collection.clothes.some((wc) => wc.id === c.id),
+  );
+  const outfitsNotInCollection = availableOutfits.filter(
+    (o) => !collection.outfits.some((wo) => wo.id === o.id),
   );
 
   return (
     <div className="w-full min-h-screen pb-20">
+      {/* Hero */}
       <div
         className="relative w-full h-[60vh] min-h-[500px] bg-content2 overflow-hidden bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${wardrobe.coverImage || "/images/placeholder_wardrobe.jpg"})`,
-        }}
+        style={{ backgroundImage: `url(${collection.coverImage || "/images/placeholder_wardrobe.jpg"})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/50 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
 
         <div className="absolute inset-0 max-w-7xl mx-auto px-6 md:px-8 flex flex-col">
           <div className="pt-8">
@@ -272,7 +311,7 @@ export default function CollectionDetailPage() {
             <div className="w-full flex flex-col md:flex-row md:justify-between md:items-end gap-8">
               <div className="flex-1 space-y-6">
                 <div className="flex items-center gap-3 flex-wrap">
-                  {wardrobe.isPublic ? (
+                  {collection.isPublic ? (
                     <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
                       <GlobeAltIcon className="w-3.5 h-3.5" />
                       <span>Public</span>
@@ -284,15 +323,19 @@ export default function CollectionDetailPage() {
                     </div>
                   )}
                   <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
-                    {wardrobe.clothes.length}{" "}
-                    {wardrobe.clothes.length === 1 ? "Piece" : "Pieces"}
+                    {collection.clothes.length}{" "}
+                    {collection.clothes.length === 1 ? "Piece" : "Pieces"}
+                  </div>
+                  <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
+                    {collection.outfits.length}{" "}
+                    {collection.outfits.length === 1 ? "Outfit" : "Outfits"}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 px-4 py-1.5 text-white text-xs font-bold uppercase">
                   <CurrencyDollarIcon className="w-3.5 h-3.5" />
                   <span>
-                    {wardrobe.stats?.totalValue?.toLocaleString("en-CA", {
+                    {collection.stats?.totalValue?.toLocaleString("en-CA", {
                       style: "currency",
                       currency: "CAD",
                     }) || "$0.00"}
@@ -300,12 +343,12 @@ export default function CollectionDetailPage() {
                 </div>
 
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none">
-                  {wardrobe.title}
+                  {collection.title}
                 </h1>
 
-                {wardrobe.description && (
+                {collection.description && (
                   <p className="max-w-2xl text-white/90 text-base md:text-lg font-light leading-relaxed drop-shadow-lg">
-                    {wardrobe.description}
+                    {collection.description}
                   </p>
                 )}
               </div>
@@ -325,16 +368,23 @@ export default function CollectionDetailPage() {
                   <DropdownItem
                     key="edit"
                     startContent={<PencilSquareIcon className="w-4 h-4" />}
-                    onPress={wardrobeModal.onOpen}
+                    onPress={editModal.onOpen}
                   >
                     Edit Details
                   </DropdownItem>
                   <DropdownItem
-                    key="add"
+                    key="add-clothes"
                     startContent={<PlusIcon className="w-4 h-4" />}
-                    onPress={addExistingModal.onOpen}
+                    onPress={openAddClothes}
                   >
-                    Add Items
+                    Add Pieces
+                  </DropdownItem>
+                  <DropdownItem
+                    key="add-outfits"
+                    startContent={<PlusIcon className="w-4 h-4" />}
+                    onPress={openAddOutfits}
+                  >
+                    Add Outfits
                   </DropdownItem>
                   <DropdownItem
                     key="delete"
@@ -352,222 +402,264 @@ export default function CollectionDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        {wardrobe.clothes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
-            <p className="text-default-400 uppercase tracking-widest text-sm mb-4">
-              This collection is empty
-            </p>
-            <div className="flex gap-4">
-              <Button
-                radius="none"
-                variant="bordered"
-                onPress={() => router.push("/closet/new")}
-              >
-                New Item
-              </Button>
-              <Button
-                color="primary"
-                radius="none"
-                onPress={addExistingModal.onOpen}
-              >
-                Add Existing
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6">
-            {wardrobe.clothes.map((item) => (
-              <div key={item.id} className="group relative">
-                <div
-                  className="aspect-[3/4] bg-content2 relative overflow-hidden mb-4 cursor-pointer"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => router.push(`/closet/${item.id}`)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      router.push(`/closet/${item.id}`);
-                  }}
-                >
-                  <Image
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    classNames={{ wrapper: "w-full h-full" }}
-                    radius="none"
-                    src={item.imageUrl || "/images/placeholder.png"}
-                  />
-
-                  <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                    <Button
-                      isIconOnly
-                      className="min-w-8 w-8 h-8 bg-white/10 backdrop-blur text-danger hover:bg-danger hover:text-white border border-danger/20"
-                      color="danger"
-                      radius="none"
-                      size="sm"
-                      variant="solid"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        handleRemoveFromWardrobe(item.id);
+      {/* Tabs */}
+      <div className="max-w-7xl mx-auto px-6 pt-10 pb-4">
+        <Tabs
+          fullWidth
+          classNames={{
+            tabList: "bg-default-100 p-1 rounded-full w-full gap-1",
+            tab: "h-10 text-xs font-bold uppercase tracking-widest rounded-full",
+            cursor: "rounded-full bg-foreground",
+            tabContent: "group-data-[selected=true]:text-background",
+            panel: "pt-10 px-0",
+          }}
+          selectedKey={activeTab}
+          variant="solid"
+          onSelectionChange={(k) => setActiveTab(k as string)}
+        >
+          <Tab
+            key="clothes"
+            title={`Pieces (${collection.clothes.length})`}
+          >
+            {collection.clothes.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
+                <p className="text-default-400 uppercase tracking-widest text-sm mb-4">
+                  No pieces yet
+                </p>
+                <Button color="primary" radius="none" onPress={openAddClothes}>
+                  Add Pieces
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6">
+                {collection.clothes.map((item) => (
+                  <div key={item.id} className="group relative">
+                    <div
+                      className="aspect-[3/4] bg-content2 relative overflow-hidden mb-4 cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => router.push(`/closet/${item.id}`)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") router.push(`/closet/${item.id}`);
                       }}
                     >
-                      <TrashIcon className="w-4 h-4" />
-                    </Button>
+                      <Image
+                        alt={item.name}
+                        className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
+                        classNames={{ wrapper: "w-full h-full" }}
+                        radius="none"
+                        src={item.imageUrl || "/images/placeholder.png"}
+                      />
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <Button
+                          isIconOnly
+                          className="min-w-8 w-8 h-8 bg-white/10 backdrop-blur text-danger hover:bg-danger hover:text-white border border-danger/20"
+                          color="danger"
+                          radius="none"
+                          size="sm"
+                          variant="solid"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveClothes(item.id);
+                          }}
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      {item.brand && (
+                        <p className="text-[10px] font-display font-light tracking-normal text-default-400">
+                          {item.brand}
+                        </p>
+                      )}
+                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                        {item.name}
+                      </h3>
+                      {item.price && (
+                        <p className="text-xs text-default-500">${item.price}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ))}
 
-                <div className="space-y-1">
-                  {item.brand && (
-                    <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                      {item.brand}
-                    </p>
-                  )}
-                  <h3 className="text-sm font-medium uppercase tracking-normal truncate">
-                    {item.name}
-                  </h3>
-                  {item.price && (
-                    <p className="text-xs text-default-500">${item.price}</p>
-                  )}
+                <div
+                  className="aspect-[3/4] border border-dashed border-default-300 flex flex-col items-center justify-center cursor-pointer hover:bg-default-50 transition-colors group"
+                  role="button"
+                  tabIndex={0}
+                  onClick={openAddClothes}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") openAddClothes();
+                  }}
+                >
+                  <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
+                  <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
+                    Add Piece
+                  </span>
                 </div>
               </div>
-            ))}
+            )}
+          </Tab>
 
-            <div
-              className="aspect-[3/4] border border-dashed border-default-300 flex flex-col items-center justify-center cursor-pointer hover:bg-default-50 transition-colors group"
-              role="button"
-              tabIndex={0}
-              onClick={addExistingModal.onOpen}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ")
-                  addExistingModal.onOpen();
-              }}
-            >
-              <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
-              <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
-                Add Piece
-              </span>
-            </div>
-          </div>
-        )}
+          <Tab
+            key="outfits"
+            title={`Outfits (${collection.outfits.length})`}
+          >
+            {collection.outfits.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
+                <p className="text-default-400 uppercase tracking-widest text-sm mb-4">
+                  No outfits yet
+                </p>
+                <Button color="primary" radius="none" onPress={openAddOutfits}>
+                  Add Outfits
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6">
+                {collection.outfits.map((outfit) => (
+                  <div key={outfit.id} className="group relative">
+                    <div
+                      className="aspect-[3/4] bg-content2 relative overflow-hidden mb-4 cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => router.push(`/outfits/${outfit.id}`)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") router.push(`/outfits/${outfit.id}`);
+                      }}
+                    >
+                      <Image
+                        alt={outfit.name}
+                        className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
+                        classNames={{ wrapper: "w-full h-full" }}
+                        radius="none"
+                        src={outfit.imageUrl || "/images/placeholder.png"}
+                      />
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <Button
+                          isIconOnly
+                          className="min-w-8 w-8 h-8 bg-white/10 backdrop-blur text-danger hover:bg-danger hover:text-white border border-danger/20"
+                          color="danger"
+                          radius="none"
+                          size="sm"
+                          variant="solid"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveOutfit(outfit.id);
+                          }}
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                        {outfit.name}
+                      </h3>
+                      {outfit.occasion && (
+                        <p className="text-[10px] text-default-400 uppercase tracking-wide">
+                          {outfit.occasion}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                <div
+                  className="aspect-[3/4] border border-dashed border-default-300 flex flex-col items-center justify-center cursor-pointer hover:bg-default-50 transition-colors group"
+                  role="button"
+                  tabIndex={0}
+                  onClick={openAddOutfits}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") openAddOutfits();
+                  }}
+                >
+                  <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
+                  <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
+                    Add Outfit
+                  </span>
+                </div>
+              </div>
+            )}
+          </Tab>
+        </Tabs>
       </div>
 
       {/* EDIT MODAL */}
-      <Modal
-        isOpen={wardrobeModal.isOpen}
-        radius="none"
-        size="xl"
-        onClose={wardrobeModal.onClose}
-      >
+      <Modal isOpen={editModal.isOpen} radius="none" size="xl" onClose={editModal.onClose}>
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold">
-            Edit Details
-          </ModalHeader>
+          <ModalHeader className="uppercase tracking-widest font-bold">Edit Details</ModalHeader>
           <ModalBody className="gap-6">
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Title"
                 radius="none"
-                value={wardrobeFormData.title}
+                value={formData.title}
                 variant="bordered"
-                onChange={(e) =>
-                  setWardrobeFormData({
-                    ...wardrobeFormData,
-                    title: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
               <Input
                 label="Cover Image URL"
                 radius="none"
-                value={wardrobeFormData.coverImage}
+                value={formData.coverImage}
                 variant="bordered"
-                onChange={(e) =>
-                  setWardrobeFormData({
-                    ...wardrobeFormData,
-                    coverImage: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
               />
             </div>
             <Textarea
               label="Description"
               radius="none"
-              value={wardrobeFormData.description}
+              value={formData.description}
               variant="bordered"
-              onChange={(e) =>
-                setWardrobeFormData({
-                  ...wardrobeFormData,
-                  description: e.target.value,
-                })
-              }
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
             <div className="flex justify-between items-center border p-4 border-default-200">
-              <span className="text-sm font-medium uppercase tracking-wide">
-                Public Collection
-              </span>
+              <span className="text-sm font-medium uppercase tracking-wide">Public Collection</span>
               <Switch
-                isSelected={wardrobeFormData.isPublic}
-                onValueChange={(v) =>
-                  setWardrobeFormData({ ...wardrobeFormData, isPublic: v })
-                }
+                isSelected={formData.isPublic}
+                onValueChange={(v) => setFormData({ ...formData, isPublic: v })}
               />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button
-              radius="none"
-              variant="light"
-              onPress={wardrobeModal.onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              radius="none"
-              onPress={handleUpdateWardrobe}
-            >
-              Save Changes
-            </Button>
+            <Button radius="none" variant="light" onPress={editModal.onClose}>Cancel</Button>
+            <Button color="primary" radius="none" onPress={handleUpdate}>Save Changes</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* ADD EXISTING ITEMS MODAL */}
+      {/* ADD PIECES MODAL */}
       <Modal
-        isOpen={addExistingModal.isOpen}
+        isOpen={addClothesModal.isOpen}
         radius="none"
         scrollBehavior="inside"
         size="4xl"
-        onClose={addExistingModal.onClose}
+        onClose={addClothesModal.onClose}
       >
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold">
-            Select Pieces
-          </ModalHeader>
+          <ModalHeader className="uppercase tracking-widest font-bold">Select Pieces</ModalHeader>
           <ModalBody>
-            {itemsNotInWardrobe.length === 0 ? (
+            {clothesNotInCollection.length === 0 ? (
               <div className="py-12 text-center text-default-400">
                 All your items are already in this collection.
               </div>
             ) : (
               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {itemsNotInWardrobe.map((item) => {
-                  const isSelected = selectedExistingItems.has(item.id);
+                {clothesNotInCollection.map((item) => {
+                  const isSelected = selectedItems.has(item.id);
 
                   return (
                     <div
                       key={item.id}
-                      className={`relative aspect-[3/4] cursor-pointer group transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                      className={`relative aspect-[3/4] cursor-pointer transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}`}
                       role="button"
                       tabIndex={0}
-                      onClick={() => toggleItemSelection(item.id)}
+                      onClick={() => toggleItem(item.id)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ")
-                          toggleItemSelection(item.id);
+                        if (e.key === "Enter" || e.key === " ") toggleItem(item.id);
                       }}
                     >
                       <Image
-                        className={`w-full h-full object-cover transition-opacity ${isSelected ? "opacity-80" : "opacity-100"}`}
+                        className={`w-full h-full object-contain object-center transition-opacity ${isSelected ? "opacity-80" : ""}`}
                         classNames={{ wrapper: "w-full h-full" }}
                         radius="none"
                         src={item.imageUrl || "/images/placeholder.png"}
@@ -587,21 +679,81 @@ export default function CollectionDetailPage() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              radius="none"
-              variant="light"
-              onPress={addExistingModal.onClose}
-            >
-              Cancel
-            </Button>
+            <Button radius="none" variant="light" onPress={addClothesModal.onClose}>Cancel</Button>
             <Button
               color="primary"
-              isDisabled={selectedExistingItems.size === 0}
+              isDisabled={selectedItems.size === 0}
               radius="none"
-              onPress={handleAddExistingItems}
+              onPress={handleAddClothes}
             >
-              Add {selectedExistingItems.size} Piece
-              {selectedExistingItems.size !== 1 ? "s" : ""}
+              Add {selectedItems.size > 0 ? `${selectedItems.size} ` : ""}
+              {selectedItems.size === 1 ? "Piece" : "Pieces"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* ADD OUTFITS MODAL */}
+      <Modal
+        isOpen={addOutfitsModal.isOpen}
+        radius="none"
+        scrollBehavior="inside"
+        size="4xl"
+        onClose={addOutfitsModal.onClose}
+      >
+        <ModalContent>
+          <ModalHeader className="uppercase tracking-widest font-bold">Select Outfits</ModalHeader>
+          <ModalBody>
+            {outfitsNotInCollection.length === 0 ? (
+              <div className="py-12 text-center text-default-400">
+                All your outfits are already in this collection.
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {outfitsNotInCollection.map((outfit) => {
+                  const isSelected = selectedItems.has(outfit.id);
+
+                  return (
+                    <div
+                      key={outfit.id}
+                      className={`relative aspect-[3/4] cursor-pointer transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => toggleItem(outfit.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") toggleItem(outfit.id);
+                      }}
+                    >
+                      <Image
+                        className={`w-full h-full object-contain object-center transition-opacity ${isSelected ? "opacity-80" : ""}`}
+                        classNames={{ wrapper: "w-full h-full" }}
+                        radius="none"
+                        src={outfit.imageUrl || "/images/placeholder.png"}
+                      />
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 bg-primary text-white p-1 rounded-full z-10">
+                          <CheckCircleIcon className="w-4 h-4" />
+                        </div>
+                      )}
+                      <div className="absolute bottom-0 w-full bg-white/90 p-2 text-xs truncate font-medium">
+                        {outfit.name}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button radius="none" variant="light" onPress={addOutfitsModal.onClose}>Cancel</Button>
+            <Button
+              color="primary"
+              isDisabled={selectedItems.size === 0}
+              radius="none"
+              onPress={handleAddOutfits}
+            >
+              Add {selectedItems.size > 0 ? `${selectedItems.size} ` : ""}
+              {selectedItems.size === 1 ? "Outfit" : "Outfits"}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -613,7 +765,7 @@ export default function CollectionDetailPage() {
         message="This collection will be permanently deleted."
         title="Delete Collection"
         onClose={onDeleteClose}
-        onConfirm={handleDeleteWardrobe}
+        onConfirm={handleDelete}
       />
     </div>
   );

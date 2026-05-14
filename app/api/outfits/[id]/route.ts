@@ -129,11 +129,12 @@ export async function PUT(
     if (data.season !== undefined) updatePayload.season = data.season;
     if (data.occasion !== undefined) updatePayload.occasion = data.occasion;
     if (data.imageUrl !== undefined) updatePayload.imageUrl = data.imageUrl;
-    if (data.isFavorite !== undefined)
-      updatePayload.isFavorite = data.isFavorite;
+    if (data.isFavorite !== undefined) updatePayload.isFavorite = data.isFavorite;
+    if (data.isPublic !== undefined) updatePayload.isPublic = data.isPublic;
+    if (data.allowComments !== undefined) updatePayload.allowComments = data.allowComments;
+    if (data.styleTags !== undefined) updatePayload.styleTags = data.styleTags;
     if (data.timesWorn !== undefined) updatePayload.timesWorn = data.timesWorn;
-    if (data.lastWornAt !== undefined)
-      updatePayload.lastWornAt = data.lastWornAt;
+    if (data.lastWornAt !== undefined) updatePayload.lastWornAt = data.lastWornAt;
 
     const { data: outfit, error: updateError } = await supabase
       .from("Outfit")

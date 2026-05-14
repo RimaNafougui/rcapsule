@@ -25,6 +25,11 @@ export async function GET(
         addedAt,
         notes,
         clothes:Clothes (*)
+      ),
+      WardrobeOutfit (
+        addedAt,
+        notes,
+        outfit:Outfit (id, name, imageUrl, occasion, season, timesWorn, createdAt)
       )
     `;
 
@@ -52,7 +57,21 @@ export async function GET(
       );
     }
 
-    // 1. Process Clothes List
+    // 1. Process Outfits List
+    const outfits = (wardrobeRaw.WardrobeOutfit || [])
+      .map((wo: any) => {
+        if (!wo.outfit) return null;
+
+        return { ...wo.outfit, addedToCollectionAt: wo.addedAt };
+      })
+      .filter(Boolean)
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.addedToCollectionAt).getTime() -
+          new Date(a.addedToCollectionAt).getTime(),
+      );
+
+    // 2. Process Clothes List
     const clothes = (wardrobeRaw.WardrobeClothes || [])
       .map((wc: any) => {
         if (!wc.clothes) return null;
@@ -101,6 +120,7 @@ export async function GET(
     const wardrobe = {
       ...wardrobeRaw,
       clothes,
+      outfits,
       stats: {
         totalValue: parseFloat(totalValue.toFixed(2)),
         itemCount: clothes.length,
@@ -109,6 +129,7 @@ export async function GET(
     };
 
     delete wardrobe.WardrobeClothes;
+    delete wardrobe.WardrobeOutfit;
 
     return NextResponse.json(wardrobe);
   } catch (error) {

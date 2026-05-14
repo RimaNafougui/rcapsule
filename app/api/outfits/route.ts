@@ -109,7 +109,10 @@ export async function POST(req: Request) {
         season: data.season,
         occasion: data.occasion,
         imageUrl: data.imageUrl,
-        isFavorite: data.isFavorite || false,
+        isFavorite: data.isFavorite ?? false,
+        isPublic: data.isPublic ?? false,
+        allowComments: data.allowComments ?? false,
+        styleTags: data.styleTags ?? [],
       })
       .select()
       .single();

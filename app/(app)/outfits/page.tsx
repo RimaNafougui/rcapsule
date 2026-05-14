@@ -299,7 +299,7 @@ export default function OutfitsPage() {
                   {outfit.imageUrl ? (
                     <Image
                       alt={outfit.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
                       classNames={{ wrapper: "w-full h-full" }}
                       radius="none"
                       src={outfit.imageUrl}
