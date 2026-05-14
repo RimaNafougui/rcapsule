@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Button,
   Input,
@@ -35,12 +35,39 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 export default function StudioPage() {
   const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [outfitName, setOutfitName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [search, setSearch] = useState("");
+  const [selectedItems, setSelectedItems] = useState<ClothingItem[]>([]);
+
+  // Peek at the outfit draft to know which items are pre-selected
+  useEffect(() => {
+    if (!returnTo) return;
+    let key: string | null = null;
+
+    if (returnTo === "/outfits/new") {
+      key = "outfit_draft";
+    } else {
+      const match = returnTo.match(/^\/outfits\/([^/]+)\/edit$/);
+      if (match) key = `outfit_draft_${match[1]}`;
+    }
+    if (!key) return;
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw);
+      if (Array.isArray(draft.selectedClothes)) {
+        setSelectedItems(draft.selectedClothes);
+      }
+    } catch {
+      // ignore corrupt draft
+    }
+  }, [returnTo]);
 
   const { data: clothes = [], isLoading } = useSWR<ClothingItem[]>(
     status === "authenticated" ? "/api/clothes?status=owned" : null,
@@ -48,16 +75,55 @@ export default function StudioPage() {
     { dedupingInterval: 30_000 },
   );
 
+  const selectedIds = useMemo(
+    () => new Set(selectedItems.map((c) => c.id)),
+    [selectedItems],
+  );
+
+  const otherItems = useMemo(
+    () => clothes.filter((c) => !selectedIds.has(c.id)),
+    [clothes, selectedIds],
+  );
+
   const filteredItems = search.trim()
-    ? clothes.filter(
+    ? otherItems.filter(
         (c) =>
           c.name?.toLowerCase().includes(search.toLowerCase()) ||
           c.category?.toLowerCase().includes(search.toLowerCase()),
       )
-    : clothes;
+    : otherItems;
 
   // Called by CollageBuilder when user hits Save
   const handleCanvasSave = async (file: File) => {
+    if (returnTo) {
+      // Upload the image and hand the URL back to the caller page
+      setIsSaving(true);
+      try {
+        const formData = new FormData();
+
+        formData.append("file", file, "collage.png");
+        formData.append("folder", "studio");
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadRes.ok) throw new Error("Upload failed");
+
+        const { url: imageUrl } = await uploadRes.json();
+
+        router.push(`${returnTo}?imageUrl=${encodeURIComponent(imageUrl)}`);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to save collage");
+      } finally {
+        setIsSaving(false);
+      }
+
+      return;
+    }
+
+    // Standalone mode: prompt for outfit name then create outfit
     setPendingFile(file);
     onOpen();
   };
@@ -128,7 +194,7 @@ export default function StudioPage() {
               radius="none"
               size="sm"
               variant="light"
-              onPress={() => router.back()}
+              onPress={() => (returnTo ? router.push(returnTo) : router.back())}
             >
               <ArrowLeftIcon className="w-4 h-4" />
             </Button>
@@ -160,7 +226,11 @@ export default function StudioPage() {
 
         {/* CollageBuilder fills remaining height */}
         <div className="flex-1 overflow-hidden">
-          <CollageBuilder items={filteredItems} onSave={handleCanvasSave} />
+          <CollageBuilder
+            items={filteredItems}
+            selectedItems={selectedItems}
+            onSave={handleCanvasSave}
+          />
         </div>
       </div>
 

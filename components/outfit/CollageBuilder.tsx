@@ -55,10 +55,11 @@ import { useCropModal } from "@/lib/hooks/collage/useCropModal";
 
 interface CollageBuilderProps {
   items: ClothingItem[];
+  selectedItems?: ClothingItem[];
   onSave: (file: File) => Promise<void>;
 }
 
-export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
+export default function CollageBuilder({ items, selectedItems, onSave }: CollageBuilderProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [removingBgId, setRemovingBgId] = useState<string | null>(null);
   const [toolMode, setToolMode] = useState<ToolMode>("select");
@@ -68,9 +69,18 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
     onOpen: onClearOpen,
     onClose: onClearClose,
   } = useDisclosure();
-  const [showGrid, setShowGrid] = useState(true);
+  const [showGrid, setShowGrid] = useState(false);
   const [snapToGrid, _setSnapToGrid] = useState(false);
   const gridSize = 20;
+  const [canvasBgColor, setCanvasBgColor] = useState("#ffffff");
+  const [canvasBgOpacity, setCanvasBgOpacity] = useState(1);
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -175,16 +185,38 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
     };
   }, [handleUndo, handleRedo, selectedId, removeItem, setSelectedId]);
 
+  const toBase64 = (url: string): Promise<string> => {
+    // Already a data URL — return as-is (the route will strip the prefix)
+    if (url.startsWith("data:")) return Promise.resolve(url);
+
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext("2d")!.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+      img.src = url;
+    });
+  };
+
   const handleRemoveBg = async (uniqueId: string) => {
     const item = canvasItems.find((i) => i.uniqueId === uniqueId);
 
     if (!item?.imageUrl) return;
     setRemovingBgId(uniqueId);
     try {
+      const imageBase64 = await toBase64(item.imageUrl);
       const res = await fetch("/api/remove-bg", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: item.imageUrl }),
+        body: JSON.stringify({ imageBase64 }),
       });
       const data = await res.json();
 
@@ -251,7 +283,10 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
       const canvas = await html2canvas(canvasRef.current, {
         useCORS: true,
         allowTaint: false,
-        backgroundColor: "#ffffff",
+        backgroundColor:
+          canvasBgOpacity === 0
+            ? null
+            : hexToRgba(canvasBgColor, canvasBgOpacity),
         scale: 2,
         width: canvasSize.width,
         height: canvasSize.height,
@@ -413,6 +448,118 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
             </PopoverContent>
           </Popover>
 
+          {/* Background colour picker */}
+          <Popover placement="bottom-end">
+            <PopoverTrigger>
+              <Button
+                isIconOnly
+                className="border border-default-300 overflow-hidden"
+                radius="none"
+                size="sm"
+                title="Canvas Background"
+                variant="flat"
+              >
+                <span
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      canvasBgOpacity === 0
+                        ? "repeating-conic-gradient(#d1d5db 0% 25%, #ffffff 0% 50%) 0 0 / 8px 8px"
+                        : hexToRgba(canvasBgColor, canvasBgOpacity),
+                  }}
+                />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-3 w-52">
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-default-400">
+                  Background
+                </p>
+
+                {/* Preset swatches */}
+                <div className="flex gap-1.5 flex-wrap">
+                  {[
+                    "#ffffff",
+                    "#000000",
+                    "#f5f5f5",
+                    "#fdf6e3",
+                    "#fce7f3",
+                    "#eff6ff",
+                    "#f0fdf4",
+                    "#fef9c3",
+                  ].map((c) => (
+                    <button
+                      key={c}
+                      className={`w-6 h-6 border-2 transition-transform hover:scale-110 ${
+                        canvasBgColor === c && canvasBgOpacity > 0
+                          ? "border-primary"
+                          : "border-default-200"
+                      }`}
+                      style={{ backgroundColor: c }}
+                      title={c}
+                      onClick={() => {
+                        setCanvasBgColor(c);
+                        if (canvasBgOpacity === 0) setCanvasBgOpacity(1);
+                      }}
+                    />
+                  ))}
+                  {/* Transparent swatch */}
+                  <button
+                    className={`w-6 h-6 border-2 transition-transform hover:scale-110 ${
+                      canvasBgOpacity === 0
+                        ? "border-primary"
+                        : "border-default-200"
+                    }`}
+                    style={{
+                      background:
+                        "repeating-conic-gradient(#d1d5db 0% 25%, #ffffff 0% 50%) 0 0 / 8px 8px",
+                    }}
+                    title="Transparent"
+                    onClick={() => setCanvasBgOpacity(0)}
+                  />
+                </div>
+
+                {/* Custom colour input */}
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-8 h-8 cursor-pointer border border-default-200 p-0.5 bg-transparent rounded-none"
+                    style={{ WebkitAppearance: "none" } as React.CSSProperties}
+                    type="color"
+                    value={canvasBgColor}
+                    onChange={(e) => {
+                      setCanvasBgColor(e.target.value);
+                      if (canvasBgOpacity === 0) setCanvasBgOpacity(1);
+                    }}
+                  />
+                  <span className="text-[11px] font-mono text-default-500 uppercase">
+                    {canvasBgColor}
+                  </span>
+                </div>
+
+                {/* Opacity slider */}
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <p className="text-[10px] uppercase tracking-widest text-default-400">
+                      Opacity
+                    </p>
+                    <span className="text-[10px] font-mono text-default-500">
+                      {Math.round(canvasBgOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    className="max-w-full"
+                    maxValue={1}
+                    minValue={0}
+                    size="sm"
+                    step={0.01}
+                    value={canvasBgOpacity}
+                    onChange={(val) => setCanvasBgOpacity(val as number)}
+                  />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <Tooltip content="Toggle Grid">
             <Button
               isIconOnly
@@ -459,36 +606,83 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
       {/* MAIN CONTENT */}
       <div className="flex flex-1 overflow-hidden">
         {/* SIDEBAR: Available Items */}
-        <div className="w-28 flex-shrink-0 overflow-y-auto border-r border-default-200 p-2 space-y-2 bg-default-50">
-          <p className="text-[9px] text-center uppercase tracking-widest text-default-400 mb-2">
-            Click to Add
-          </p>
-          {items.map((item) => (
-            <Tooltip
-              key={item.id}
-              content={item.name || "Add to canvas"}
-              placement="right"
-            >
-              <div
-                className="aspect-square bg-white border border-default-200 cursor-pointer hover:border-primary hover:shadow-sm transition-all p-1"
-                role="button"
-                tabIndex={0}
-                onClick={() => addToCanvas(item)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    addToCanvas(item);
-                  }
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  alt={item.name || "Item"}
-                  className="w-full h-full object-contain"
-                  src={item.imageUrl || ""}
-                />
+        <div className="w-28 flex-shrink-0 overflow-y-auto border-r border-default-200 bg-default-50">
+          {/* Outfit items — pre-selected by the user in the form */}
+          {selectedItems && selectedItems.length > 0 && (
+            <>
+              <p className="sticky top-0 z-10 text-[9px] text-center uppercase tracking-widest text-primary bg-primary-50 border-b border-primary-100 px-2 py-1">
+                Outfit
+              </p>
+              <div className="p-2 space-y-2">
+                {selectedItems.map((item) => (
+                  <Tooltip
+                    key={item.id}
+                    content={item.name || "Add to canvas"}
+                    placement="right"
+                  >
+                    <div
+                      className="aspect-square bg-white border-2 border-primary/20 cursor-pointer hover:border-primary hover:shadow-sm transition-all p-1"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => addToCanvas(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") addToCanvas(item);
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt={item.name || "Item"}
+                        className="w-full h-full object-contain"
+                        src={item.imageUrl || ""}
+                      />
+                    </div>
+                  </Tooltip>
+                ))}
               </div>
-            </Tooltip>
-          ))}
+            </>
+          )}
+
+          {/* Rest of wardrobe */}
+          {items.length > 0 && (
+            <>
+              <p className="sticky top-0 z-10 text-[9px] text-center uppercase tracking-widest text-default-400 bg-default-50 border-b border-default-200 px-2 py-1">
+                {selectedItems && selectedItems.length > 0 ? "More" : "Items"}
+              </p>
+              <div className="p-2 space-y-2">
+                {items.map((item) => (
+                  <Tooltip
+                    key={item.id}
+                    content={item.name || "Add to canvas"}
+                    placement="right"
+                  >
+                    <div
+                      className="aspect-square bg-white border border-default-200 cursor-pointer hover:border-primary hover:shadow-sm transition-all p-1"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => addToCanvas(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") addToCanvas(item);
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt={item.name || "Item"}
+                        className="w-full h-full object-contain"
+                        src={item.imageUrl || ""}
+                      />
+                    </div>
+                  </Tooltip>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Empty state */}
+          {(!selectedItems || selectedItems.length === 0) && items.length === 0 && (
+            <p className="text-[9px] text-center uppercase tracking-widest text-default-400 p-4">
+              No items
+            </p>
+          )}
         </div>
 
         {/* CANVAS AREA */}
@@ -517,13 +711,13 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
                 transform: `scale(${canvasZoom})`,
                 transformOrigin: "center center",
                 backgroundImage: showGrid
-                  ? `linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
-                     linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px)`
+                  ? `linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+                     linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)`
                   : "none",
                 backgroundSize: showGrid
                   ? `${gridSize}px ${gridSize}px`
                   : "auto",
-                backgroundColor: "#ffffff",
+                backgroundColor: hexToRgba(canvasBgColor, canvasBgOpacity),
               }}
             >
               {canvasItems.length === 0 && (
@@ -588,7 +782,7 @@ export default function CollageBuilder({ items, onSave }: CollageBuilderProps) {
                       <img
                         alt="collage-item"
                         className="pointer-events-none"
-                        crossOrigin="anonymous"
+                        crossOrigin={item.corsEnabled ? "anonymous" : undefined}
                         src={item.imageUrl}
                         style={getImageStyle(item)}
                       />

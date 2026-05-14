@@ -27,6 +27,7 @@ export interface CanvasItem extends ClothingItem {
   cropData?: CropData;
   naturalWidth: number;
   naturalHeight: number;
+  corsEnabled?: boolean;
 }
 
 export type ToolMode = "select" | "pan";

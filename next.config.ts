@@ -21,7 +21,7 @@ const securityHeaders = [
       "default-src 'self'",
       // 'unsafe-eval' is only needed in development (webpack HMR).
       // Production Next.js builds do not require it.
-      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""} https://js.stripe.com https://*.sentry.io https://maps.googleapis.com https://www.googletagmanager.com`,
+      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""} https://js.stripe.com https://*.sentry.io https://maps.googleapis.com https://www.googletagmanager.com https://va.vercel-scripts.com`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https: https://www.google-analytics.com",
       "font-src 'self'",

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import {
   Button,
   Image,
@@ -25,18 +25,16 @@ import {
 import {
   ArrowLeftIcon,
   PlusIcon,
-  XMarkIcon,
   SparklesIcon,
-  MagnifyingGlassIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon,
   ArrowPathIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 
 import { ImageUpload } from "@/components/closet/ImageUpload";
-import CollageBuilder from "@/components/outfit/CollageBuilder";
+import AddPiecesModal from "@/components/outfit/AddPiecesModal";
+import SelectedPieceCard from "@/components/outfit/SelectedPieceCard";
 
 interface ClothingItem {
   id: string;
@@ -52,25 +50,6 @@ interface Wardrobe {
   id: string;
   title: string;
 }
-
-const ACCESSORY_CATEGORIES = [
-  "Bag",
-  "Belt",
-  "Hat",
-  "Scarf",
-  "Sunglasses",
-  "Jewelry",
-  "Beanie",
-  "Cap",
-  "Purse",
-  "Wallet",
-  "Necklace",
-  "Earrings",
-  "Card Holder",
-  "Watch",
-  "Bracelet",
-  "Ring",
-];
 
 const SEASONS = ["Spring", "Summer", "Fall", "Winter", "All Season"];
 const OCCASIONS = [
@@ -90,6 +69,7 @@ export default function EditOutfitPage() {
   const { status } = useSession();
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const outfitId = params.id as string;
 
   const [loading, setLoading] = useState(true);
@@ -113,7 +93,6 @@ export default function EditOutfitPage() {
     typeof formData | null
   >(null);
 
-  const [showCollageBuilder, setShowCollageBuilder] = useState(false);
   const [imageMethod, setImageMethod] = useState<"builder" | "upload" | "url">(
     "upload",
   );
@@ -125,9 +104,6 @@ export default function EditOutfitPage() {
     imageUrl: "",
     isFavorite: false,
   });
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const addClothesModal = useDisclosure();
   const confirmLeaveModal = useDisclosure();
@@ -246,6 +222,24 @@ export default function EditOutfitPage() {
             outfit.imageUrl.includes("base64") ? "builder" : "url",
           );
         }
+
+        // Restore studio draft after server data is set (avoids race condition)
+        const draft = sessionStorage.getItem(`outfit_draft_${outfitId}`);
+        if (draft) {
+          try {
+            sessionStorage.removeItem(`outfit_draft_${outfitId}`);
+            const saved = JSON.parse(draft);
+            if (saved.formData) setFormData({ ...initialFormData, ...saved.formData });
+            if (saved.selectedClothes) setSelectedClothes(saved.selectedClothes);
+            if (saved.selectedWardrobes) setSelectedWardrobes(new Set(saved.selectedWardrobes));
+          } catch {
+            // ignore corrupt draft
+          }
+        }
+        const returnedImageUrl = searchParams.get("imageUrl");
+        if (returnedImageUrl) {
+          setFormData((prev) => ({ ...prev, imageUrl: decodeURIComponent(returnedImageUrl) }));
+        }
       } else {
         toast.error("Outfit not found");
         router.push("/outfits");
@@ -257,29 +251,8 @@ export default function EditOutfitPage() {
     }
   };
 
-  const handleAddClothes = (item: ClothingItem) => {
-    if (selectedClothes.find((c) => c.id === item.id)) return;
-    const isAccessory = ACCESSORY_CATEGORIES.includes(item.category);
-
-    if (!isAccessory) {
-      const filtered = selectedClothes.filter(
-        (c) => c.category !== item.category,
-      );
-
-      setSelectedClothes([...filtered, item]);
-    } else {
-      setSelectedClothes([...selectedClothes, item]);
-    }
-  };
-
   const handleRemoveClothes = (itemId: string) => {
     setSelectedClothes(selectedClothes.filter((c) => c.id !== itemId));
-  };
-
-  const getSelectedInCategory = (
-    category: string,
-  ): ClothingItem | undefined => {
-    return selectedClothes.find((c) => c.category === category);
   };
 
   const toggleWardrobe = (id: string) => {
@@ -289,26 +262,16 @@ export default function EditOutfitPage() {
     setSelectedWardrobes(s);
   };
 
-  const handleCollageSave = async (file: File) => {
-    try {
-      const uploadData = new FormData();
-
-      uploadData.append("file", file);
-      uploadData.append("folder", "outfits");
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: uploadData,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-
-        setFormData((prev) => ({ ...prev, imageUrl: data.url }));
-        setShowCollageBuilder(false);
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
-    }
+  const handleOpenStudio = () => {
+    sessionStorage.setItem(
+      `outfit_draft_${outfitId}`,
+      JSON.stringify({
+        formData,
+        selectedClothes,
+        selectedWardrobes: Array.from(selectedWardrobes),
+      }),
+    );
+    router.push(`/studio?returnTo=/outfits/${outfitId}/edit`);
   };
 
   const totalCost = selectedClothes.reduce(
@@ -401,33 +364,6 @@ export default function EditOutfitPage() {
     );
   }
 
-  const unselectedClothes = availableClothes.filter(
-    (item) => !selectedClothes.find((s) => s.id === item.id),
-  );
-
-  const filteredClothes = unselectedClothes.filter((item) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.brand?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !activeCategory || item.category === activeCategory;
-
-    return matchesSearch && matchesCategory;
-  });
-
-  const groupedClothes = filteredClothes.reduce(
-    (acc, item) => {
-      if (!acc[item.category]) acc[item.category] = [];
-      acc[item.category].push(item);
-
-      return acc;
-    },
-    {} as Record<string, ClothingItem[]>,
-  );
-
-  const allCategories = [
-    ...new Set(availableClothes.map((c) => c.category)),
-  ].sort();
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8">
@@ -524,20 +460,14 @@ export default function EditOutfitPage() {
                 <div className="text-center">
                   <Button
                     className="uppercase font-bold text-xs tracking-widest h-14 px-8"
-                    isDisabled={selectedClothes.length === 0}
                     radius="none"
                     size="lg"
                     startContent={<SparklesIcon className="w-5 h-5" />}
                     variant="flat"
-                    onPress={() => setShowCollageBuilder(true)}
+                    onPress={handleOpenStudio}
                   >
                     Open Collage Studio
                   </Button>
-                  <p className="text-[10px] text-default-400 mt-4 uppercase tracking-wider">
-                    {selectedClothes.length === 0
-                      ? "Select clothes first"
-                      : `${selectedClothes.length} items ready`}
-                  </p>
                 </div>
               ) : imageMethod === "upload" ? (
                 <ImageUpload
@@ -709,73 +639,15 @@ export default function EditOutfitPage() {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-6">
-                {Object.entries(
-                  selectedClothes.reduce(
-                    (acc, item) => {
-                      if (!acc[item.category]) acc[item.category] = [];
-                      acc[item.category].push(item);
-
-                      return acc;
-                    },
-                    {} as Record<string, ClothingItem[]>,
-                  ),
-                )
-                  .sort(([catA], [catB]) => catA.localeCompare(catB))
-                  .map(([category, items]) => (
-                    <div key={category}>
-                      <div className="text-[10px] uppercase tracking-widest text-default-500 mb-2">
-                        {category}
-                      </div>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                        {items.map((item) => {
-                          const isNew = !originalClothesIds.has(item.id);
-
-                          return (
-                            <div
-                              key={item.id}
-                              className={`relative group aspect-[3/4] border-2 cursor-pointer hover:border-danger transition-colors ${isNew ? "border-success" : "border-default-200"}`}
-                              role="button"
-                              tabIndex={0}
-                              onClick={() => handleRemoveClothes(item.id)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  handleRemoveClothes(item.id);
-                                }
-                              }}
-                            >
-                              <Image
-                                className="w-full h-full object-cover"
-                                classNames={{ wrapper: "w-full h-full" }}
-                                radius="none"
-                                src={item.imageUrl || ""}
-                              />
-                              <div className="absolute bottom-0 w-full bg-white/90 p-1 text-[9px] uppercase truncate text-center">
-                                {item.name}
-                              </div>
-                              {isNew && (
-                                <div className="absolute top-1 left-1">
-                                  <Chip
-                                    className="text-[8px] h-4"
-                                    color="success"
-                                    size="sm"
-                                    variant="flat"
-                                  >
-                                    NEW
-                                  </Chip>
-                                </div>
-                              )}
-                              <div className="absolute inset-0 bg-danger/10 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                <div className="bg-danger text-white p-2 rounded-full">
-                                  <XMarkIcon className="w-5 h-5" />
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
+              <div className="flex flex-wrap gap-3">
+                {selectedClothes.map((item) => (
+                  <SelectedPieceCard
+                    key={item.id}
+                    isNew={!originalClothesIds.has(item.id)}
+                    item={item}
+                    onRemove={handleRemoveClothes}
+                  />
+                ))}
               </div>
             )}
           </section>
@@ -837,175 +709,13 @@ export default function EditOutfitPage() {
         </div>
       </form>
 
-      <Modal
+      <AddPiecesModal
+        availableClothes={availableClothes}
         isOpen={addClothesModal.isOpen}
-        radius="none"
-        scrollBehavior="inside"
-        size="5xl"
+        selectedClothes={selectedClothes}
         onClose={addClothesModal.onClose}
-      >
-        <ModalContent>
-          <ModalHeader className="flex-col gap-4">
-            <div className="flex justify-between items-center w-full">
-              <span className="uppercase tracking-widest font-bold">
-                Select Pieces
-              </span>
-              <span className="text-xs text-default-400 font-normal">
-                {selectedClothes.length} selected
-              </span>
-            </div>
-            <div className="flex gap-3 w-full">
-              <Input
-                isClearable
-                className="flex-1"
-                placeholder="Search..."
-                radius="none"
-                size="sm"
-                startContent={
-                  <MagnifyingGlassIcon className="w-4 h-4 text-default-400" />
-                }
-                value={searchQuery}
-                variant="bordered"
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery("")}
-              />
-              <Select
-                className="w-48"
-                placeholder="All Categories"
-                radius="none"
-                selectedKeys={activeCategory ? [activeCategory] : []}
-                size="sm"
-                variant="bordered"
-                onChange={(e) => setActiveCategory(e.target.value || null)}
-              >
-                {allCategories.map((cat) => (
-                  <SelectItem key={cat}>{cat}</SelectItem>
-                ))}
-              </Select>
-            </div>
-          </ModalHeader>
-          <ModalBody className="pb-6">
-            {Object.keys(groupedClothes).length === 0 ? (
-              <div className="py-12 text-center text-default-400">
-                No items found
-              </div>
-            ) : (
-              Object.entries(groupedClothes)
-                .sort(([catA], [catB]) => catA.localeCompare(catB))
-                .map(([category, items]) => {
-                  const isAccessory = ACCESSORY_CATEGORIES.includes(category);
-                  const selectedInCategory = getSelectedInCategory(category);
-
-                  return (
-                    <div key={category} className="mb-8">
-                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-default-200">
-                        <h4 className="text-xs font-display font-light tracking-normal">
-                          {category}
-                        </h4>
-                        <Chip className="text-[10px]" size="sm" variant="flat">
-                          {isAccessory ? "Multiple OK" : "Pick One"}
-                        </Chip>
-                        {!isAccessory && selectedInCategory && (
-                          <span className="text-[10px] text-success-600 uppercase tracking-wider ml-auto flex items-center gap-1">
-                            <CheckCircleIcon className="w-3 h-3" />
-                            {selectedInCategory.name}
-                          </span>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
-                        {items.map((item) => {
-                          const isSelected = selectedClothes.some(
-                            (c) => c.id === item.id,
-                          );
-                          const wouldReplace =
-                            !isAccessory && selectedInCategory && !isSelected;
-
-                          return (
-                            <Tooltip
-                              key={item.id}
-                              content={
-                                wouldReplace
-                                  ? `Replace ${selectedInCategory.name}`
-                                  : item.name
-                              }
-                            >
-                              <div
-                                className={`aspect-[3/4] cursor-pointer group relative border-2 transition-all ${isSelected ? "border-primary shadow-lg" : wouldReplace ? "border-warning-300 hover:border-warning" : "border-transparent hover:border-default-300"}`}
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => handleAddClothes(item)}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    handleAddClothes(item);
-                                  }
-                                }}
-                              >
-                                <Image
-                                  className="w-full h-full object-cover group-hover:opacity-90"
-                                  radius="none"
-                                  src={item.imageUrl || ""}
-                                />
-                                <div
-                                  className={`absolute bottom-0 w-full p-1 text-[9px] uppercase truncate text-center ${isSelected ? "bg-primary text-white" : "bg-white/90 text-foreground"}`}
-                                >
-                                  {item.name}
-                                </div>
-                                {isSelected && (
-                                  <div className="absolute top-1 right-1 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center">
-                                    <CheckCircleIcon className="w-4 h-4" />
-                                  </div>
-                                )}
-                                {wouldReplace && (
-                                  <div className="absolute top-1 right-1">
-                                    <ArrowPathIcon className="w-4 h-4 text-warning" />
-                                  </div>
-                                )}
-                              </div>
-                            </Tooltip>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })
-            )}
-          </ModalBody>
-          <ModalFooter className="border-t border-divider">
-            <div className="flex justify-between items-center w-full">
-              <span className="text-xs text-default-500">
-                {selectedClothes.length} items selected
-              </span>
-              <Button
-                color="primary"
-                radius="none"
-                onPress={addClothesModal.onClose}
-              >
-                Done
-              </Button>
-            </div>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <Modal
-        classNames={{ body: "p-0", header: "border-b border-default-200" }}
-        isOpen={showCollageBuilder}
-        radius="none"
-        size="5xl"
-        onClose={() => setShowCollageBuilder(false)}
-      >
-        <ModalContent className="h-[85vh]">
-          <ModalHeader className="uppercase tracking-widest font-bold">
-            Collage Studio
-          </ModalHeader>
-          <ModalBody className="overflow-hidden">
-            <CollageBuilder
-              items={selectedClothes}
-              onSave={handleCollageSave}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        onSelectionChange={setSelectedClothes}
+      />
 
       <Modal
         isOpen={confirmLeaveModal.isOpen}

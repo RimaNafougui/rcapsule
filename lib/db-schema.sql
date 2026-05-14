@@ -18,7 +18,6 @@ CREATE TABLE public.Account (
   CONSTRAINT Account_pkey PRIMARY KEY (provider, providerAccountId),
   CONSTRAINT Account_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Activity (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -31,7 +30,6 @@ CREATE TABLE public.Activity (
   CONSTRAINT Activity_pkey PRIMARY KEY (id),
   CONSTRAINT Activity_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Block (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   blockerId uuid NOT NULL,
@@ -41,7 +39,6 @@ CREATE TABLE public.Block (
   CONSTRAINT Block_blockerId_fkey FOREIGN KEY (blockerId) REFERENCES public.User(id),
   CONSTRAINT Block_blockedId_fkey FOREIGN KEY (blockedId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Clothes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -85,7 +82,6 @@ CREATE TABLE public.Clothes (
   CONSTRAINT Clothes_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id),
   CONSTRAINT fk_global_product FOREIGN KEY (globalproductid) REFERENCES public.GlobalProduct(id)
 );
-
 CREATE TABLE public.ClothesAnalytics (
   clothesId uuid NOT NULL,
   userId uuid NOT NULL,
@@ -102,7 +98,6 @@ CREATE TABLE public.ClothesAnalytics (
   CONSTRAINT ClothesAnalytics_pkey PRIMARY KEY (clothesId),
   CONSTRAINT ClothesAnalytics_clothesId_fkey FOREIGN KEY (clothesId) REFERENCES public.Clothes(id)
 );
-
 CREATE TABLE public.Comment (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -119,7 +114,6 @@ CREATE TABLE public.Comment (
   CONSTRAINT Comment_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id),
   CONSTRAINT Comment_parentId_fkey FOREIGN KEY (parentId) REFERENCES public.Comment(id)
 );
-
 CREATE TABLE public.ContactMessages (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -129,7 +123,6 @@ CREATE TABLE public.ContactMessages (
   createdAt timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT ContactMessages_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.FeaturedContent (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   contentType text NOT NULL CHECK ("contentType" = ANY (ARRAY['user'::text, 'wardrobe'::text, 'outfit'::text])),
@@ -142,7 +135,6 @@ CREATE TABLE public.FeaturedContent (
   createdAt timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT FeaturedContent_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.Follow (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   followerId uuid NOT NULL,
@@ -152,7 +144,6 @@ CREATE TABLE public.Follow (
   CONSTRAINT Follow_followerId_fkey FOREIGN KEY (followerId) REFERENCES public.User(id),
   CONSTRAINT Follow_followingId_fkey FOREIGN KEY (followingId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.GlobalProduct (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -179,7 +170,6 @@ CREATE TABLE public.GlobalProduct (
   scrapingStatus text CHECK ("scrapingStatus" = ANY (ARRAY['active'::text, 'discontinued'::text, 'error'::text])),
   CONSTRAINT GlobalProduct_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.Like (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -189,7 +179,6 @@ CREATE TABLE public.Like (
   CONSTRAINT Like_pkey PRIMARY KEY (id),
   CONSTRAINT Like_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Notification (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -204,7 +193,6 @@ CREATE TABLE public.Notification (
   CONSTRAINT Notification_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id),
   CONSTRAINT Notification_actorId_fkey FOREIGN KEY (actorId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Outfit (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -236,7 +224,6 @@ CREATE TABLE public.Outfit (
   CONSTRAINT Outfit_pkey PRIMARY KEY (id),
   CONSTRAINT Outfit_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.OutfitClothes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   outfitId uuid NOT NULL,
@@ -247,7 +234,6 @@ CREATE TABLE public.OutfitClothes (
   CONSTRAINT OutfitClothes_outfitId_fkey FOREIGN KEY (outfitId) REFERENCES public.Outfit(id),
   CONSTRAINT OutfitClothes_clothesId_fkey FOREIGN KEY (clothesId) REFERENCES public.Clothes(id)
 );
-
 CREATE TABLE public.OutfitRecommendations (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userid uuid NOT NULL,
@@ -263,7 +249,6 @@ CREATE TABLE public.OutfitRecommendations (
   CONSTRAINT OutfitRecommendations_pkey PRIMARY KEY (id),
   CONSTRAINT OutfitRecommendations_userid_fkey FOREIGN KEY (userid) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Report (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   reporterId uuid NOT NULL,
@@ -279,7 +264,6 @@ CREATE TABLE public.Report (
   CONSTRAINT Report_reporterId_fkey FOREIGN KEY (reporterId) REFERENCES public.User(id),
   CONSTRAINT Report_reviewedBy_fkey FOREIGN KEY (reviewedBy) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Save (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -291,7 +275,6 @@ CREATE TABLE public.Save (
   CONSTRAINT Save_pkey PRIMARY KEY (id),
   CONSTRAINT Save_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.StyleTag (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL UNIQUE,
@@ -302,14 +285,11 @@ CREATE TABLE public.StyleTag (
   createdAt timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT StyleTag_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.User (
   id uuid NOT NULL,
   name text,
   email text NOT NULL UNIQUE,
-  emailVerified timestamp without time zone,
   image text,
-  password text,
   profilePublic boolean NOT NULL DEFAULT false,
   createdAt timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -335,10 +315,10 @@ CREATE TABLE public.User (
   showItemPrices boolean DEFAULT false,
   allowMessages boolean DEFAULT true,
   lastActiveAt timestamp without time zone,
+  role text NOT NULL DEFAULT 'user'::text CHECK (role = ANY (ARRAY['user'::text, 'admin'::text])),
   CONSTRAINT User_pkey PRIMARY KEY (id),
   CONSTRAINT User_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );
-
 CREATE TABLE public.UserPreferences (
   userId uuid NOT NULL,
   budgetGoal double precision,
@@ -356,7 +336,6 @@ CREATE TABLE public.UserPreferences (
   CONSTRAINT UserPreferences_pkey PRIMARY KEY (userId),
   CONSTRAINT UserPreferences_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.Wardrobe (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,
@@ -380,7 +359,6 @@ CREATE TABLE public.Wardrobe (
   CONSTRAINT Wardrobe_pkey PRIMARY KEY (id),
   CONSTRAINT Wardrobe_userId_fkey FOREIGN KEY (userId) REFERENCES public.User(id)
 );
-
 CREATE TABLE public.WardrobeClothes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   wardrobeId uuid NOT NULL,
@@ -391,7 +369,6 @@ CREATE TABLE public.WardrobeClothes (
   CONSTRAINT WardrobeClothes_wardrobeId_fkey FOREIGN KEY (wardrobeId) REFERENCES public.Wardrobe(id),
   CONSTRAINT WardrobeClothes_clothesId_fkey FOREIGN KEY (clothesId) REFERENCES public.Clothes(id)
 );
-
 CREATE TABLE public.WardrobeOutfit (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   wardrobeId uuid NOT NULL,
@@ -402,7 +379,6 @@ CREATE TABLE public.WardrobeOutfit (
   CONSTRAINT WardrobeOutfit_wardrobeId_fkey FOREIGN KEY (wardrobeId) REFERENCES public.Wardrobe(id),
   CONSTRAINT WardrobeOutfit_outfitId_fkey FOREIGN KEY (outfitId) REFERENCES public.Outfit(id)
 );
-
 CREATE TABLE public.WearLog (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   userId uuid NOT NULL,

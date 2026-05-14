@@ -16,10 +16,6 @@ export const siteConfig = {
       href: "/outfits",
     },
     {
-      label: "Studio",
-      href: "/studio",
-    },
-    {
       label: "Collections",
       href: "/collections",
     },

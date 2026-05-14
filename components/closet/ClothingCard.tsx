@@ -104,31 +104,6 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
           </div>
         )}
 
-        {/* Condition badge for owned items */}
-        {!isWishlist && item.condition && item.condition !== "excellent" && (
-          <div className="absolute top-2 left-2 z-20">
-            <Chip
-              classNames={{
-                base: "backdrop-blur-sm",
-                content:
-                  "text-[10px] uppercase tracking-wider font-semibold px-1 capitalize",
-              }}
-              color={
-                item.condition === "new"
-                  ? "success"
-                  : item.condition === "good"
-                    ? "primary"
-                    : item.condition === "fair"
-                      ? "warning"
-                      : "default"
-              }
-              size="sm"
-              variant="flat"
-            >
-              {item.condition}
-            </Chip>
-          </div>
-        )}
 
         {/* Wear count badge */}
         {!isWishlist && item.timesworn !== undefined && item.timesworn > 0 && (

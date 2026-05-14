@@ -30,28 +30,21 @@ export async function POST(req: Request) {
     );
   }
 
-  const { imageUrl } = await req.json();
+  const { imageBase64 } = await req.json();
 
-  if (!imageUrl || typeof imageUrl !== "string") {
+  if (!imageBase64 || typeof imageBase64 !== "string") {
     return NextResponse.json(
-      { error: "imageUrl is required" },
+      { error: "imageBase64 is required" },
       { status: 400 },
     );
   }
 
+  // Strip data URL prefix if present (e.g. "data:image/png;base64,...")
+  const rawBase64 = imageBase64.includes(",")
+    ? imageBase64.split(",")[1]
+    : imageBase64;
+
   try {
-    // Fetch the image server-side so we avoid CORS issues from the browser
-    const imgRes = await fetch(imageUrl);
-
-    if (!imgRes.ok) {
-      return NextResponse.json(
-        { error: "Could not fetch the source image" },
-        { status: 422 },
-      );
-    }
-
-    const buffer = await imgRes.arrayBuffer();
-    const rawBase64 = Buffer.from(buffer).toString("base64");
 
     const command = new InvokeCommand({
       FunctionName: functionName,

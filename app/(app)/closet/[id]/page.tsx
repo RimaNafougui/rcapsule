@@ -685,6 +685,16 @@ function EditMode({
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
           />
         </div>
+        <Input
+          classNames={{ inputWrapper: "border-default-300 mt-3" }}
+          description="Paste an external image URL to use instead of uploading"
+          label="Image URL"
+          placeholder="https://example.com/image.jpg"
+          radius="sm"
+          value={formData.imageUrl}
+          variant="bordered"
+          onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+        />
       </div>
 
       {/* Tabbed Edit Sections */}

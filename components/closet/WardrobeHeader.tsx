@@ -264,7 +264,6 @@ export default function WardrobeHeader({
             value: "text-sm font-light uppercase tracking-widest",
             selectorIcon: "text-default-400",
           }}
-          id="wardrobe-sort-select"
           placeholder="SORT BY"
           radius="none"
           selectedKeys={[sortBy]}
