@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import {
@@ -65,7 +65,7 @@ const OCCASIONS = [
   "Interview",
 ];
 
-export default function EditOutfitPage() {
+function EditOutfitPage() {
   const { status } = useSession();
   const router = useRouter();
   const params = useParams();
@@ -786,5 +786,13 @@ export default function EditOutfitPage() {
         </ModalContent>
       </Modal>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <EditOutfitPage />
+    </Suspense>
   );
 }

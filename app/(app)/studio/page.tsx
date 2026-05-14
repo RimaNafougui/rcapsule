@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -32,7 +32,7 @@ interface ClothingItem {
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export default function StudioPage() {
+function StudioPage() {
   const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -273,5 +273,13 @@ export default function StudioPage() {
         </ModalContent>
       </Modal>
     </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <StudioPage />
+    </Suspense>
   );
 }
