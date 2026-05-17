@@ -20,8 +20,8 @@ export const siteConfig = {
       href: "/collections",
     },
     {
-      label: "Catalog",
-      href: "/catalog",
+      label: "Catalogue",
+      href: "/catalogue",
     },
     {
       label: "Discover",
@@ -35,8 +35,12 @@ export const siteConfig = {
       href: "/discover",
     },
     {
-      label: "Features",
-      href: "/features",
+      label: "Community",
+      href: "/discover",
+    },
+    {
+      label: "About",
+      href: "/about",
     },
   ],
   /** Profile dropdown items (logged in) */

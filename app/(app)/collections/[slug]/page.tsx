@@ -89,7 +89,11 @@ export default function CollectionDetailPage() {
   const editModal = useDisclosure();
   const addClothesModal = useDisclosure();
   const addOutfitsModal = useDisclosure();
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -163,7 +167,9 @@ export default function CollectionDetailPage() {
   const handleRemoveClothes = async (clothesId: string) => {
     if (!collection) return;
     try {
-      await fetch(`/api/collections/${collection.id}/clothes/${clothesId}`, { method: "DELETE" });
+      await fetch(`/api/collections/${collection.id}/clothes/${clothesId}`, {
+        method: "DELETE",
+      });
       fetchCollection();
       fetchAvailableClothes();
     } catch (e) {
@@ -174,7 +180,9 @@ export default function CollectionDetailPage() {
   const handleRemoveOutfit = async (outfitId: string) => {
     if (!collection) return;
     try {
-      await fetch(`/api/collections/${collection.id}/outfits/${outfitId}`, { method: "DELETE" });
+      await fetch(`/api/collections/${collection.id}/outfits/${outfitId}`, {
+        method: "DELETE",
+      });
       fetchCollection();
     } catch (e) {
       console.error(e);
@@ -210,7 +218,9 @@ export default function CollectionDetailPage() {
   const handleDelete = async () => {
     if (!collection) return;
     try {
-      const res = await fetch(`/api/collections/${collection.id}`, { method: "DELETE" });
+      const res = await fetch(`/api/collections/${collection.id}`, {
+        method: "DELETE",
+      });
 
       if (res.ok) router.push("/collections");
     } catch (e) {
@@ -290,7 +300,9 @@ export default function CollectionDetailPage() {
       {/* Hero */}
       <div
         className="relative w-full h-[60vh] min-h-[500px] bg-content2 overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: `url(${collection.coverImage || "/images/placeholder_wardrobe.jpg"})` }}
+        style={{
+          backgroundImage: `url(${collection.coverImage || "/images/placeholder_wardrobe.jpg"})`,
+        }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/50 to-black/20" />
 
@@ -312,22 +324,22 @@ export default function CollectionDetailPage() {
               <div className="flex-1 space-y-6">
                 <div className="flex items-center gap-3 flex-wrap">
                   {collection.isPublic ? (
-                    <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
+                    <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white eyebrow border border-white/20">
                       <GlobeAltIcon className="w-3.5 h-3.5" />
                       <span>Public</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
+                    <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-xl text-white eyebrow border border-white/20">
                       <LockClosedIcon className="w-3.5 h-3.5" />
                       <span>Private</span>
                     </div>
                   )}
-                  <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
-                    {collection.clothes.length}{" "}
+                  <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 eyebrow border border-white/10">
+                    <span className="num">{collection.clothes.length}</span>{" "}
                     {collection.clothes.length === 1 ? "Piece" : "Pieces"}
                   </div>
-                  <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
-                    {collection.outfits.length}{" "}
+                  <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 eyebrow border border-white/10">
+                    <span className="num">{collection.outfits.length}</span>{" "}
                     {collection.outfits.length === 1 ? "Outfit" : "Outfits"}
                   </div>
                 </div>
@@ -342,7 +354,7 @@ export default function CollectionDetailPage() {
                   </span>
                 </div>
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-white leading-none">
                   {collection.title}
                 </h1>
 
@@ -407,9 +419,9 @@ export default function CollectionDetailPage() {
         <Tabs
           fullWidth
           classNames={{
-            tabList: "bg-default-100 p-1 rounded-full w-full gap-1",
-            tab: "h-10 text-xs font-bold uppercase tracking-widest rounded-full",
-            cursor: "rounded-full bg-foreground",
+            tabList: "bg-default-100 p-1 w-full gap-1",
+            tab: "h-10 eyebrow",
+            cursor: "bg-foreground",
             tabContent: "group-data-[selected=true]:text-background",
             panel: "pt-10 px-0",
           }}
@@ -417,15 +429,10 @@ export default function CollectionDetailPage() {
           variant="solid"
           onSelectionChange={(k) => setActiveTab(k as string)}
         >
-          <Tab
-            key="clothes"
-            title={`Pieces (${collection.clothes.length})`}
-          >
+          <Tab key="clothes" title={`Pieces (${collection.clothes.length})`}>
             {collection.clothes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
-                <p className="text-default-400 uppercase tracking-widest text-sm mb-4">
-                  No pieces yet
-                </p>
+                <p className="eyebrow text-stone mb-4">No pieces yet</p>
                 <Button color="primary" radius="none" onPress={openAddClothes}>
                   Add Pieces
                 </Button>
@@ -440,7 +447,8 @@ export default function CollectionDetailPage() {
                       tabIndex={0}
                       onClick={() => router.push(`/closet/${item.id}`)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") router.push(`/closet/${item.id}`);
+                        if (e.key === "Enter" || e.key === " ")
+                          router.push(`/closet/${item.id}`);
                       }}
                     >
                       <Image
@@ -469,15 +477,15 @@ export default function CollectionDetailPage() {
                     </div>
                     <div className="space-y-1">
                       {item.brand && (
-                        <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                          {item.brand}
-                        </p>
+                        <p className="eyebrow text-stone">{item.brand}</p>
                       )}
-                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                      <h3 className="font-display font-light text-sm tracking-tight truncate">
                         {item.name}
                       </h3>
                       {item.price && (
-                        <p className="text-xs text-default-500">${item.price}</p>
+                        <p className="eyebrow text-stone">
+                          <span className="num">${item.price}</span>
+                        </p>
                       )}
                     </div>
                   </div>
@@ -493,23 +501,16 @@ export default function CollectionDetailPage() {
                   }}
                 >
                   <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
-                  <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
-                    Add Piece
-                  </span>
+                  <span className="eyebrow text-stone mt-2">Add Piece</span>
                 </div>
               </div>
             )}
           </Tab>
 
-          <Tab
-            key="outfits"
-            title={`Outfits (${collection.outfits.length})`}
-          >
+          <Tab key="outfits" title={`Outfits (${collection.outfits.length})`}>
             {collection.outfits.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
-                <p className="text-default-400 uppercase tracking-widest text-sm mb-4">
-                  No outfits yet
-                </p>
+                <p className="eyebrow text-stone mb-4">No outfits yet</p>
                 <Button color="primary" radius="none" onPress={openAddOutfits}>
                   Add Outfits
                 </Button>
@@ -524,7 +525,8 @@ export default function CollectionDetailPage() {
                       tabIndex={0}
                       onClick={() => router.push(`/outfits/${outfit.id}`)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") router.push(`/outfits/${outfit.id}`);
+                        if (e.key === "Enter" || e.key === " ")
+                          router.push(`/outfits/${outfit.id}`);
                       }}
                     >
                       <Image
@@ -552,13 +554,11 @@ export default function CollectionDetailPage() {
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                      <h3 className="font-display font-light text-sm tracking-tight truncate">
                         {outfit.name}
                       </h3>
                       {outfit.occasion && (
-                        <p className="text-[10px] text-default-400 uppercase tracking-wide">
-                          {outfit.occasion}
-                        </p>
+                        <p className="eyebrow text-stone">{outfit.occasion}</p>
                       )}
                     </div>
                   </div>
@@ -574,9 +574,7 @@ export default function CollectionDetailPage() {
                   }}
                 >
                   <PlusIcon className="w-8 h-8 text-default-300 group-hover:text-default-500 transition-colors" />
-                  <span className="text-xs font-display font-light tracking-normal text-default-400 mt-2">
-                    Add Outfit
-                  </span>
+                  <span className="eyebrow text-stone mt-2">Add Outfit</span>
                 </div>
               </div>
             )}
@@ -585,9 +583,16 @@ export default function CollectionDetailPage() {
       </div>
 
       {/* EDIT MODAL */}
-      <Modal isOpen={editModal.isOpen} radius="none" size="xl" onClose={editModal.onClose}>
+      <Modal
+        isOpen={editModal.isOpen}
+        radius="none"
+        size="xl"
+        onClose={editModal.onClose}
+      >
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold">Edit Details</ModalHeader>
+          <ModalHeader className="uppercase tracking-widest font-bold">
+            Edit Details
+          </ModalHeader>
           <ModalBody className="gap-6">
             <div className="grid grid-cols-2 gap-4">
               <Input
@@ -595,14 +600,18 @@ export default function CollectionDetailPage() {
                 radius="none"
                 value={formData.title}
                 variant="bordered"
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
               />
               <Input
                 label="Cover Image URL"
                 radius="none"
                 value={formData.coverImage}
                 variant="bordered"
-                onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, coverImage: e.target.value })
+                }
               />
             </div>
             <Textarea
@@ -610,10 +619,14 @@ export default function CollectionDetailPage() {
               radius="none"
               value={formData.description}
               variant="bordered"
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
             <div className="flex justify-between items-center border p-4 border-default-200">
-              <span className="text-sm font-medium uppercase tracking-wide">Public Collection</span>
+              <span className="text-sm font-medium uppercase tracking-wide">
+                Public Collection
+              </span>
               <Switch
                 isSelected={formData.isPublic}
                 onValueChange={(v) => setFormData({ ...formData, isPublic: v })}
@@ -621,8 +634,12 @@ export default function CollectionDetailPage() {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button radius="none" variant="light" onPress={editModal.onClose}>Cancel</Button>
-            <Button color="primary" radius="none" onPress={handleUpdate}>Save Changes</Button>
+            <Button radius="none" variant="light" onPress={editModal.onClose}>
+              Cancel
+            </Button>
+            <Button color="primary" radius="none" onPress={handleUpdate}>
+              Save Changes
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -636,7 +653,9 @@ export default function CollectionDetailPage() {
         onClose={addClothesModal.onClose}
       >
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold">Select Pieces</ModalHeader>
+          <ModalHeader className="uppercase tracking-widest font-bold">
+            Select Pieces
+          </ModalHeader>
           <ModalBody>
             {clothesNotInCollection.length === 0 ? (
               <div className="py-12 text-center text-default-400">
@@ -655,7 +674,8 @@ export default function CollectionDetailPage() {
                       tabIndex={0}
                       onClick={() => toggleItem(item.id)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") toggleItem(item.id);
+                        if (e.key === "Enter" || e.key === " ")
+                          toggleItem(item.id);
                       }}
                     >
                       <Image
@@ -665,7 +685,7 @@ export default function CollectionDetailPage() {
                         src={item.imageUrl || "/images/placeholder.png"}
                       />
                       {isSelected && (
-                        <div className="absolute top-2 right-2 bg-primary text-white p-1 rounded-full z-10">
+                        <div className="absolute top-2 right-2 bg-primary text-white p-1 z-10">
                           <CheckCircleIcon className="w-4 h-4" />
                         </div>
                       )}
@@ -679,7 +699,13 @@ export default function CollectionDetailPage() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button radius="none" variant="light" onPress={addClothesModal.onClose}>Cancel</Button>
+            <Button
+              radius="none"
+              variant="light"
+              onPress={addClothesModal.onClose}
+            >
+              Cancel
+            </Button>
             <Button
               color="primary"
               isDisabled={selectedItems.size === 0}
@@ -702,7 +728,9 @@ export default function CollectionDetailPage() {
         onClose={addOutfitsModal.onClose}
       >
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold">Select Outfits</ModalHeader>
+          <ModalHeader className="uppercase tracking-widest font-bold">
+            Select Outfits
+          </ModalHeader>
           <ModalBody>
             {outfitsNotInCollection.length === 0 ? (
               <div className="py-12 text-center text-default-400">
@@ -721,7 +749,8 @@ export default function CollectionDetailPage() {
                       tabIndex={0}
                       onClick={() => toggleItem(outfit.id)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") toggleItem(outfit.id);
+                        if (e.key === "Enter" || e.key === " ")
+                          toggleItem(outfit.id);
                       }}
                     >
                       <Image
@@ -731,7 +760,7 @@ export default function CollectionDetailPage() {
                         src={outfit.imageUrl || "/images/placeholder.png"}
                       />
                       {isSelected && (
-                        <div className="absolute top-2 right-2 bg-primary text-white p-1 rounded-full z-10">
+                        <div className="absolute top-2 right-2 bg-primary text-white p-1 z-10">
                           <CheckCircleIcon className="w-4 h-4" />
                         </div>
                       )}
@@ -745,7 +774,13 @@ export default function CollectionDetailPage() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button radius="none" variant="light" onPress={addOutfitsModal.onClose}>Cancel</Button>
+            <Button
+              radius="none"
+              variant="light"
+              onPress={addOutfitsModal.onClose}
+            >
+              Cancel
+            </Button>
             <Button
               color="primary"
               isDisabled={selectedItems.size === 0}

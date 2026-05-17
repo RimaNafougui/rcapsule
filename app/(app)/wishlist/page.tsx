@@ -207,11 +207,16 @@ export default function WishlistPage() {
 
   const suggestions = useMemo((): SearchSuggestion[] => {
     const query = searchQuery.trim();
+
     if (!query) return [];
 
     const lowerQuery = query.toLowerCase();
     const seen = new Set<string>();
-    const candidates: { label: string; type: SuggestionType; priority: number }[] = [];
+    const candidates: {
+      label: string;
+      type: SuggestionType;
+      priority: number;
+    }[] = [];
 
     const addCandidate = (
       value: string | undefined,
@@ -220,12 +225,14 @@ export default function WishlistPage() {
     ) => {
       if (!value) return;
       const key = value.toLowerCase();
+
       if (seen.has(key) || !key.includes(lowerQuery)) return;
       seen.add(key);
 
       const words = key.split(/[\s,]+/);
       const isPrefix = key.startsWith(lowerQuery);
       const isWordStart = words.some((w) => w.startsWith(lowerQuery));
+
       candidates.push({
         label: value,
         type,
@@ -281,6 +288,7 @@ export default function WishlistPage() {
       <WardrobeHeader
         actionLabel="Add Wish"
         history={history}
+        searchPlaceholder="Search wishlist"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setShowFilters={setShowFilters}
@@ -296,7 +304,6 @@ export default function WishlistPage() {
           )
         }
         suggestions={suggestions}
-        searchPlaceholder="Search wishlist"
         title="Wishlist"
         viewMode={viewMode}
         onAddNew={() => router.push("/closet/new")}

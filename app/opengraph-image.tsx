@@ -18,9 +18,9 @@ async function loadFont(family: string, weight: number): Promise<ArrayBuffer> {
 }
 
 export default async function OgImage() {
-  const [fontBold, fontRegular] = await Promise.all([
-    loadFont("Plus+Jakarta+Sans", 700),
-    loadFont("Plus+Jakarta+Sans", 400),
+  const [displayLight, monoRegular] = await Promise.all([
+    loadFont("Cormorant+Garamond", 300),
+    loadFont("JetBrains+Mono", 400),
   ]);
 
   return new ImageResponse(
@@ -29,102 +29,72 @@ export default async function OgImage() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#171717",
+          background: "#FAFAF7",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "Plus Jakarta Sans",
           position: "relative",
         }}
       >
-        {/* Corner marks — editorial detail */}
-        <div
-          style={{
-            position: "absolute",
-            top: 40,
-            left: 40,
-            width: 24,
-            height: 24,
-            borderTop: "1.5px solid #404040",
-            borderLeft: "1.5px solid #404040",
-            display: "flex",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 40,
-            right: 40,
-            width: 24,
-            height: 24,
-            borderTop: "1.5px solid #404040",
-            borderRight: "1.5px solid #404040",
-            display: "flex",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 40,
-            left: 40,
-            width: 24,
-            height: 24,
-            borderBottom: "1.5px solid #404040",
-            borderLeft: "1.5px solid #404040",
-            display: "flex",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 40,
-            width: 24,
-            height: 24,
-            borderBottom: "1.5px solid #404040",
-            borderRight: "1.5px solid #404040",
-            display: "flex",
-          }}
-        />
+        {/* Corner marks */}
+        {[
+          { top: 40, left: 40, borderTop: "1px solid #E5E3DC", borderLeft: "1px solid #E5E3DC" },
+          { top: 40, right: 40, borderTop: "1px solid #E5E3DC", borderRight: "1px solid #E5E3DC" },
+          { bottom: 40, left: 40, borderBottom: "1px solid #E5E3DC", borderLeft: "1px solid #E5E3DC" },
+          { bottom: 40, right: 40, borderBottom: "1px solid #E5E3DC", borderRight: "1px solid #E5E3DC" },
+        ].map((style, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              width: 20,
+              height: 20,
+              display: "flex",
+              ...style,
+            }}
+          />
+        ))}
 
-        {/* Wordmark */}
+        {/* Wordmark — Cormorant Garamond display */}
         <div
           style={{
-            fontSize: 96,
-            fontWeight: 700,
-            color: "#FFFFFF",
-            letterSpacing: "0.1em",
-            lineHeight: 1,
+            fontFamily: "Cormorant Garamond",
+            fontSize: 120,
+            fontWeight: 300,
+            color: "#0A0A0A",
+            letterSpacing: "-0.025em",
+            lineHeight: 0.92,
             display: "flex",
           }}
         >
-          RCAPSULE
+          rcapsule
         </div>
 
-        {/* Divider */}
+        {/* Accent rule */}
         <div
           style={{
-            width: 40,
+            width: 32,
             height: 1,
-            background: "#525252",
-            margin: "28px 0",
+            background: "#7A2E1F",
+            margin: "32px 0 28px",
             display: "flex",
           }}
         />
 
-        {/* Tagline */}
+        {/* Eyebrow — mono caps */}
         <div
           style={{
-            fontSize: 20,
+            fontFamily: "JetBrains Mono",
+            fontSize: 12,
             fontWeight: 400,
-            color: "#737373",
-            letterSpacing: "0.2em",
+            color: "#6B6B66",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
             display: "flex",
           }}
         >
-          Your digital wardrobe
+          your digital wardrobe
         </div>
 
         {/* Bottom URL */}
@@ -132,9 +102,10 @@ export default async function OgImage() {
           style={{
             position: "absolute",
             bottom: 44,
-            fontSize: 14,
+            fontFamily: "JetBrains Mono",
+            fontSize: 11,
             fontWeight: 400,
-            color: "#404040",
+            color: "#A8A8A2",
             letterSpacing: "0.12em",
             display: "flex",
           }}
@@ -146,8 +117,8 @@ export default async function OgImage() {
     {
       ...size,
       fonts: [
-        { name: "Plus Jakarta Sans", data: fontBold, weight: 700 },
-        { name: "Plus Jakarta Sans", data: fontRegular, weight: 400 },
+        { name: "Cormorant Garamond", data: displayLight, weight: 300, style: "normal" },
+        { name: "JetBrains Mono", data: monoRegular, weight: 400, style: "normal" },
       ],
     },
   );

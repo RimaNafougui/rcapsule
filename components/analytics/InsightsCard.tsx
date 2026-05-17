@@ -45,7 +45,7 @@ export function InsightsCard({ insights }: { insights: Insight[] }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="border-b border-default-200 dark:border-default-700 pb-4">
-        <h3 className="text-[11px] font-display font-light tracking-normal text-foreground-600">
+        <h3 className="font-display font-light text-2xl md:text-3xl tracking-tight">
           Wardrobe Intelligence
         </h3>
       </div>
@@ -59,16 +59,14 @@ export function InsightsCard({ insights }: { insights: Insight[] }) {
           return (
             <div
               key={index}
-              className={`${styles.bg} border-l-4 ${styles.border} p-5 group hover:shadow-md transition-all duration-300`}
+              className={`${styles.bg} border-l-4 ${styles.border} p-5 group transition-all duration-300`}
             >
               <div className="flex items-start gap-4">
                 <Icon
                   className={`w-5 h-5 ${styles.icon} flex-shrink-0 mt-0.5`}
                 />
                 <div className="flex-1">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-default-500 mb-2">
-                    {insight.category}
-                  </p>
+                  <p className="eyebrow text-stone mb-2">{insight.category}</p>
                   <p className="text-sm leading-relaxed text-foreground font-light">
                     {insight.message}
                   </p>

@@ -14,10 +14,10 @@ export function CategoryBreakdown({
     <div className="bg-background border border-default-200 p-8">
       {/* Header */}
       <div className="mb-8 pb-4 border-b border-default-200">
-        <h3 className="text-[11px] font-display font-light tracking-normal text-foreground-600 mb-1">
+        <h3 className="font-display font-light text-2xl md:text-3xl tracking-tight mb-1">
           Category Analysis
         </h3>
-        <p className="text-xs text-default-500 font-light italic">
+        <p className="eyebrow text-stone">
           Distribution across your collection
         </p>
       </div>
@@ -38,10 +38,11 @@ export function CategoryBreakdown({
               </div>
 
               <div className="flex items-baseline gap-4">
-                <span className="text-xs text-default-500 font-light">
-                  {cat.count} {cat.count === 1 ? "piece" : "pieces"}
+                <span className="eyebrow text-stone">
+                  <span className="num">{cat.count}</span>{" "}
+                  {cat.count === 1 ? "piece" : "pieces"}
                 </span>
-                <span className="text-sm font-bold text-foreground">
+                <span className="num text-sm text-foreground">
                   ${cat.value.toFixed(0)}
                 </span>
               </div>
@@ -56,9 +57,13 @@ export function CategoryBreakdown({
             </div>
 
             {/* Metadata */}
-            <div className="flex justify-between text-[9px] text-default-500 uppercase tracking-normal">
-              <span>Avg ${cat.avgPrice.toFixed(0)}</span>
-              <span>{cat.wears} total wears</span>
+            <div className="flex justify-between eyebrow text-stone">
+              <span>
+                Avg <span className="num">${cat.avgPrice.toFixed(0)}</span>
+              </span>
+              <span>
+                <span className="num">{cat.wears}</span> total wears
+              </span>
             </div>
           </div>
         ))}

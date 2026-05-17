@@ -212,10 +212,10 @@ export default function PublicOutfitPage() {
   if (notFound || !outfit || !author) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
-        <h1 className="text-3xl font-display font-light tracking-normal">
+        <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight">
           Look Not Found
         </h1>
-        <p className="text-default-500">
+        <p className="text-stone">
           This outfit doesn&apos;t exist or is set to private.
         </p>
         <Button
@@ -268,7 +268,7 @@ export default function PublicOutfitPage() {
         <div className="flex flex-col gap-6">
           {/* Header */}
           <div>
-            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal leading-none mb-4">
+            <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-none mb-4">
               {outfit.name}
             </h1>
 
@@ -324,17 +324,16 @@ export default function PublicOutfitPage() {
               </button>
             </Tooltip>
 
-            <span className="text-[10px] uppercase tracking-widest text-default-400 ml-auto">
-              {outfit.viewCount} views · {outfit.saveCount} saves
+            <span className="eyebrow text-stone ml-auto">
+              <span className="num">{outfit.viewCount}</span> views ·{" "}
+              <span className="num">{outfit.saveCount}</span> saves
             </span>
           </div>
 
           {/* Items breakdown */}
           {items.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
-                Pieces in This Look
-              </h2>
+              <h2 className="eyebrow text-stone mb-3">Pieces in This Look</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {items.map(({ clothes }) => (
                   <div
@@ -356,17 +355,16 @@ export default function PublicOutfitPage() {
                       )}
                     </div>
                     <div className="p-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wider truncate">
-                        {clothes.name}
-                      </p>
+                      <p className="eyebrow truncate">{clothes.name}</p>
                       {clothes.brand && (
-                        <p className="text-[9px] text-default-400 uppercase tracking-widest truncate">
+                        <p className="eyebrow text-stone truncate">
                           {clothes.brand}
                         </p>
                       )}
                       {clothes.price && (
-                        <p className="text-[10px] font-mono text-default-500 mt-0.5">
-                          ${clothes.price} {clothes.purchaseCurrency || "CAD"}
+                        <p className="eyebrow text-stone mt-0.5">
+                          <span className="num">${clothes.price}</span>{" "}
+                          {clothes.purchaseCurrency || "CAD"}
                         </p>
                       )}
                     </div>
@@ -386,7 +384,7 @@ export default function PublicOutfitPage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <Link
-                  className="font-bold text-sm uppercase tracking-wider hover:underline"
+                  className="font-display font-light tracking-tight hover:underline"
                   href={`/u/${author.username}`}
                 >
                   {author.name || author.username}
@@ -395,11 +393,12 @@ export default function PublicOutfitPage() {
                   <CheckBadgeIcon className="w-4 h-4 text-primary flex-shrink-0" />
                 )}
               </div>
-              <p className="text-[10px] text-default-400">
-                @{author.username} · {author.followerCount} followers
+              <p className="eyebrow text-stone">
+                @{author.username} ·{" "}
+                <span className="num">{author.followerCount}</span> followers
               </p>
               {author.bio && (
-                <p className="text-xs text-default-500 mt-1 line-clamp-2">
+                <p className="text-xs text-stone mt-1 line-clamp-2">
                   {author.bio}
                 </p>
               )}

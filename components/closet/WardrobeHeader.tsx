@@ -193,7 +193,7 @@ export default function WardrobeHeader({
                   {/* Suggestions */}
                   {searchQuery.length > 0 && suggestions.length > 0 && (
                     <div className="mb-2">
-                      <p className="text-[10px] uppercase tracking-widest text-default-400 mb-2 px-2">
+                      <p className="eyebrow text-default-400 mb-2 px-2">
                         Suggestions
                       </p>
                       {suggestions.map((suggestion, i) => (
@@ -206,7 +206,7 @@ export default function WardrobeHeader({
                           }}
                         >
                           <span>{suggestion.label}</span>
-                          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-default-300 shrink-0">
+                          <span className="eyebrow text-default-300 shrink-0">
                             {SUGGESTION_LABELS[suggestion.type]}
                           </span>
                         </button>
@@ -218,11 +218,9 @@ export default function WardrobeHeader({
                   {history.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-2 px-2 mt-2">
-                        <p className="text-[10px] uppercase tracking-widest text-default-400">
-                          Recent
-                        </p>
+                        <p className="eyebrow text-default-400">Recent</p>
                         <button
-                          className="text-[10px] text-default-400 hover:text-red-500 uppercase tracking-wide"
+                          className="eyebrow text-default-400 hover:text-danger transition-colors"
                           onClick={onClearHistory}
                         >
                           Clear

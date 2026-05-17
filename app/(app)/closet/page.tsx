@@ -175,6 +175,7 @@ export default function ClosetPage() {
 
   const searchedClothes = useMemo(() => {
     const query = searchQuery.trim();
+
     if (!query) return filteredClothes;
 
     const tokens = query.toLowerCase().split(/\s+/);
@@ -209,6 +210,7 @@ export default function ClosetPage() {
             const words = lower.split(/[\s,]+/);
             const isExactWord = words.includes(token);
             const isWordStart = words.some((w) => w.startsWith(token));
+
             score += weight * (isExactWord ? 3 : isWordStart ? 2 : 1);
             tokenMatched = true;
           }
@@ -249,11 +251,16 @@ export default function ClosetPage() {
 
   const suggestions = useMemo((): SearchSuggestion[] => {
     const query = searchQuery.trim();
+
     if (!query) return [];
 
     const lowerQuery = query.toLowerCase();
     const seen = new Set<string>();
-    const candidates: { label: string; type: SuggestionType; priority: number }[] = [];
+    const candidates: {
+      label: string;
+      type: SuggestionType;
+      priority: number;
+    }[] = [];
 
     const addCandidate = (
       value: string | undefined,
@@ -262,12 +269,14 @@ export default function ClosetPage() {
     ) => {
       if (!value) return;
       const key = value.toLowerCase();
+
       if (seen.has(key) || !key.includes(lowerQuery)) return;
       seen.add(key);
 
       const words = key.split(/[\s,]+/);
       const isPrefix = key.startsWith(lowerQuery);
       const isWordStart = words.some((w) => w.startsWith(lowerQuery));
+
       candidates.push({
         label: value,
         type,
@@ -332,6 +341,7 @@ export default function ClosetPage() {
       <WardrobeHeader
         actionLabel="Add Piece"
         history={history}
+        searchPlaceholder="Search closet"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setShowFilters={setShowFilters}
@@ -347,7 +357,6 @@ export default function ClosetPage() {
           )
         }
         suggestions={suggestions}
-        searchPlaceholder="Search closet"
         title="Closet"
         viewMode={viewMode}
         onAddNew={() => router.push("/closet/new")}

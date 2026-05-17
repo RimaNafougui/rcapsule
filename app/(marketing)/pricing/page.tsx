@@ -96,7 +96,7 @@ export default function PricingPage() {
         name: "Can I export my data?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. You own your data. You can export your entire wardrobe catalog and usage logs at any time from your account settings.",
+          text: "Yes. You own your data. You can export your entire wardrobe catalogue and usage logs at any time from your account settings.",
         },
       },
       {
@@ -117,12 +117,10 @@ export default function PricingPage() {
         type="application/ld+json"
       />
       <header className="text-center mb-16 pt-8">
-        <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-2">
+        <h1 className="font-display font-light text-[clamp(32px,5vw,56px)] tracking-tight leading-tight mb-2">
           The Membership
         </h1>
-        <div className="text-xs uppercase tracking-widest text-default-500">
-          Stop guessing. Start wearing.
-        </div>
+        <div className="eyebrow text-stone">Stop guessing. Start wearing.</div>
       </header>
 
       {/* Billing toggle */}
@@ -198,7 +196,7 @@ export default function PricingPage() {
           variant="bordered"
         >
           <div className="mb-10 text-center md:text-left">
-            <span className="font-display font-light tracking-normal text-xs mb-2 block text-default-500">
+            <span className="eyebrow text-stone mb-2 block">
               The Digital Closet
             </span>
             <h2 className="font-display italic text-3xl font-light">
@@ -208,9 +206,7 @@ export default function PricingPage() {
 
           <div className="mb-10 h-16 flex items-baseline justify-center md:justify-start">
             <span className="text-5xl font-light tracking-normal">$0</span>
-            <span className="text-default-400 text-xs ml-3 uppercase tracking-widest">
-              / Forever
-            </span>
+            <span className="eyebrow text-stone ml-3">/ Forever</span>
           </div>
 
           <DSButton
@@ -223,9 +219,7 @@ export default function PricingPage() {
           </DSButton>
 
           <div className="space-y-5">
-            <span className="text-xs font-display font-light tracking-normal text-default-400 mb-4 block">
-              Core Features
-            </span>
+            <span className="eyebrow text-stone mb-4 block">Core Features</span>
             <div className="space-y-4">
               <FeatureItem included text="Unlimited Item Uploads" />
               <FeatureItem included text="Manual Outfit Canvas" />
@@ -246,7 +240,7 @@ export default function PricingPage() {
           </div>
 
           <div className="mb-10 text-center md:text-left">
-            <span className="font-display font-light tracking-normal text-xs mb-2 block opacity-60">
+            <span className="eyebrow opacity-60 mb-2 block">
               The Pocket Stylist
             </span>
             <h2 className="font-display italic text-3xl font-light">
@@ -290,9 +284,7 @@ export default function PricingPage() {
           </DSButton>
 
           <div className="space-y-5">
-            <span className="text-xs font-display font-light tracking-normal opacity-40 mb-4 block">
-              Styling Suite
-            </span>
+            <span className="eyebrow opacity-40 mb-4 block">Styling Suite</span>
             <div className="space-y-4">
               <li className="flex items-start gap-4">
                 <SparklesIcon className="w-5 h-5 shrink-0" />
@@ -387,7 +379,7 @@ export default function PricingPage() {
             aria-label="export"
             title="Can I export my data?"
           >
-            Yes. You own your data. You can export your entire wardrobe catalog
+            Yes. You own your data. You can export your entire wardrobe catalogue
             and usage logs at any time from your account settings.
           </AccordionItem>
           <AccordionItem

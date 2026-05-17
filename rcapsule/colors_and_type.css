@@ -1,0 +1,138 @@
+/* ============================================================
+   rcapsule — Core CSS variables
+   Drop this in alongside any framework. All tokens are vanilla
+   CSS custom properties; no Tailwind required.
+   ============================================================ */
+
+:root {
+  /* Color — light mode */
+  --rc-background:     #FFFFFF;
+  --rc-foreground:     #0A0A0A;
+  --rc-surface:        #F7F7F5;
+  --rc-surface-2:      #EFEDE7;
+  --rc-border:         #E5E3DC;
+  --rc-border-strong:  #0A0A0A;
+  --rc-muted:          #6B6B66;
+  --rc-mute-2:         #A8A8A2;
+  --rc-accent:         #7A2E1F;
+  --rc-accent-soft:    #A45A4A;
+  --rc-danger:         #8A1F1F;
+  --rc-success:        #3F5C3A;
+
+  /* Editorial surface for marketing/landing only */
+  --rc-paper:          #FAFAF7;
+
+  /* Fonts */
+  --rc-font-display:   "Cormorant Garamond", "Cormorant", ui-serif, Georgia, serif;
+  --rc-font-sans:      "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rc-font-mono:      "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Spacing */
+  --rc-space-hair:       8px;
+  --rc-space-tight:     16px;
+  --rc-space-block:     32px;
+  --rc-space-gutter:    56px;
+  --rc-space-section-sm: 96px;
+  --rc-space-section:  160px;
+
+  /* Containers */
+  --rc-container-sm:    720px;
+  --rc-container:      1320px;
+  --rc-container-lg:   1480px;
+  --rc-container-xl:   1640px;
+
+  /* Easing + duration */
+  --rc-ease:           cubic-bezier(0.22, 1, 0.36, 1);
+  --rc-duration-base:  200ms;
+  --rc-duration-mid:   300ms;
+  --rc-duration-slow:  500ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rc-background:    #0A0A0A;
+    --rc-foreground:    #FAFAF7;
+    --rc-surface:       #141413;
+    --rc-surface-2:     #1C1C1B;
+    --rc-border:        #262624;
+    --rc-border-strong: #FAFAF7;
+    --rc-muted:         #8E8E88;
+    --rc-mute-2:        #5C5C58;
+    --rc-accent:        #B05A47;
+    --rc-accent-soft:   #7A2E1F;
+    --rc-danger:        #C25A5A;
+    --rc-success:       #7A9476;
+    --rc-paper:         #141413;
+  }
+}
+
+/* Semantic element styles
+   Use as a reset/foundation layer before component CSS.        */
+html, body {
+  background: var(--rc-background);
+  color: var(--rc-foreground);
+  font-family: var(--rc-font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--rc-font-display);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+h1 { font-size: clamp(56px, 9vw, 144px); line-height: 0.92; letter-spacing: -0.03em; }
+h2 { font-size: clamp(44px, 6.5vw, 112px); line-height: 0.95; letter-spacing: -0.025em; }
+h3 { font-size: clamp(36px, 5vw, 80px); line-height: 0.98; letter-spacing: -0.02em; }
+h4 { font-size: clamp(28px, 3.5vw, 56px); line-height: 1.05; font-weight: 400; }
+h5 { font-size: 22px; font-weight: 400; line-height: 1.2; }
+h6 { font-size: 18px; font-weight: 400; line-height: 1.3; }
+
+p { margin: 0; }
+
+code, kbd, samp, pre, .num, .tabular {
+  font-family: var(--rc-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color var(--rc-duration-base) var(--rc-ease);
+}
+a:hover { color: var(--rc-accent); }
+
+::selection { background: var(--rc-foreground); color: var(--rc-background); }
+
+/* Canonical small label */
+.eyebrow {
+  font-family: var(--rc-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--rc-muted);
+}
+
+.serif-italic {
+  font-family: var(--rc-font-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

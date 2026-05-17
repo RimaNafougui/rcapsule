@@ -12,6 +12,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         display: ["var(--font-display)"],
+        mono: ["var(--font-mono)"],
       },
       animation: {
         "fade-in": "fadeIn 0.8s ease-in-out",

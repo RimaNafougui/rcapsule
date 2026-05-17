@@ -306,7 +306,7 @@ export default function SettingsPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                className={`flex items-center gap-3 text-left px-4 py-3 text-xs uppercase tracking-widest font-bold transition-all border-l-2 ${
+                className={`flex items-center gap-3 text-left px-4 py-3 eyebrow transition-all border-l-2 ${
                   activeTab === tab.id
                     ? "border-primary text-primary bg-primary/5"
                     : "border-transparent text-default-400 hover:text-foreground"
@@ -326,7 +326,7 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
+                <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                   <UserCircleIcon className="w-6 h-6" /> Profile Details
                 </h2>
                 <Divider className="my-4" />
@@ -335,9 +335,7 @@ export default function SettingsPage() {
               {/* Images Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-default-500">
-                    Avatar
-                  </span>
+                  <span className="eyebrow text-stone">Avatar</span>
                   <div className="flex items-center gap-4">
                     <Avatar
                       isBordered
@@ -357,19 +355,17 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-default-500">
-                    Cover Image
-                  </span>
+                  <span className="eyebrow text-stone">Cover Image</span>
                   <div className="flex items-center gap-4">
                     {formData.coverImage ? (
                       <div
-                        className="w-24 h-24 rounded-medium bg-cover bg-center border border-default-200"
+                        className="w-24 h-24 bg-cover bg-center border border-default-200"
                         style={{
                           backgroundImage: `url(${formData.coverImage})`,
                         }}
                       />
                     ) : (
-                      <div className="w-24 h-24 rounded-medium bg-default-100 flex items-center justify-center border border-default-200">
+                      <div className="w-24 h-24 bg-default-100 flex items-center justify-center border border-default-200">
                         <PhotoIcon className="w-8 h-8 text-default-300" />
                       </div>
                     )}
@@ -448,11 +444,11 @@ export default function SettingsPage() {
           {activeTab === "socials" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
+                <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                   <AtSymbolIcon className="w-6 h-6" /> Social Connections
                 </h2>
                 <Divider className="my-4" />
-                <p className="text-sm text-default-500 mb-6">
+                <p className="text-sm text-stone mb-6">
                   Link your social media profiles to display them on your public
                   closet.
                 </p>
@@ -519,7 +515,7 @@ export default function SettingsPage() {
           {activeTab === "preferences" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
+                <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                   <AdjustmentsHorizontalIcon className="w-6 h-6" /> App
                   Preferences
                 </h2>
@@ -529,7 +525,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Privacy Settings */}
                 <div className="space-y-6">
-                  <h3 className="font-semibold text-default-500 uppercase text-xs tracking-wider mb-4">
+                  <h3 className="eyebrow text-stone mb-4">
                     Privacy & Visibility
                   </h3>
 
@@ -589,9 +585,7 @@ export default function SettingsPage() {
 
                 {/* Style Settings */}
                 <div className="space-y-6">
-                  <h3 className="font-semibold text-default-500 uppercase text-xs tracking-wider mb-4">
-                    Style Profile
-                  </h3>
+                  <h3 className="eyebrow text-stone mb-4">Style Profile</h3>
                   <Select
                     classNames={{ trigger: "min-h-12" }}
                     label="Style Tags"
@@ -622,7 +616,7 @@ export default function SettingsPage() {
 
               <div className="flex justify-end pt-8">
                 <Button
-                  className="uppercase font-bold tracking-widest px-8 shadow-lg shadow-primary/20"
+                  className="uppercase font-bold tracking-widest px-8"
                   color="primary"
                   isLoading={loading}
                   radius="none"
@@ -638,7 +632,7 @@ export default function SettingsPage() {
           {activeTab === "subscription" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
+                <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                   <CreditCardIcon className="w-6 h-6" /> Subscription
                 </h2>
                 <Divider className="my-4" />
@@ -651,11 +645,11 @@ export default function SettingsPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <SparklesIcon className="w-5 h-5" />
-                          <span className="text-xs font-display font-light tracking-normal opacity-60">
+                          <span className="eyebrow opacity-60">
                             Current Plan
                           </span>
                         </div>
-                        <h3 className="text-3xl font-display font-light tracking-normal">
+                        <h3 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight">
                           Premium
                         </h3>
                       </div>
@@ -682,14 +676,14 @@ export default function SettingsPage() {
               ) : (
                 <div className="space-y-6">
                   <div className="border border-dashed border-default-300 p-8 text-center space-y-6">
-                    <div className="w-16 h-16 rounded-full bg-default-100 flex items-center justify-center mx-auto">
+                    <div className="w-16 h-16 bg-default-100 flex items-center justify-center mx-auto">
                       <SparklesIcon className="w-8 h-8 text-default-400" />
                     </div>
                     <div className="space-y-2">
-                      <h4 className="text-xl font-bold">
+                      <h4 className="font-display font-light text-xl tracking-tight">
                         Unlock Premium Features
                       </h4>
-                      <p className="text-default-500 text-sm max-w-md mx-auto">
+                      <p className="text-stone text-sm max-w-md mx-auto">
                         Get AI-powered outfit recommendations, magic background
                         removal, and more.
                       </p>
@@ -713,7 +707,7 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h2 className="text-xl font-bold uppercase tracking-normal flex items-center gap-2">
+                <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight flex items-center gap-2">
                   <ShieldCheckIcon className="w-6 h-6" /> Password & Auth
                 </h2>
                 <Divider className="my-4" />

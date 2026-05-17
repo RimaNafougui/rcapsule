@@ -234,10 +234,12 @@ function EditOutfitPage() {
 
         // Restore studio draft after server data is set (avoids race condition)
         const draft = sessionStorage.getItem(`outfit_draft_${outfitId}`);
+
         if (draft) {
           try {
             sessionStorage.removeItem(`outfit_draft_${outfitId}`);
             const saved = JSON.parse(draft);
+
             if (saved.formData)
               setFormData({ ...initialFormData, ...saved.formData });
             if (saved.selectedClothes)
@@ -249,6 +251,7 @@ function EditOutfitPage() {
           }
         }
         const returnedImageUrl = searchParams.get("imageUrl");
+
         if (returnedImageUrl) {
           setFormData((prev) => ({
             ...prev,
@@ -392,12 +395,10 @@ function EditOutfitPage() {
             <ArrowLeftIcon className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
+            <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight mb-2">
               Edit Look
             </h1>
-            <p className="text-xs uppercase tracking-widest text-default-500">
-              Refine your curation
-            </p>
+            <p className="eyebrow text-stone">Refine your curation</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -515,20 +516,16 @@ function EditOutfitPage() {
           {selectedClothes.length > 0 && (
             <div className="bg-content2 p-4 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs uppercase tracking-widest text-default-500">
-                  Items
-                </span>
-                <span className="text-2xl font-light">
-                  {selectedClothes.length}
+                <span className="eyebrow text-stone">Items</span>
+                <span className="font-display font-light text-2xl tracking-tight">
+                  <span className="num">{selectedClothes.length}</span>
                 </span>
               </div>
               {totalCost > 0 && (
                 <div className="flex justify-between items-center border-t border-divider pt-3">
-                  <span className="text-xs uppercase tracking-widest text-default-500">
-                    Total Value
-                  </span>
-                  <span className="text-xl font-light">
-                    ${totalCost.toFixed(2)}
+                  <span className="eyebrow text-stone">Total Value</span>
+                  <span className="font-display font-light text-xl tracking-tight">
+                    $<span className="num">{totalCost.toFixed(2)}</span>
                   </span>
                 </div>
               )}
@@ -536,9 +533,7 @@ function EditOutfitPage() {
           )}
 
           <div className="border border-danger-200 p-4">
-            <h4 className="text-xs font-display font-light tracking-normal text-danger mb-3">
-              Danger Zone
-            </h4>
+            <h4 className="eyebrow text-danger mb-3">Danger Zone</h4>
             <Button
               className="uppercase tracking-widest text-xs"
               color="danger"
@@ -555,7 +550,7 @@ function EditOutfitPage() {
 
         <div className="lg:col-span-7 space-y-12">
           <section className="space-y-6">
-            <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
+            <h3 className="eyebrow text-stone border-b border-divider pb-2">
               Look Details
             </h3>
             <Input
@@ -623,13 +618,13 @@ function EditOutfitPage() {
 
           {/* Visibility Section */}
           <section className="space-y-6">
-            <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
+            <h3 className="eyebrow text-stone border-b border-divider pb-2">
               Visibility
             </h3>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm uppercase tracking-wide">Public Look</p>
-                <p className="text-xs text-default-400 mt-0.5">
+                <p className="eyebrow text-stone mt-0.5">
                   Share with the community
                 </p>
               </div>
@@ -666,6 +661,7 @@ function EditOutfitPage() {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     const t = tagInput.trim().toLowerCase();
+
                     if (t && !formData.styleTags.includes(t)) {
                       setFormData((prev) => ({
                         ...prev,
@@ -712,8 +708,8 @@ function EditOutfitPage() {
 
           <section className="space-y-6">
             <div className="flex justify-between items-end border-b border-divider pb-2">
-              <h3 className="text-xs font-display font-light tracking-normal">
-                Pieces ({selectedClothes.length})
+              <h3 className="eyebrow text-stone">
+                Pieces (<span className="num">{selectedClothes.length}</span>)
               </h3>
               <Button
                 className="uppercase font-bold text-[10px]"
@@ -728,9 +724,7 @@ function EditOutfitPage() {
             </div>
             {selectedClothes.length === 0 ? (
               <div className="py-12 text-center border border-dashed border-default-300">
-                <p className="text-default-400 text-sm italic mb-4">
-                  No items selected
-                </p>
+                <p className="eyebrow text-stone mb-4">No items selected</p>
                 <Button
                   radius="none"
                   size="sm"
@@ -757,7 +751,7 @@ function EditOutfitPage() {
 
           {availableWardrobes.length > 0 && (
             <section className="space-y-6">
-              <h3 className="text-xs font-display font-light tracking-normal border-b border-divider pb-2">
+              <h3 className="eyebrow text-stone border-b border-divider pb-2">
                 Collections
               </h3>
               <div className="flex flex-wrap gap-3">

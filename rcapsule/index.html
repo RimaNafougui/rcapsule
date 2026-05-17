@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>rcapsule — your wardrobe, with the receipts</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper:  '#FAFAF7',
+            ink:    '#0A0A0A',
+            ash:    '#1A1A1A',
+            stone:  '#6B6B66',
+            mist:   '#A8A8A2',
+            line:   '#E5E3DC',
+            soft:   '#F1EFE8',
+          },
+          fontFamily: {
+            sans: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            serif: ['Instrument Serif', 'ui-serif', 'serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body { background: #FAFAF7; color: #0A0A0A; font-family: 'Geist', system-ui, sans-serif; font-feature-settings: "ss01","ss02","cv11"; -webkit-font-smoothing: antialiased; }
+    * { -webkit-tap-highlight-color: transparent; }
+    .display { font-weight: 200; letter-spacing: -0.035em; line-height: 0.92; }
+    .display-thin { font-weight: 100; letter-spacing: -0.04em; line-height: 0.9; }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; }
+    .num { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum"; }
+    .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .hairline { border-color: #E5E3DC; }
+    .hairline-strong { border-color: #0A0A0A; }
+
+    /* Fade-in on scroll */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1.05s cubic-bezier(.16,.84,.32,1) var(--rd,0ms), transform 1.05s cubic-bezier(.16,.84,.32,1) var(--rd,0ms); }
+    .reveal.in { opacity: 1; transform: none; }
+    .reveal-fade { opacity: 0; transition: opacity 1.4s ease var(--rd,0ms); }
+    .reveal-fade.in { opacity: 1; }
+
+    /* Marquee */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-track { animation: marquee 60s linear infinite; }
+
+    /* Subtle grid background */
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(10,10,10,0.04) 1px, transparent 1px);
+      background-size: 8.3333% 100%;
+    }
+    .grid-bg-h {
+      background-image:
+        linear-gradient(to bottom, rgba(10,10,10,0.05) 1px, transparent 1px);
+      background-size: 100% 24px;
+    }
+    .dot-bg {
+      background-image: radial-gradient(rgba(10,10,10,0.18) 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+    .stripe-bg {
+      background-image: repeating-linear-gradient(135deg, rgba(10,10,10,0.05) 0 1px, transparent 1px 9px);
+    }
+
+    /* Selection */
+    ::selection { background: #0A0A0A; color: #FAFAF7; }
+
+    /* Buttons */
+    .btn-dark { background: #0A0A0A; color: #FAFAF7; transition: all .25s ease; }
+    .btn-dark:hover { background: #1A1A1A; transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: #0A0A0A; border: 1px solid #0A0A0A; transition: all .25s ease; }
+    .btn-ghost:hover { background: #0A0A0A; color: #FAFAF7; }
+
+    /* Ticker number */
+    .tabular { font-variant-numeric: tabular-nums; }
+
+    /* Tile hover */
+    .feature-tile { transition: background-color .35s ease; }
+    .feature-tile:hover { background-color: #F1EFE8; }
+
+    /* Hide scrollbar but allow scroll */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+
+    /* Editorial swatch */
+    .swatch-edge { box-shadow: inset 0 0 0 1px rgba(10,10,10,0.08); }
+
+    /* Cursor */
+    button, a, [role="button"] { cursor: pointer; }
+  </style>
+</head>
+<body class="overflow-x-hidden">
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="mockups.jsx"></script>
+  <script type="text/babel" src="landing.jsx"></script>
+</body>
+</html>

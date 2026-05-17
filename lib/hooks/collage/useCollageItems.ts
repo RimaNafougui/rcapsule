@@ -25,7 +25,11 @@ export function useCollageItems({
     return Math.round(value / gridSize) * gridSize;
   };
 
-  const placeOnCanvas = (item: ClothingItem, img: HTMLImageElement, corsEnabled: boolean) => {
+  const placeOnCanvas = (
+    item: ClothingItem,
+    img: HTMLImageElement,
+    corsEnabled: boolean,
+  ) => {
     const baseWidth = 180;
     const aspectRatio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
     const calculatedHeight = baseWidth / aspectRatio;

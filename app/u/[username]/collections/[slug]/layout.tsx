@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description =
     collection.description ||
     `Explore ${collection.title} curated by @${username} on Rcapsule.`;
-  const ogImage = collection.coverImage || "/og-default.png";
+  const ogImage = collection.coverImage || "/opengraph-image";
 
   return {
     title,

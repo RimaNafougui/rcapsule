@@ -101,7 +101,9 @@ export default function PublicCollectionPage() {
   const fetchCollection = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/users/${username}/collections/${slug}`);
+      const response = await fetch(
+        `/api/users/${username}/collections/${slug}`,
+      );
 
       if (response.status === 404 || response.status === 403) {
         setNotFound(true);
@@ -133,7 +135,10 @@ export default function PublicCollectionPage() {
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: `${collection?.title} by @${owner?.username}`, url });
+        await navigator.share({
+          title: `${collection?.title} by @${owner?.username}`,
+          url,
+        });
       } catch (_err) {}
     } else {
       await navigator.clipboard.writeText(url);
@@ -152,10 +157,10 @@ export default function PublicCollectionPage() {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-display font-light tracking-normal">
+          <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight">
             Collection Not Found
           </h1>
-          <p className="text-default-500 max-w-sm mx-auto">
+          <p className="text-stone max-w-sm mx-auto">
             This collection doesn&apos;t exist or is set to private.
           </p>
         </div>
@@ -176,7 +181,9 @@ export default function PublicCollectionPage() {
       {/* COVER IMAGE */}
       <div
         className="relative w-full h-[60vh] min-h-[500px] bg-content2 overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: `url(${collection.coverImage || "/images/placeholder_wardrobe.jpg"})` }}
+        style={{
+          backgroundImage: `url(${collection.coverImage || "/images/placeholder_wardrobe.jpg"})`,
+        }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-black/20" />
 
@@ -197,7 +204,9 @@ export default function PublicCollectionPage() {
                 </Link>
               </BreadcrumbItem>
               <BreadcrumbItem>
-                <span className="text-white/60 text-xs uppercase tracking-wider">Collections</span>
+                <span className="text-white/60 text-xs uppercase tracking-wider">
+                  Collections
+                </span>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <span className="text-white text-xs uppercase tracking-wider font-bold">
@@ -221,28 +230,30 @@ export default function PublicCollectionPage() {
             <div className="w-full">
               <div className="flex items-center gap-3 flex-wrap mb-6">
                 {collection.isPublic ? (
-                  <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-xl text-white eyebrow border border-white/20">
                     <GlobeAltIcon className="w-3.5 h-3.5" />
                     <span>Public</span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-wider border border-white/20 rounded-full">
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-xl text-white eyebrow border border-white/20">
                     <LockClosedIcon className="w-3.5 h-3.5" />
                     <span>Private</span>
                   </div>
                 )}
-                <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
-                  {collection.itemCount} {collection.itemCount === 1 ? "Piece" : "Pieces"}
+                <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 eyebrow border border-white/10">
+                  <span className="num">{collection.itemCount}</span>{" "}
+                  {collection.itemCount === 1 ? "Piece" : "Pieces"}
                 </div>
-                <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 text-xs font-semibold uppercase tracking-wider border border-white/10 rounded-full">
-                  {collection.outfitCount} {collection.outfitCount === 1 ? "Outfit" : "Outfits"}
+                <div className="px-4 py-1.5 bg-white/5 backdrop-blur-xl text-white/80 eyebrow border border-white/10">
+                  <span className="num">{collection.outfitCount}</span>{" "}
+                  {collection.outfitCount === 1 ? "Outfit" : "Outfits"}
                 </div>
                 {collection.styleTags?.slice(0, 3).map((tag) => (
                   <Chip
                     key={tag}
                     classNames={{
                       base: "bg-white/10 backdrop-blur-xl border border-white/20",
-                      content: "text-white text-[10px] uppercase tracking-widest font-bold",
+                      content: "text-white eyebrow",
                     }}
                     size="sm"
                     variant="flat"
@@ -252,7 +263,7 @@ export default function PublicCollectionPage() {
                 ))}
               </div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-normal text-white drop-shadow-2xl leading-none mb-6">
+              <h1 className="font-display font-light text-[clamp(40px,8vw,96px)] tracking-tight text-white leading-none mb-6">
                 {collection.title}
               </h1>
 
@@ -263,17 +274,20 @@ export default function PublicCollectionPage() {
               )}
 
               <div className="flex items-center justify-between flex-wrap gap-6">
-                <Link className="flex items-center gap-3 group" href={`/u/${owner.username}`}>
+                <Link
+                  className="flex items-center gap-3 group"
+                  href={`/u/${owner.username}`}
+                >
                   <Avatar
                     className="w-12 h-12 ring-2 ring-white/20"
                     name={owner.name || owner.username}
                     src={owner.image || undefined}
                   />
                   <div>
-                    <p className="text-white font-bold text-sm group-hover:underline">
+                    <p className="text-white font-display font-light tracking-tight group-hover:underline">
                       {owner.name || owner.username}
                     </p>
-                    <p className="text-white/60 text-xs">@{owner.username}</p>
+                    <p className="eyebrow text-white/60">@{owner.username}</p>
                   </div>
                 </Link>
 
@@ -313,7 +327,11 @@ export default function PublicCollectionPage() {
                     className="border-white/20 text-white hover:bg-white/10 uppercase font-bold tracking-widest"
                     radius="none"
                     variant="bordered"
-                    onPress={() => router.push(`/collections/${collection.slug || collection.id}`)}
+                    onPress={() =>
+                      router.push(
+                        `/collections/${collection.slug || collection.id}`,
+                      )
+                    }
                   >
                     Edit Collection
                   </Button>
@@ -329,9 +347,9 @@ export default function PublicCollectionPage() {
         <Tabs
           fullWidth
           classNames={{
-            tabList: "bg-default-100 p-1 rounded-full w-full gap-1",
-            tab: "h-10 text-xs font-bold uppercase tracking-widest rounded-full",
-            cursor: "rounded-full bg-foreground",
+            tabList: "bg-default-100 p-1 w-full gap-1",
+            tab: "h-10 eyebrow",
+            cursor: "bg-foreground",
             tabContent: "group-data-[selected=true]:text-background",
             panel: "pt-10 px-0",
           }}
@@ -342,7 +360,7 @@ export default function PublicCollectionPage() {
           <Tab key="clothes" title={`Pieces (${clothes.length})`}>
             {clothes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
-                <p className="text-default-400 uppercase tracking-widest text-sm">
+                <p className="eyebrow text-stone">
                   No pieces in this collection
                 </p>
               </div>
@@ -363,7 +381,8 @@ export default function PublicCollectionPage() {
                           <Chip
                             classNames={{
                               base: "bg-danger-50/90 backdrop-blur-sm",
-                              content: "text-danger font-semibold text-[10px] uppercase tracking-wider px-1",
+                              content:
+                                "text-danger font-semibold text-[10px] uppercase tracking-wider px-1",
                             }}
                             color="danger"
                             size="sm"
@@ -376,15 +395,19 @@ export default function PublicCollectionPage() {
                     </div>
                     <div className="space-y-1">
                       {item.brand && (
-                        <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                          {item.brand}
-                        </p>
+                        <p className="eyebrow text-stone">{item.brand}</p>
                       )}
-                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                      <h3 className="font-display font-light text-sm tracking-tight truncate">
                         {item.name}
                       </h3>
-                      <p className="text-xs text-default-400 capitalize">{item.category}</p>
-                      {item.price && <p className="text-xs text-default-500">${item.price}</p>}
+                      <p className="eyebrow text-stone capitalize">
+                        {item.category}
+                      </p>
+                      {item.price && (
+                        <p className="eyebrow text-stone">
+                          $<span className="num">{item.price}</span>
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -395,7 +418,7 @@ export default function PublicCollectionPage() {
           <Tab key="outfits" title={`Outfits (${outfits.length})`}>
             {outfits.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 border border-dashed border-default-300">
-                <p className="text-default-400 uppercase tracking-widest text-sm">
+                <p className="eyebrow text-stone">
                   No outfits in this collection
                 </p>
               </div>
@@ -407,7 +430,9 @@ export default function PublicCollectionPage() {
                     className="group cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => router.push(`/u/${username}/looks/${outfit.id}`)}
+                    onClick={() =>
+                      router.push(`/u/${username}/looks/${outfit.id}`)
+                    }
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ")
                         router.push(`/u/${username}/looks/${outfit.id}`);
@@ -423,13 +448,11 @@ export default function PublicCollectionPage() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-sm font-medium uppercase tracking-normal truncate">
+                      <h3 className="font-display font-light text-sm tracking-tight truncate">
                         {outfit.name}
                       </h3>
                       {outfit.occasion && (
-                        <p className="text-[10px] text-default-400 uppercase tracking-wide">
-                          {outfit.occasion}
-                        </p>
+                        <p className="eyebrow text-stone">{outfit.occasion}</p>
                       )}
                     </div>
                   </div>

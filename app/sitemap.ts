@@ -82,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ] as string[];
 
     brandRoutes = distinctBrands.map((brand) => ({
-      url: `${baseUrl}/catalog/brand/${encodeURIComponent(brand)}`,
+      url: `${baseUrl}/catalogue/brand/${encodeURIComponent(brand)}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.5,

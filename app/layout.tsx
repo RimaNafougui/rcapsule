@@ -9,7 +9,7 @@ import { Providers } from "./providers";
 
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { fontSans, fontDisplay } from "@/lib/config/fonts";
+import { fontSans, fontDisplay, fontMono } from "@/lib/config/fonts";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
 // app/layout.tsx
@@ -20,26 +20,42 @@ export const metadata: Metadata = {
     template: `%s | Rcapsule`,
   },
   description:
-    "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
+    "Rcapsule is a wardrobe management and fashion community. Catalogue your clothes, build outfits, track wear, and discover looks from real people.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/rcapsuleFavicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/rcapsuleFavicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/rcapsuleFavicon/apple-touch-icon.png",
+    other: [
+      { rel: "manifest", url: "/manifest.json" },
+    ],
   },
   openGraph: {
     title: "Rcapsule",
     description:
-      "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
+      "Rcapsule is a wardrobe management and fashion community. Catalogue your clothes, build outfits, track wear, and discover looks from real people.",
     url: "https://rcapsule.com",
     siteName: "Rcapsule",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Rcapsule — Your digital wardrobe",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Rcapsule",
     description:
-      "Rcapsule is a wardrobe management and fashion community. Catalog your clothes, build outfits, track wear, and discover looks from real people.",
+      "Rcapsule is a wardrobe management and fashion community. Catalogue your clothes, build outfits, track wear, and discover looks from real people.",
+    images: ["/opengraph-image"],
   },
   alternates: {
-    canonical: "/",
+    canonical: "https://rcapsule.com",
   },
 };
 
@@ -92,6 +108,7 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased text-foreground",
           fontSans.variable,
           fontDisplay.variable,
+          fontMono.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>

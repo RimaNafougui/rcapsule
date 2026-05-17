@@ -129,7 +129,9 @@ export async function GET(
       .order("addedAt", { ascending: false });
 
     const outfits = (wardrobeOutfits || [])
-      .map((wo: any) => (wo.outfit ? { ...wo.outfit, addedToCollectionAt: wo.addedAt } : null))
+      .map((wo: any) =>
+        wo.outfit ? { ...wo.outfit, addedToCollectionAt: wo.addedAt } : null,
+      )
       .filter(Boolean);
 
     // Check if current user has liked/saved this collection

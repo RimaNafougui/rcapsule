@@ -42,23 +42,21 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Left Side: Contact Info */}
         <div>
-          <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
+          <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight mb-2">
             Get in Touch
           </h1>
-          <p className="text-default-500 mb-8 text-lg">
+          <p className="text-stone mb-8 text-lg">
             Have a feature request? Found a bug? Or just want to show off your
             collection?
           </p>
 
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-content2 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-soft border border-default-200 flex items-center justify-center">
                 <EnvelopeIcon className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-widest text-default-400">
-                  Email Us
-                </p>
+                <p className="eyebrow text-stone">Email Us</p>
                 <a
                   className="font-medium hover:underline"
                   href="mailto:nafouguirima@gmail.com"
@@ -68,11 +66,9 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="p-6 bg-content2 rounded-lg mt-8">
-              <h3 className="font-bold uppercase tracking-wider text-xs mb-2">
-                Note on Scraping
-              </h3>
-              <p className="text-sm text-default-500">
+            <div className="p-6 bg-soft border border-default-200 mt-8">
+              <h3 className="eyebrow mb-2">Note on Scraping</h3>
+              <p className="text-sm text-stone">
                 If a specific store isn&apos;t importing correctly, please send
                 us the URL. We update our scrapers weekly.
               </p>
@@ -81,14 +77,14 @@ export default function ContactPage() {
         </div>
 
         {/* Right Side: Form */}
-        <div className="bg-white/5 border border-default-200 p-8 rounded-xl">
+        <div className="bg-white/5 border border-default-200 p-8">
           {succeeded ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12 animate-in fade-in zoom-in duration-300">
               <CheckCircleIcon className="w-16 h-16 text-success" />
-              <h3 className="text-2xl font-bold uppercase tracking-normal">
+              <h3 className="font-display font-light text-2xl tracking-tight">
                 Message Sent
               </h3>
-              <p className="text-default-500">
+              <p className="text-stone">
                 We&apos;ve received your message and saved it to our database.
               </p>
               <Button
@@ -143,7 +139,7 @@ export default function ContactPage() {
 
               <Button
                 fullWidth
-                className="font-display font-light tracking-normal h-12 shadow-lg shadow-primary/20"
+                className="font-display font-light tracking-tight h-12"
                 color="primary"
                 isLoading={submitting}
                 radius="sm"

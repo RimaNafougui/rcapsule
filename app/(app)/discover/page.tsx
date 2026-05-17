@@ -127,10 +127,10 @@ export default function DiscoverPage() {
         {(["trending", "recent", "following"] as SortTab[]).map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-3 text-xs font-display font-light tracking-normal transition-colors relative ${
+            className={`px-4 py-3 eyebrow transition-colors relative ${
               activeTab === tab
                 ? "text-foreground"
-                : "text-default-400 hover:text-default-600"
+                : "text-stone hover:text-default-600"
             }`}
             onClick={() => handleTabChange(tab)}
           >
@@ -143,9 +143,7 @@ export default function DiscoverPage() {
 
         {/* Season filter */}
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-widest text-default-400 hidden sm:block">
-            Season:
-          </span>
+          <span className="eyebrow text-stone hidden sm:block">Season:</span>
           <div className="flex gap-1">
             {SEASONS.map((s) => (
               <button
@@ -260,19 +258,19 @@ function OutfitCard({ outfit }: { outfit: FeedOutfit }) {
             name={outfit.author.name || outfit.author.username}
             src={outfit.author.image || undefined}
           />
-          <span className="text-[10px] font-bold uppercase tracking-wider truncate text-default-500 group-hover/author:text-foreground transition-colors">
+          <span className="eyebrow text-stone group-hover/author:text-foreground transition-colors truncate">
             @{outfit.author.username}
           </span>
         </Link>
 
         <div className="flex items-center gap-3 mt-2">
-          <span className="flex items-center gap-1 text-[10px] text-default-400">
+          <span className="flex items-center gap-1 eyebrow text-stone">
             <HeartIcon className="w-3 h-3" />
-            {outfit.likeCount}
+            <span className="num">{outfit.likeCount}</span>
           </span>
-          <span className="flex items-center gap-1 text-[10px] text-default-400">
+          <span className="flex items-center gap-1 eyebrow text-stone">
             <BookmarkIcon className="w-3 h-3" />
-            {outfit.saveCount}
+            <span className="num">{outfit.saveCount}</span>
           </span>
           {outfit.season && (
             <Chip className="ml-auto" size="sm" variant="flat">

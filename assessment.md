@@ -4,7 +4,7 @@
 
 ## 🧠 Project Overview
 
-**Rcapsule** is a wardrobe management SaaS with social discovery features. Users digitally catalog their clothing, build visual outfit collages, track wear history, receive AI-generated outfit recommendations calibrated to live weather, and share looks within a community feed.
+**Rcapsule** is a wardrobe management SaaS with social discovery features. Users digitally catalogue their clothing, build visual outfit collages, track wear history, receive AI-generated outfit recommendations calibrated to live weather, and share looks within a community feed.
 
 **Target users:** Fashion-conscious individuals aged 18–35 (predominantly women) who want to reduce decision fatigue, shop less wastefully, and document their personal style. Secondary: "capsule wardrobe" enthusiasts, sustainability-focused consumers.
 
@@ -16,15 +16,17 @@
 
 **Is this a real, painful problem?**
 
-Yes — but it's a *moderate* pain point, not an acute one. The problem is real enough that multiple funded apps exist to solve it. However, it sits in the "nice to have" tier rather than "must have." People get dressed every day without it. The pain only sharpens for users with large wardrobes, analytical personalities, or sustainability motivations.
+Yes — but it's a _moderate_ pain point, not an acute one. The problem is real enough that multiple funded apps exist to solve it. However, it sits in the "nice to have" tier rather than "must have." People get dressed every day without it. The pain only sharpens for users with large wardrobes, analytical personalities, or sustainability motivations.
 
 The strongest pain hooks:
+
 - **Decision fatigue** (proven: 70%+ of outfits come from 20% of a wardrobe)
 - **Wasteful shopping** — buying duplicates, forgetting what you own
 - **Sustainability guilt** — the "$6 fast fashion item worn once" problem
 - **Cost-per-wear analytics** — genuinely actionable insight most people have never seen
 
 **Market size:**
+
 - Global fashion app market: ~$1.5B, growing at ~8% CAGR
 - "Digital wardrobe" is a real niche — but niche means small TAM
 - More realistic addressable market: fashion-forward millennial/Gen Z women in English-speaking markets → perhaps 5–10M engaged users globally, with 5–10% potentially paying
@@ -39,22 +41,24 @@ Yes and no. It's crowded with direct competitors but none has achieved dominant 
 
 **Direct Competitors:**
 
-| Competitor | Pricing | Platform | Scale |
-|---|---|---|---|
-| **Stylebook** | $4.99 one-time | iOS only | 500k+ downloads |
-| **Whering** | Freemium + $7.99/mo | iOS + Android | ~100k users (UK-based) |
-| **Cladwell** | $4/mo (annual) | iOS + Android | ~150k users |
-| **Smart Closet** | Freemium | iOS + Android | ~500k downloads |
-| **Indyx** | $10/mo (curation service) | iOS + Web | Small, premium |
-| **OOTD Album** | Free | iOS + Android | ~100k |
+| Competitor       | Pricing                   | Platform      | Scale                  |
+| ---------------- | ------------------------- | ------------- | ---------------------- |
+| **Stylebook**    | $4.99 one-time            | iOS only      | 500k+ downloads        |
+| **Whering**      | Freemium + $7.99/mo       | iOS + Android | ~100k users (UK-based) |
+| **Cladwell**     | $4/mo (annual)            | iOS + Android | ~150k users            |
+| **Smart Closet** | Freemium                  | iOS + Android | ~500k downloads        |
+| **Indyx**        | $10/mo (curation service) | iOS + Web     | Small, premium         |
+| **OOTD Album**   | Free                      | iOS + Android | ~100k                  |
 
 **Indirect Competitors:**
+
 - Pinterest boards (free, massive network, zero switching cost)
 - Instagram Saved posts + TikTok bookmarks (users already do informal wardrobe tracking here)
 - Depop/Vinted (fashion community, resale angle)
 - Notion/spreadsheet DIYers (surprisingly common in the target demographic)
 
 **What makes Rcapsule different:**
+
 1. **Chrome extension auto-import** from retail sites — none of the competitors offer this; it eliminates the single biggest friction point (manual data entry)
 2. **Weather-aware AI recommendations** — Whering has a "What to wear" feature but it's basic; the full OneCall + OpenAI pipeline here is technically more sophisticated
 3. **Full community social layer** — most competitors are utility-only; Rcapsule has a Pinterest-like discovery feed
@@ -62,7 +66,8 @@ Yes and no. It's crowded with direct competitors but none has achieved dominant 
 5. **Web-first** — most competitors are iOS-only, so Android and desktop users are underserved
 
 **What makes it the same:**
-- Core wardrobe cataloging (table stakes)
+
+- Core wardrobe cataloguing (table stakes)
 - Outfit collage builder (Stylebook has had this since 2010)
 - Basic social sharing
 
@@ -99,9 +104,10 @@ This is genuinely impressive engineering for a solo or small-team project. Speci
 
 5. **No push notifications** — Loops handles transactional email, but there's no browser push or mobile push. For a "what to wear today" app, a morning notification is the core retention hook.
 
-6. **Global product catalog appears sparse** — The admin can add products manually and via scraping, but there's no automated pipeline to keep it populated. Without a large catalog, the "browse and add" import path adds little value.
+6. **Global product catalogue appears sparse** — The admin can add products manually and via scraping, but there's no automated pipeline to keep it populated. Without a large catalogue, the "browse and add" import path adds little value.
 
 **Technical debt:**
+
 - Minimal. The two known TypeScript errors are in third-party type incompatibilities, not business logic. This is healthy.
 - `NextAuth v5 beta` is a dependency risk — it's still beta after years, and API surface has changed multiple times
 
@@ -116,6 +122,7 @@ This is genuinely impressive engineering for a solo or small-team project. Speci
 Realistic, but the conversion math is hard. The free tier is very generous — unlimited item uploads, outfit canvas, calendar log, basic stats. The premium gate (AI recommendations, background removal, unlimited collections, cost-per-wear) is reasonable, but cost-per-wear analytics and basic stats already provide the core value proposition without converting.
 
 **Conversion rate reality check:**
+
 - Consumer SaaS freemium apps typically convert at 2–5% of registered users to paid
 - Fashion/lifestyle apps trend toward the bottom of that range (2–3%)
 - At $6.99/mo: to reach $10k MRR requires ~1,430 paying users → which means 50,000–70,000 registered users
@@ -125,7 +132,7 @@ Realistic, but the conversion math is hard. The free tier is very generous — u
 
 1. **Affiliate commerce** — When the AI recommends "you need a white linen shirt," a "Shop this look" button with Farfetch/ASOS affiliate links (4–8% commission) is a natural monetization layer. This is how Cladwell generates a significant portion of revenue.
 
-2. **Brand partnerships / sponsored catalog products** — Brands pay to have their products appear in the global catalog and be recommended by the AI. This requires scale but is a realistic revenue stream at 50k+ users.
+2. **Brand partnerships / sponsored catalogue products** — Brands pay to have their products appear in the global catalogue and be recommended by the AI. This requires scale but is a realistic revenue stream at 50k+ users.
 
 3. **"Curated capsule" premium tier** — Personal stylist marketplace where verified stylists create and sell capsule wardrobe plans through the platform.
 
@@ -134,6 +141,7 @@ Realistic, but the conversion math is hard. The free tier is very generous — u
 5. **Data insights (B2B)** — Anonymized trend data on what people actually wear vs. buy has real value to fashion brands. Long-term play, requires 100k+ active users.
 
 **Pricing assessment:**
+
 - $6.99/mo is competitive with Whering ($7.99/mo) and cheaper than Indyx ($10/mo)
 - The annual discount to $4.92/mo effective is good for LTV
 - Risk: the free tier is too generous to force conversion on value-seeking users
@@ -160,15 +168,15 @@ The product's natural acquisition channel is **content on TikTok and Instagram R
 
 **Channels ranked by expected ROI:**
 
-| Channel | Cost | Expected users/effort | Verdict |
-|---|---|---|---|
-| TikTok/Reels organic | Low | High | **Primary channel** |
-| Chrome Web Store listing | Free | Medium | **Do immediately** |
-| Reddit/communities | Free | Medium | **Do now** |
-| Product Hunt | ~2 weeks prep | 500–2k one-time | **Plan this** |
-| SEO | Medium | Long-term | **Background** |
-| Paid social | High | Unpredictable | **Later** |
-| Influencer gifting | Low-medium | Variable | **After 1k users** |
+| Channel                  | Cost          | Expected users/effort | Verdict             |
+| ------------------------ | ------------- | --------------------- | ------------------- |
+| TikTok/Reels organic     | Low           | High                  | **Primary channel** |
+| Chrome Web Store listing | Free          | Medium                | **Do immediately**  |
+| Reddit/communities       | Free          | Medium                | **Do now**          |
+| Product Hunt             | ~2 weeks prep | 500–2k one-time       | **Plan this**       |
+| SEO                      | Medium        | Long-term             | **Background**      |
+| Paid social              | High          | Unpredictable         | **Later**           |
+| Influencer gifting       | Low-medium    | Variable              | **After 1k users**  |
 
 ---
 
@@ -202,12 +210,12 @@ The product's natural acquisition channel is **content on TikTok and Instagram R
 
 **Score: 6.5/10**
 
-| Dimension | Score | Reasoning |
-|---|---|---|
-| Market demand | 6/10 | Real problem, real audience, growing trend — but "nice to have" pain level |
-| Execution feasibility | 8/10 | Technical foundation is strong; missing mobile is a build challenge, not an idea flaw |
-| Differentiation | 7/10 | Chrome extension + AI + weather is genuinely novel; not a clone |
-| Monetization potential | 5/10 | SaaS model works but affiliate/commerce layer is missing |
+| Dimension              | Score | Reasoning                                                                             |
+| ---------------------- | ----- | ------------------------------------------------------------------------------------- |
+| Market demand          | 6/10  | Real problem, real audience, growing trend — but "nice to have" pain level            |
+| Execution feasibility  | 8/10  | Technical foundation is strong; missing mobile is a build challenge, not an idea flaw |
+| Differentiation        | 7/10  | Chrome extension + AI + weather is genuinely novel; not a clone                       |
+| Monetization potential | 5/10  | SaaS model works but affiliate/commerce layer is missing                              |
 
 **Reasoning:** This is a technically excellent product in a real market with real competitors and genuine differentiation. The score is not higher because: (a) no mobile app in a mobile-first category is a serious structural weakness, (b) the community features create a chicken-and-egg problem that requires a different go-to-market than a pure utility tool, and (c) the $6.99/mo price point on a feature set this generous makes the unit economics hard. The score is not lower because the Chrome extension is a real moat, the technical execution is above average for this stage, and the cultural tailwinds (capsule wardrobe, sustainability, intentional consumption) are real.
 
@@ -237,7 +245,7 @@ Use the OpenAI Vision API on uploaded clothing photos to auto-fill category, col
 - **Building a native mobile app right now** — React Native or a PWA wrapper is the right next mobile strategy, but attempting it before product-market fit is a resource drain. Focus on proving the model on web first; mobile can follow once you understand which features drive retention
 - **Expanding the community platform further** — Comments, reports, featured content, broadcast notifications are all built. Don't add more social features. Focus on filling the feed with quality content manually
 - **B2B / brand partnerships** — Real but premature at sub-10k users
-- **Automated catalog scraping pipeline** — The manual admin catalog is fine for now; invest in user acquisition, not supply-side infrastructure
+- **Automated catalogue scraping pipeline** — The manual admin catalogue is fine for now; invest in user acquisition, not supply-side infrastructure
 - **Server-side collage rendering** — Nice to have, but not blocking any user acquisition path
 
 ### Final Recommendation
@@ -254,4 +262,4 @@ The no-mobile-app gap is real and will eventually need to be addressed, but it's
 
 ---
 
-*Evaluation based on codebase review as of May 2026. Market data reflects publicly available competitor information.*
+_Evaluation based on codebase review as of May 2026. Market data reflects publicly available competitor information._

@@ -104,20 +104,18 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
           </div>
         )}
 
-
         {/* Wear count badge */}
         {!isWishlist && item.timesworn !== undefined && item.timesworn > 0 && (
           <div className="absolute bottom-2 left-2 z-20">
             <Chip
               classNames={{
                 base: "bg-default-50/90 backdrop-blur-sm",
-                content:
-                  "text-default-700 text-[10px] uppercase tracking-wider font-semibold px-1",
+                content: "text-default-700 px-1 eyebrow",
               }}
               size="sm"
               variant="flat"
             >
-              Worn {item.timesworn}x
+              Worn <span className="num">{item.timesworn}</span>x
             </Chip>
           </div>
         )}
@@ -128,11 +126,9 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
         onClick={handleCardClick}
       >
         <div className="flex justify-between w-full items-baseline">
-          <p className="text-[10px] font-display font-light tracking-normal text-default-500">
-            {item.brand || "Unbranded"}
-          </p>
+          <p className="eyebrow text-stone">{item.brand || "Unbranded"}</p>
           {item.price && (
-            <p className="text-xs font-medium">${item.price.toFixed(2)}</p>
+            <p className="num text-xs">${item.price.toFixed(2)}</p>
           )}
         </div>
 
@@ -140,7 +136,7 @@ export default function ClothingCard({ item, onClick }: ClothingCardProps) {
           {item.name}
         </h3>
 
-        <p className="text-xs text-default-400 capitalize">{item.category}</p>
+        <p className="eyebrow text-stone capitalize">{item.category}</p>
       </CardFooter>
     </Card>
   );

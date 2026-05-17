@@ -190,12 +190,10 @@ export default function NewItemPage() {
             <ArrowLeftIcon className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2">
+            <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight mb-2">
               New Acquisition
             </h1>
-            <p className="text-xs uppercase tracking-widest text-default-500">
-              Add a piece to your collection
-            </p>
+            <p className="eyebrow text-stone">Add a piece to your collection</p>
           </div>
         </div>
 
@@ -233,7 +231,7 @@ export default function NewItemPage() {
               />
             </div>
 
-            <p className="mt-4 text-[10px] text-default-400 text-center uppercase tracking-wider">
+            <p className="mt-4 eyebrow text-stone text-center">
               Supported: JPG, PNG, WEBP • Max 10MB
             </p>
           </div>
@@ -750,7 +748,7 @@ export default function NewItemPage() {
                 </div>
 
                 {formData.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 p-4 bg-default-50 rounded-lg">
+                  <div className="flex flex-wrap gap-2 p-4 bg-soft border border-default-100">
                     {formData.tags.map((tag) => (
                       <Chip
                         key={tag}
@@ -764,7 +762,7 @@ export default function NewItemPage() {
                   </div>
                 )}
 
-                <p className="text-xs text-default-400">
+                <p className="eyebrow text-stone">
                   Use tags to organize and search your items (e.g.,
                   &quot;vintage&quot;, &quot;investment piece&quot;, &quot;needs
                   repair&quot;)
@@ -785,7 +783,7 @@ export default function NewItemPage() {
             </Button>
             <Button
               fullWidth
-              className="h-12 uppercase tracking-widest font-bold shadow-lg shadow-primary/20"
+              className="h-12 uppercase tracking-widest font-bold"
               color="primary"
               isLoading={saving}
               radius="sm"

@@ -291,7 +291,7 @@ export default function ItemPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-        <div className="relative w-full aspect-[3/4] sm:aspect-auto sm:h-[600px] bg-content2 rounded-lg overflow-hidden shadow-inner">
+        <div className="relative w-full aspect-[3/4] sm:aspect-auto sm:h-[600px] bg-content2 overflow-hidden">
           {item.imageUrl ? (
             <Image
               removeWrapper
@@ -356,29 +356,30 @@ function ViewMode({
     <div className="space-y-8 animate-in fade-in duration-300">
       <div>
         {item.brand && (
-          <h2 className="text-sm font-display font-light tracking-normal text-default-500 mb-2">
-            {item.brand}
-          </h2>
+          <h2 className="eyebrow text-stone mb-2">{item.brand}</h2>
         )}
-        <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal mb-2 leading-none break-words">
+        <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight mb-2 break-words">
           {item.name}
         </h1>
 
         <div className="flex flex-wrap items-baseline gap-4">
           {item.price && (
             <p className="text-2xl font-light text-foreground">
-              ${item.price.toFixed(2)} {item.purchaseCurrency}
+              <span className="num">${item.price.toFixed(2)}</span>{" "}
+              {item.purchaseCurrency}
             </p>
           )}
           {item.originalPrice && item.originalPrice !== item.price && (
-            <p className="text-lg line-through text-default-400">
-              ${item.originalPrice.toFixed(2)}
+            <p className="text-lg line-through text-stone">
+              <span className="num">${item.originalPrice.toFixed(2)}</span>
             </p>
           )}
           {item.purchaseDate && (
-            <p className="text-xs text-default-400 uppercase tracking-widest flex items-center gap-1">
+            <p className="eyebrow text-stone flex items-center gap-1">
               <CalendarDaysIcon className="w-3 h-3" />
-              {new Date(item.purchaseDate).toLocaleDateString()}
+              <span className="num">
+                {new Date(item.purchaseDate).toLocaleDateString()}
+              </span>
             </p>
           )}
         </div>
@@ -415,14 +416,12 @@ function ViewMode({
 
       {item.colors && item.colors.length > 0 && (
         <div>
-          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
-            Colors
-          </span>
+          <span className="block eyebrow text-stone mb-2">Colors</span>
           <div className="flex gap-2">
             {item.colors.map((color) => (
               <div
                 key={color}
-                className="w-6 h-6 rounded-full border border-default-200 shadow-sm"
+                className="w-6 h-6 border border-default-200"
                 style={{ background: colorMap[color] || color }}
                 title={color}
               />
@@ -433,9 +432,7 @@ function ViewMode({
 
       {(item.style || item.silhouette || item.pattern || item.fit) && (
         <div>
-          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
-            Style Details
-          </h3>
+          <h3 className="eyebrow text-stone mb-3">Style Details</h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             {item.style && <DetailItem label="Style" value={item.style} />}
             {item.silhouette && (
@@ -454,7 +451,7 @@ function ViewMode({
       )}
       {item.materials && (
         <div>
-          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
+          <span className="block eyebrow text-stone mb-2">
             Material Composition
           </span>
           <p className="text-sm whitespace-pre-wrap">{item.materials}</p>
@@ -463,9 +460,7 @@ function ViewMode({
 
       {(item.purchaseLocation || item.purchaseType) && (
         <div>
-          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
-            Purchase Info
-          </h3>
+          <h3 className="eyebrow text-stone mb-3">Purchase Info</h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             {item.purchaseLocation && (
               <DetailItem label="Location" value={item.purchaseLocation} />
@@ -481,7 +476,7 @@ function ViewMode({
         <div className="space-y-4">
           {item.careInstructions && (
             <div>
-              <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
+              <span className="block eyebrow text-stone mb-2">
                 Care Instructions
               </span>
               <p className="text-sm text-default-600 whitespace-pre-wrap">
@@ -491,7 +486,7 @@ function ViewMode({
           )}
           {item.sustainability && (
             <div>
-              <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
+              <span className="block eyebrow text-stone mb-2">
                 Sustainability
               </span>
               <p className="text-sm text-default-600 whitespace-pre-wrap">
@@ -504,15 +499,10 @@ function ViewMode({
 
       {item.placesToWear && item.placesToWear.length > 0 && (
         <div className="pt-2">
-          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
-            Best For
-          </span>
+          <span className="block eyebrow text-stone mb-2">Best For</span>
           <div className="flex flex-wrap gap-2">
             {item.placesToWear.map((place) => (
-              <span
-                key={place}
-                className="px-3 py-1 bg-default-100 rounded-full text-xs font-medium uppercase tracking-wider"
-              >
+              <span key={place} className="px-3 py-1 bg-default-100 eyebrow">
                 {place}
               </span>
             ))}
@@ -522,9 +512,7 @@ function ViewMode({
 
       {item.tags && item.tags.length > 0 && (
         <div>
-          <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-2">
-            Tags
-          </span>
+          <span className="block eyebrow text-stone mb-2">Tags</span>
           <div className="flex flex-wrap gap-2">
             {item.tags.map((tag) => (
               <Chip
@@ -541,19 +529,17 @@ function ViewMode({
       )}
 
       {(item.timesworn !== undefined || item.lastwornat) && (
-        <div className="bg-default-50 p-4 rounded-lg">
-          <h3 className="text-[10px] font-display font-light tracking-normal text-default-400 mb-3">
-            Wear Statistics
-          </h3>
+        <div className="bg-default-50 p-4 border border-default-200">
+          <h3 className="eyebrow text-stone mb-3">Wear Statistics</h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-default-500">Times Worn</span>
-              <p className="text-lg font-semibold">{item.timesworn || 0}</p>
+              <span className="eyebrow text-stone">Times Worn</span>
+              <p className="text-lg num">{item.timesworn || 0}</p>
             </div>
             {item.lastwornat && (
               <div>
-                <span className="text-default-500">Last Worn</span>
-                <p className="text-lg font-semibold">
+                <span className="eyebrow text-stone">Last Worn</span>
+                <p className="text-lg num">
                   {new Date(item.lastwornat).toLocaleDateString()}
                 </p>
               </div>
@@ -563,18 +549,21 @@ function ViewMode({
               item.timesworn &&
               item.timesworn > 0 && (
                 <div className="col-span-2 mt-2 pt-3 border-t border-default-200">
-                  <span className="text-[10px] font-display font-light tracking-normal text-default-400 block mb-1">
+                  <span className="eyebrow text-stone block mb-1">
                     Cost Per Wear
                   </span>
-                  <p className="text-2xl font-display font-light tracking-normal">
-                    ${(item.price / item.timesworn).toFixed(2)}
-                    <span className="text-sm font-normal text-default-400 ml-1">
+                  <p className="text-2xl font-display font-light tracking-tight">
+                    <span className="num">
+                      ${(item.price / item.timesworn).toFixed(2)}
+                    </span>
+                    <span className="text-sm font-normal text-stone ml-1">
                       / wear
                     </span>
                   </p>
-                  <p className="text-[10px] text-default-400 mt-0.5">
-                    Based on {item.timesworn} wear
-                    {item.timesworn !== 1 ? "s" : ""} · ${item.price.toFixed(2)}{" "}
+                  <p className="eyebrow text-stone mt-0.5">
+                    Based on <span className="num">{item.timesworn}</span> wear
+                    {item.timesworn !== 1 ? "s" : ""} ·{" "}
+                    <span className="num">${item.price.toFixed(2)}</span>{" "}
                     purchase price
                   </p>
                 </div>
@@ -636,9 +625,7 @@ function DetailItem({
 }) {
   return (
     <div>
-      <span className="block text-[10px] font-display font-light tracking-normal text-default-400 mb-1">
-        {label}
-      </span>
+      <span className="block eyebrow text-stone mb-1">{label}</span>
       <span className={`text-lg ${capitalize ? "capitalize" : ""}`}>
         {value}
       </span>
@@ -661,9 +648,9 @@ function EditMode({
   onCancel,
 }: any) {
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 bg-content1 p-1 sm:p-6 rounded-lg max-h-[800px] overflow-y-auto">
+    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 bg-content1 p-1 sm:p-6 max-h-[800px] overflow-y-auto">
       <div className="flex justify-between items-center border-b border-divider pb-4 sticky top-0 bg-content1 z-10">
-        <h2 className="text-xl font-bold uppercase tracking-normal">
+        <h2 className="font-display font-light text-xl tracking-tight">
           Edit Piece
         </h2>
         <Button color="danger" size="sm" variant="light" onPress={onCancel}>
@@ -673,10 +660,8 @@ function EditMode({
 
       {/* REPLACED: Single ImageUpload Component */}
       <div className="pb-4 border-b border-divider">
-        <h3 className="text-xs font-display font-light tracking-normal mb-3 text-default-500">
-          Visual
-        </h3>
-        <div className="w-full aspect-[3/4] sm:aspect-video bg-content2 border border-dashed border-default-300 rounded-lg overflow-hidden relative">
+        <h3 className="eyebrow text-stone mb-3">Visual</h3>
+        <div className="w-full aspect-[3/4] sm:aspect-video bg-content2 border border-dashed border-default-300 overflow-hidden relative">
           <ImageUpload
             className="h-full w-full"
             folder="clothes"
@@ -693,7 +678,9 @@ function EditMode({
           radius="sm"
           value={formData.imageUrl}
           variant="bordered"
-          onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, imageUrl: e.target.value })
+          }
         />
       </div>
 
@@ -799,7 +786,7 @@ function EditMode({
           <div className="space-y-4">
             {/* Status Toggle Button for Wishlist Items */}
             {formData.status === "wishlist" && (
-              <div className="bg-default-100 p-4 rounded-lg border border-default-200">
+              <div className="bg-default-100 p-4 border border-default-200">
                 <p className="text-sm text-default-600 mb-3">
                   This item is currently in your wishlist. Mark it as purchased
                   to track ownership details.
@@ -819,7 +806,7 @@ function EditMode({
 
             {/* Status Toggle Button for Owned Items */}
             {formData.status === "owned" && (
-              <div className="bg-default-100 p-4 rounded-lg border border-default-200">
+              <div className="bg-default-100 p-4 border border-default-200">
                 <p className="text-sm text-default-600 mb-3">
                   This item is in your collection. Move it back to your wishlist
                   if you no longer own it.
@@ -1173,7 +1160,7 @@ function EditMode({
             </div>
 
             {formData.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 p-4 bg-default-50 rounded-lg">
+              <div className="flex flex-wrap gap-2 p-4 bg-default-50 border border-default-100">
                 {formData.tags.map((tag: string) => (
                   <Chip
                     key={tag}
@@ -1192,7 +1179,7 @@ function EditMode({
 
       <Button
         fullWidth
-        className="h-12 font-display font-light tracking-normal mt-4 shadow-lg shadow-primary/20"
+        className="h-12 font-display font-light tracking-tight mt-4"
         color="primary"
         isLoading={saving}
         radius="sm"

@@ -163,12 +163,12 @@ export default function OutfitDetailPage() {
           {/* Badges row */}
           <div className="flex items-center gap-2 flex-wrap mb-4">
             {outfit.isPublic ? (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-default-100 text-default-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-default-100 text-default-600 eyebrow">
                 <GlobeAltIcon className="w-3 h-3" />
                 Public
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-default-100 text-default-500 text-[10px] font-bold uppercase tracking-widest rounded-full">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-default-100 text-stone eyebrow">
                 <LockClosedIcon className="w-3 h-3" />
                 Private
               </div>
@@ -197,7 +197,7 @@ export default function OutfitDetailPage() {
 
           {/* Title + favorite */}
           <div className="flex items-start justify-between gap-4 mb-2">
-            <h1 className="text-3xl md:text-4xl font-display font-light tracking-normal leading-tight">
+            <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight">
               {outfit.name}
             </h1>
             <button
@@ -238,32 +238,24 @@ export default function OutfitDetailPage() {
           {/* Stats row */}
           <div className="flex items-center gap-8 mb-8 border-y border-divider py-4">
             <div>
-              <span className="block text-3xl font-light">
-                {outfit.timesWorn}
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-default-400">
-                Times Worn
-              </span>
+              <span className="block text-3xl num">{outfit.timesWorn}</span>
+              <span className="eyebrow text-stone">Times Worn</span>
             </div>
             {outfit.lastWornAt && (
               <div>
-                <span className="block text-xl font-light mt-1.5">
+                <span className="block text-xl num mt-1.5">
                   {new Date(outfit.lastWornAt).toLocaleDateString()}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-default-400">
-                  Last Outing
-                </span>
+                <span className="eyebrow text-stone">Last Outing</span>
               </div>
             )}
             {outfit.stats && outfit.stats.totalValue > 0 && (
               <div>
-                <span className="block text-xl font-light mt-1.5 flex items-center gap-1">
+                <span className="block text-xl num mt-1.5 flex items-center gap-1">
                   <CurrencyDollarIcon className="w-4 h-4 inline" />
                   {outfit.stats.totalValue.toFixed(2)}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-default-400">
-                  Total Value
-                </span>
+                <span className="eyebrow text-stone">Total Value</span>
               </div>
             )}
             {outfit.rating && (
@@ -276,9 +268,7 @@ export default function OutfitDetailPage() {
                     />
                   ))}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-default-400">
-                  Rating
-                </span>
+                <span className="eyebrow text-stone">Rating</span>
               </div>
             )}
           </div>
@@ -288,9 +278,7 @@ export default function OutfitDetailPage() {
             outfit.locationWorn ||
             outfit.temperatureWorn) && (
             <div className="flex items-center gap-4 mb-8 p-4 bg-default-50 border border-default-200">
-              <span className="text-[10px] uppercase tracking-widest text-default-400 mr-2">
-                Last Worn
-              </span>
+              <span className="eyebrow text-stone mr-2">Last Worn</span>
               {outfit.locationWorn && (
                 <span className="flex items-center gap-1 text-xs text-default-600">
                   <MapPinIcon className="w-3.5 h-3.5" />
@@ -313,8 +301,12 @@ export default function OutfitDetailPage() {
 
           {/* Pieces */}
           <div className="mb-8">
-            <h3 className="text-[10px] uppercase tracking-widest text-default-400 mb-4">
-              Pieces ({outfit.stats?.itemCount ?? outfit.clothes.length})
+            <h3 className="eyebrow text-stone mb-4">
+              Pieces (
+              <span className="num">
+                {outfit.stats?.itemCount ?? outfit.clothes.length}
+              </span>
+              )
             </h3>
             <div className="space-y-3">
               {outfit.clothes.map((item) => (
@@ -339,15 +331,15 @@ export default function OutfitDetailPage() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-display font-light tracking-normal text-default-400">
+                    <p className="eyebrow text-stone">
                       {item.brand || item.category}
                     </p>
-                    <p className="font-medium uppercase tracking-normal group-hover:underline truncate">
+                    <p className="font-display font-light tracking-tight group-hover:underline truncate">
                       {item.name}
                     </p>
                     {item.price && (
-                      <p className="text-[10px] text-default-400">
-                        ${item.price}
+                      <p className="eyebrow text-stone">
+                        <span className="num">${item.price}</span>
                       </p>
                     )}
                   </div>
@@ -359,9 +351,7 @@ export default function OutfitDetailPage() {
           {/* Collections this outfit belongs to */}
           {outfit.wardrobes && outfit.wardrobes.length > 0 && (
             <div className="mb-8">
-              <h3 className="text-[10px] uppercase tracking-widest text-default-400 mb-4">
-                In Collections
-              </h3>
+              <h3 className="eyebrow text-stone mb-4">In Collections</h3>
               <div className="flex flex-wrap gap-2">
                 {outfit.wardrobes.map((w) => (
                   <button

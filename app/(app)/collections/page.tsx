@@ -155,7 +155,7 @@ export default function CollectionsPage() {
                       ? "bg-foreground text-background"
                       : "border-default-300"
                   }`,
-                  content: "font-bold text-[10px] uppercase tracking-widest",
+                  content: "eyebrow",
                 }}
                 size="sm"
                 variant={filter === f ? "solid" : "bordered"}
@@ -207,39 +207,35 @@ export default function CollectionsPage() {
       {/* Stats Bar */}
       <div className="flex gap-6 mb-8 pb-6 border-b border-default-200">
         <div>
-          <span className="text-2xl font-light">{wardrobes.length}</span>
-          <span className="text-xs text-default-400 uppercase tracking-widest ml-2">
-            Total
-          </span>
+          <span className="text-2xl num">{wardrobes.length}</span>
+          <span className="eyebrow text-stone ml-2">Total</span>
         </div>
         <div>
-          <span className="text-2xl font-light">
+          <span className="text-2xl num">
             {wardrobes.filter((w) => w.isPublic).length}
           </span>
-          <span className="text-xs text-default-400 uppercase tracking-widest ml-2">
-            Public
-          </span>
+          <span className="eyebrow text-stone ml-2">Public</span>
         </div>
         <div>
-          <span className="text-2xl font-light">
+          <span className="text-2xl num">
             {wardrobes.reduce((sum, w) => sum + (w.clothesCount || 0), 0)}
           </span>
-          <span className="text-xs text-default-400 uppercase tracking-widest ml-2">
-            Items
-          </span>
+          <span className="eyebrow text-stone ml-2">Items</span>
         </div>
       </div>
 
       {/* Content */}
       {filteredWardrobes.length === 0 ? (
         <div className="py-24 text-center border border-dashed border-default-300">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-default-100 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-6 bg-default-100 flex items-center justify-center">
             <Squares2X2Icon className="w-8 h-8 text-default-400" />
           </div>
           {wardrobes.length === 0 ? (
             <>
-              <h3 className="text-xl font-bold mb-2">No collections yet</h3>
-              <p className="text-default-500 text-sm mb-6">
+              <h3 className="font-display font-light text-xl tracking-tight mb-2">
+                No collections yet
+              </h3>
+              <p className="text-stone text-sm mb-6">
                 Create your first collection to organize your wardrobe
               </p>
               <Button
@@ -254,8 +250,10 @@ export default function CollectionsPage() {
             </>
           ) : (
             <>
-              <h3 className="text-xl font-bold mb-2">No results found</h3>
-              <p className="text-default-500 text-sm">
+              <h3 className="font-display font-light text-xl tracking-tight mb-2">
+                No results found
+              </h3>
+              <p className="text-stone text-sm">
                 Try adjusting your search or filter
               </p>
             </>
@@ -306,12 +304,15 @@ export default function CollectionsPage() {
                 </div>
               </CardBody>
               <CardHeader className="px-0 pt-4 flex-col items-start">
-                <h3 className="text-lg font-bold uppercase tracking-normal">
+                <h3 className="font-display font-light text-xl tracking-tight">
                   {wardrobe.title}
                 </h3>
-                <p className="text-xs text-default-400 uppercase tracking-widest">
-                  {wardrobe.clothesCount || 0} Items •{" "}
-                  {new Date(wardrobe.updatedAt).toLocaleDateString()}
+                <p className="eyebrow text-stone">
+                  <span className="num">{wardrobe.clothesCount || 0}</span>{" "}
+                  Items •{" "}
+                  <span className="num">
+                    {new Date(wardrobe.updatedAt).toLocaleDateString()}
+                  </span>
                 </p>
               </CardHeader>
             </Card>
@@ -348,7 +349,7 @@ export default function CollectionsPage() {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-lg font-bold uppercase tracking-normal">
+                  <h3 className="font-display font-light text-xl tracking-tight">
                     {wardrobe.title}
                   </h3>
                   <Chip
@@ -371,13 +372,16 @@ export default function CollectionsPage() {
                   </Chip>
                 </div>
                 {wardrobe.description && (
-                  <p className="text-sm text-default-500 line-clamp-1 mb-2">
+                  <p className="text-sm text-stone line-clamp-1 mb-2">
                     {wardrobe.description}
                   </p>
                 )}
-                <p className="text-xs text-default-400 uppercase tracking-widest">
-                  {wardrobe.clothesCount || 0} Items • Updated{" "}
-                  {new Date(wardrobe.updatedAt).toLocaleDateString()}
+                <p className="eyebrow text-stone">
+                  <span className="num">{wardrobe.clothesCount || 0}</span>{" "}
+                  Items • Updated{" "}
+                  <span className="num">
+                    {new Date(wardrobe.updatedAt).toLocaleDateString()}
+                  </span>
                 </p>
               </div>
             </div>

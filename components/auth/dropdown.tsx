@@ -35,8 +35,8 @@ export function ProfileDropdown({ user }: { user: any }) {
           className="h-14 gap-2 opacity-100 italic"
           textValue="Signed in as"
         >
-          <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold text-primary">{user.email}</p>
+          <p className="eyebrow text-default-400">Signed in as</p>
+          <p className="text-sm font-light text-foreground">{user.email}</p>
         </DropdownItem>
 
         <DropdownItem key="profile" as={NextLink} href="/profile">

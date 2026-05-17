@@ -39,7 +39,12 @@ export default function SelectedPieceCard({ item, onRemove, isNew }: Props) {
       </div>
       {isNew && (
         <div className="absolute top-1 left-1 z-10">
-          <Chip className="text-[8px] h-4" color="success" size="sm" variant="flat">
+          <Chip
+            className="text-[8px] h-4"
+            color="success"
+            size="sm"
+            variant="flat"
+          >
             NEW
           </Chip>
         </div>

@@ -17,7 +17,10 @@ export async function POST(
     const { outfitIds } = await req.json();
 
     if (!Array.isArray(outfitIds) || outfitIds.length === 0)
-      return NextResponse.json({ error: "outfitIds required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "outfitIds required" },
+        { status: 400 },
+      );
 
     const supabase = getSupabaseServer();
 
@@ -30,7 +33,10 @@ export async function POST(
       .maybeSingle();
 
     if (!wardrobe)
-      return NextResponse.json({ error: "Collection not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Collection not found" },
+        { status: 404 },
+      );
 
     // Verify all outfits belong to the user
     const { data: outfits } = await supabase
@@ -46,9 +52,10 @@ export async function POST(
 
     const rows = validIds.map((outfitId) => ({ wardrobeId: id, outfitId }));
 
-    const { error } = await supabase
-      .from("WardrobeOutfit")
-      .upsert(rows, { onConflict: "wardrobeId,outfitId", ignoreDuplicates: true });
+    const { error } = await supabase.from("WardrobeOutfit").upsert(rows, {
+      onConflict: "wardrobeId,outfitId",
+      ignoreDuplicates: true,
+    });
 
     if (error) throw error;
 
@@ -56,6 +63,9 @@ export async function POST(
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json({ error: "Failed to add outfits" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to add outfits" },
+      { status: 500 },
+    );
   }
 }

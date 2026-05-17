@@ -1,0 +1,258 @@
+/* ============================================================
+   rcapsule — Tailwind CSS v4 design system tokens
+   Drop this into your global stylesheet (e.g. globals.css)
+   alongside `@import "tailwindcss";`.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* ---------- Fonts ----------------------------------------- */
+/* Import in your <head> (or via next/font):
+   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+*/
+
+/* ---------- Theme tokens (Tailwind v4 @theme) ------------- */
+@theme {
+  /* --- Colors: light mode defaults --- */
+  --color-background:      #FFFFFF;
+  --color-foreground:      #0A0A0A;
+  --color-surface:         #F7F7F5;
+  --color-surface-2:       #EFEDE7;
+  --color-border:          #E5E3DC;
+  --color-border-strong:   #0A0A0A;
+  --color-muted:           #6B6B66;
+  --color-mute-2:          #A8A8A2;
+  --color-accent:          #7A2E1F;
+  --color-accent-soft:     #A45A4A;
+  --color-danger:          #8A1F1F;
+  --color-success:         #3F5C3A;
+
+  /* HeroUI default-N parity (so existing default-100, default-200 work) */
+  --color-default-50:      #F7F7F5;
+  --color-default-100:     #EFEDE7;
+  --color-default-200:     #E5E3DC;
+  --color-default-300:     #CFCDC5;
+  --color-default-400:     #6B6B66;
+  --color-default-500:     #A8A8A2;
+  --color-default-900:     #0A0A0A;
+
+  /* --- Font families --- */
+  --font-display: "Cormorant Garamond", "Cormorant", ui-serif, Georgia, serif;
+  --font-sans:    "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-num:     "JetBrains Mono", ui-monospace, monospace;
+
+  /* --- Type scale (display) --- */
+  --text-display-4xl:        clamp(28px, 3.5vw, 56px);
+  --text-display-4xl--line-height:    1.05;
+  --text-display-4xl--letter-spacing: -0.015em;
+  --text-display-4xl--font-weight:    400;
+
+  --text-display-5xl:        clamp(36px, 5vw, 80px);
+  --text-display-5xl--line-height:    0.98;
+  --text-display-5xl--letter-spacing: -0.02em;
+  --text-display-5xl--font-weight:    300;
+
+  --text-display-6xl:        clamp(44px, 6.5vw, 112px);
+  --text-display-6xl--line-height:    0.95;
+  --text-display-6xl--letter-spacing: -0.025em;
+  --text-display-6xl--font-weight:    300;
+
+  --text-display-7xl:        clamp(56px, 9vw, 144px);
+  --text-display-7xl--line-height:    0.92;
+  --text-display-7xl--letter-spacing: -0.03em;
+  --text-display-7xl--font-weight:    300;
+
+  --text-display-8xl:        clamp(72px, 12vw, 192px);
+  --text-display-8xl--line-height:    0.9;
+  --text-display-8xl--letter-spacing: -0.035em;
+  --text-display-8xl--font-weight:    300;
+
+  /* --- Type scale (body) --- */
+  --text-body-lg:        19px;
+  --text-body-lg--line-height: 1.45;
+  --text-body-lg--font-weight: 400;
+
+  --text-body:           16px;
+  --text-body--line-height: 1.5;
+  --text-body--font-weight: 400;
+
+  --text-body-sm:        14px;
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--font-weight: 400;
+
+  --text-body-xs:        12px;
+  --text-body-xs--line-height: 1.45;
+  --text-body-xs--letter-spacing: 0.01em;
+  --text-body-xs--font-weight: 400;
+
+  /* --- Type scale (labels — mono caps) --- */
+  --text-label-lg:       12px;
+  --text-label-lg--line-height: 1.2;
+  --text-label-lg--letter-spacing: 0.18em;
+  --text-label-lg--font-weight: 500;
+
+  --text-label:          11px;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.18em;
+  --text-label--font-weight: 500;
+
+  --text-label-xs:       10px;
+  --text-label-xs--line-height: 1.2;
+  --text-label-xs--letter-spacing: 0.20em;
+  --text-label-xs--font-weight: 500;
+
+  /* --- Spacing --- */
+  --spacing-hair:      8px;
+  --spacing-tight:    16px;
+  --spacing-block:    32px;
+  --spacing-gutter:   56px;
+  --spacing-section-sm: 96px;
+  --spacing-section:  160px;
+
+  /* --- Containers --- */
+  --container-sm:  720px;
+  --container:    1320px;
+  --container-lg: 1480px;
+  --container-xl: 1640px;
+
+  /* --- Radius --- */
+  --radius-none: 0;
+  --radius-pill: 9999px;
+  /* Default radius for everything not a pill: 0. */
+
+  /* --- Easing --- */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  /* --- Motion durations --- */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-mid:  300ms;
+  --duration-slow: 500ms;
+}
+
+/* ---------- Dark mode overrides --------------------------- */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-background:    #0A0A0A;
+    --color-foreground:    #FAFAF7;
+    --color-surface:       #141413;
+    --color-surface-2:     #1C1C1B;
+    --color-border:        #262624;
+    --color-border-strong: #FAFAF7;
+    --color-muted:         #8E8E88;
+    --color-mute-2:        #5C5C58;
+    --color-accent:        #B05A47;
+    --color-accent-soft:   #7A2E1F;
+    --color-danger:        #C25A5A;
+    --color-success:       #7A9476;
+
+    --color-default-50:    #141413;
+    --color-default-100:   #1C1C1B;
+    --color-default-200:   #262624;
+    --color-default-300:   #3A3A37;
+    --color-default-400:   #8E8E88;
+    --color-default-500:   #5C5C58;
+    --color-default-900:   #FAFAF7;
+  }
+}
+
+/* ---------- HeroUI variable mapping ----------------------- */
+/* Map our tokens onto HeroUI's --heroui-* variables so HeroUI
+   components inherit the design system automatically.        */
+:root {
+  --heroui-background:           var(--color-background);
+  --heroui-foreground:           var(--color-foreground);
+  --heroui-default-50:           var(--color-default-50);
+  --heroui-default-100:          var(--color-default-100);
+  --heroui-default-200:          var(--color-default-200);
+  --heroui-default-300:          var(--color-default-300);
+  --heroui-default-400:          var(--color-default-400);
+  --heroui-default-500:          var(--color-default-500);
+  --heroui-default-900:          var(--color-default-900);
+
+  --heroui-primary:              var(--color-foreground);
+  --heroui-primary-foreground:   var(--color-background);
+
+  --heroui-secondary:            var(--color-accent);
+  --heroui-secondary-foreground: var(--color-background);
+
+  --heroui-danger:               var(--color-danger);
+  --heroui-danger-foreground:    var(--color-background);
+
+  --heroui-success:              var(--color-success);
+  --heroui-success-foreground:   var(--color-background);
+
+  --heroui-divider:              var(--color-border);
+  --heroui-focus:                var(--color-foreground);
+
+  /* All HeroUI radii → 0 by default. Pill chips override locally. */
+  --heroui-radius-small:  0;
+  --heroui-radius-medium: 0;
+  --heroui-radius-large:  0;
+}
+
+/* ---------- Utilities ------------------------------------- */
+@layer utilities {
+  /* Editorial-grade tabular numerals */
+  .font-num   { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+  .tabular    { font-variant-numeric: tabular-nums; }
+
+  /* The canonical small label */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Editorial italic accent — for Cormorant italic accent lines */
+  .serif-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Hairline rules */
+  .hairline        { border-color: var(--color-border); }
+  .hairline-strong { border-color: var(--color-foreground); }
+
+  /* Section spacing helpers */
+  .py-section    { padding-top: var(--spacing-section);    padding-bottom: var(--spacing-section); }
+  .py-section-sm { padding-top: var(--spacing-section-sm); padding-bottom: var(--spacing-section-sm); }
+
+  /* Container helpers */
+  .container-page    { width: 100%; margin-inline: auto; max-width: var(--container);    padding-inline: 1rem; }
+  .container-page-sm { width: 100%; margin-inline: auto; max-width: var(--container-sm); padding-inline: 1rem; }
+  .container-page-lg { width: 100%; margin-inline: auto; max-width: var(--container-lg); padding-inline: 1rem; }
+  @media (min-width: 768px) {
+    .container-page,
+    .container-page-sm,
+    .container-page-lg { padding-inline: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .container-page,
+    .container-page-sm,
+    .container-page-lg { padding-inline: 2rem; }
+  }
+}
+
+/* ---------- Reduced-motion ------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- Selection ------------------------------------ */
+::selection {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}

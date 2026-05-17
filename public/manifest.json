@@ -1,0 +1,21 @@
+{
+  "name": "Rcapsule",
+  "short_name": "Rcapsule",
+  "description": "Your digital wardrobe — catalogue clothes, build outfits, and discover style.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#171717",
+  "theme_color": "#171717",
+  "icons": [
+    {
+      "src": "/rcapsuleFavicon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/rcapsuleFavicon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

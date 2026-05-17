@@ -59,7 +59,11 @@ interface CollageBuilderProps {
   onSave: (file: File) => Promise<void>;
 }
 
-export default function CollageBuilder({ items, selectedItems, onSave }: CollageBuilderProps) {
+export default function CollageBuilder({
+  items,
+  selectedItems,
+  onSave,
+}: CollageBuilderProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [removingBgId, setRemovingBgId] = useState<string | null>(null);
   const [toolMode, setToolMode] = useState<ToolMode>("select");
@@ -79,6 +83,7 @@ export default function CollageBuilder({ items, selectedItems, onSave }: Collage
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
+
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
@@ -626,7 +631,8 @@ export default function CollageBuilder({ items, selectedItems, onSave }: Collage
                       tabIndex={0}
                       onClick={() => addToCanvas(item)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") addToCanvas(item);
+                        if (e.key === "Enter" || e.key === " ")
+                          addToCanvas(item);
                       }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -661,7 +667,8 @@ export default function CollageBuilder({ items, selectedItems, onSave }: Collage
                       tabIndex={0}
                       onClick={() => addToCanvas(item)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") addToCanvas(item);
+                        if (e.key === "Enter" || e.key === " ")
+                          addToCanvas(item);
                       }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -678,11 +685,12 @@ export default function CollageBuilder({ items, selectedItems, onSave }: Collage
           )}
 
           {/* Empty state */}
-          {(!selectedItems || selectedItems.length === 0) && items.length === 0 && (
-            <p className="text-[9px] text-center uppercase tracking-widest text-default-400 p-4">
-              No items
-            </p>
-          )}
+          {(!selectedItems || selectedItems.length === 0) &&
+            items.length === 0 && (
+              <p className="text-[9px] text-center uppercase tracking-widest text-default-400 p-4">
+                No items
+              </p>
+            )}
         </div>
 
         {/* CANVAS AREA */}

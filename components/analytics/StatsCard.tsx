@@ -33,24 +33,20 @@ export function StatsCard({
 
   return (
     <Card
-      className={`bg-white dark:bg-black border border-[#E5E5E5] dark:border-[#262626] border-l-4 ${accentColors[accent]} hover:shadow-lg transition-all duration-300`}
+      className={`bg-white dark:bg-black border border-[#E5E5E5] dark:border-[#262626] border-l-4 ${accentColors[accent]} transition-all duration-300`}
       radius="none"
     >
       <CardBody className="p-6">
         {/* Label */}
-        <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#6b7884] mb-3 letter-spacing-widest">
-          {label}
-        </p>
+        <p className="eyebrow text-stone mb-3">{label}</p>
 
         {/* Value */}
-        <p className="text-4xl font-display font-light tracking-normal mb-2 text-[#171717] dark:text-[#EDEDED] italic">
-          {value}
+        <p className="text-4xl font-display font-light tracking-tight mb-2 text-[#171717] dark:text-[#EDEDED]">
+          <span className="num">{value}</span>
         </p>
 
         {/* Subtext */}
-        {subtext && (
-          <p className="text-xs text-[#6b7884] mb-3 font-light">{subtext}</p>
-        )}
+        {subtext && <p className="eyebrow text-stone mb-3">{subtext}</p>}
 
         {/* Trend */}
         {trend && (

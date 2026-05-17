@@ -8,8 +8,11 @@ const mockLimit = vi.fn().mockResolvedValue({ success: true, reset: 0 });
 
 vi.mock("@/lib/ratelimit", () => ({
   apiLimiter: vi.fn(() => ({ limit: mockLimit })),
-  rateLimitResponse: vi.fn(() =>
-    new Response(JSON.stringify({ error: "Too many requests." }), { status: 429 }),
+  rateLimitResponse: vi.fn(
+    () =>
+      new Response(JSON.stringify({ error: "Too many requests." }), {
+        status: 429,
+      }),
   ),
 }));
 
@@ -18,7 +21,9 @@ vi.mock("@/lib/ratelimit", () => ({
  * Chained methods return `this`; awaiting the chain resolves with `resolveWith`.
  * `.not()` and `.gte()` resolve directly as terminal methods.
  */
-function makeChain(resolveWith: object = { count: 10, data: null, error: null }) {
+function makeChain(
+  resolveWith: object = { count: 10, data: null, error: null },
+) {
   const chain: any = {};
   const returnsThis = ["select", "eq", "order", "range", "limit"];
 
@@ -79,7 +84,10 @@ describe("GET /api/admin/stats", () => {
   it("returns 429 when rate limited", async () => {
     const { auth } = await import("@/auth");
     vi.mocked(auth).mockResolvedValueOnce(adminSession as any);
-    mockLimit.mockResolvedValueOnce({ success: false, reset: Date.now() + 60_000 });
+    mockLimit.mockResolvedValueOnce({
+      success: false,
+      reset: Date.now() + 60_000,
+    });
 
     const res = await GET(makeRequest());
     expect(res.status).toBe(429);
@@ -95,7 +103,7 @@ describe("GET /api/admin/stats", () => {
     const body = await res.json();
     expect(body).toHaveProperty("totalUsers");
     expect(body).toHaveProperty("totalItems");
-    expect(body).toHaveProperty("catalogSize");
+    expect(body).toHaveProperty("catalogueSize");
     expect(body).toHaveProperty("pendingReports");
     expect(body).toHaveProperty("signupTrend");
     expect(body).toHaveProperty("topBrands");

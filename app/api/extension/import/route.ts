@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         ? null
         : new Date().toISOString().split("T")[0];
 
-    // 1. Upsert into GlobalProduct catalog
+    // 1. Upsert into GlobalProduct catalogue
     let globalProductId: string | null = null;
 
     if (link) {

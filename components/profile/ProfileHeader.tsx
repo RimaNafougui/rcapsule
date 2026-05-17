@@ -109,10 +109,10 @@ export default function ProfileHeader({
             {/* Top Row: Name & Handle */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-display font-light tracking-normal">
+                <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight">
                   {user.name}
                 </h1>
-                <div className="flex items-center gap-2 text-default-500">
+                <div className="flex items-center gap-2 text-stone">
                   <span className="font-medium">
                     @{user.username || "username"}
                   </span>
@@ -131,18 +131,12 @@ export default function ProfileHeader({
               {/* Follower Stats (Visible on Desktop) */}
               <div className="hidden md:flex gap-6">
                 <div className="text-center">
-                  <p className="font-bold text-lg">{user.followerCount || 0}</p>
-                  <p className="text-[10px] uppercase text-default-500 tracking-wider">
-                    Followers
-                  </p>
+                  <p className="num text-lg">{user.followerCount || 0}</p>
+                  <p className="eyebrow text-stone">Followers</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-lg">
-                    {user.followingCount || 0}
-                  </p>
-                  <p className="text-[10px] uppercase text-default-500 tracking-wider">
-                    Following
-                  </p>
+                  <p className="num text-lg">{user.followingCount || 0}</p>
+                  <p className="eyebrow text-stone">Following</p>
                 </div>
               </div>
             </div>
@@ -205,18 +199,16 @@ export default function ProfileHeader({
 
             <div className="flex md:hidden justify-between py-4 border-y border-default-100">
               <div className="text-center">
-                <p className="font-bold">{user.followerCount || 0}</p>
-                <p className="text-[10px] uppercase text-default-400">
-                  Followers
-                </p>
+                <p className="num">{user.followerCount || 0}</p>
+                <p className="eyebrow text-stone">Followers</p>
               </div>
               <div className="text-center">
-                <p className="font-bold">{stats.items}</p>
-                <p className="text-[10px] uppercase text-default-400">Items</p>
+                <p className="num">{stats.items}</p>
+                <p className="eyebrow text-stone">Items</p>
               </div>
               <div className="text-center">
-                <p className="font-bold">{stats.outfits}</p>
-                <p className="text-[10px] uppercase text-default-400">Looks</p>
+                <p className="num">{stats.outfits}</p>
+                <p className="eyebrow text-stone">Looks</p>
               </div>
             </div>
           </div>
@@ -226,30 +218,20 @@ export default function ProfileHeader({
         {/* Only visible on md+, mobile uses the condensed row above */}
         <div className="hidden md:grid grid-cols-4 gap-4 py-8 border-t border-default-200">
           <div className="space-y-1">
-            <p className="text-4xl font-light">{stats.items}</p>
-            <p className="text-xs font-display font-light tracking-normal text-default-400">
-              Total Items
-            </p>
+            <p className="text-4xl num">{stats.items}</p>
+            <p className="eyebrow text-stone">Total Items</p>
           </div>
           <div className="space-y-1">
-            <p className="text-4xl font-light">{stats.wardrobes}</p>
-            <p className="text-xs font-display font-light tracking-normal text-default-400">
-              Collections
-            </p>
+            <p className="text-4xl num">{stats.wardrobes}</p>
+            <p className="eyebrow text-stone">Collections</p>
           </div>
           <div className="space-y-1">
-            <p className="text-4xl font-light">{stats.outfits}</p>
-            <p className="text-xs font-display font-light tracking-normal text-default-400">
-              Created Looks
-            </p>
+            <p className="text-4xl num">{stats.outfits}</p>
+            <p className="eyebrow text-stone">Created Looks</p>
           </div>
           <div className="space-y-1 border-l border-default-200 pl-8">
-            <p className="text-4xl font-light">
-              ${stats.totalValue.toLocaleString()}
-            </p>
-            <p className="text-xs font-display font-light tracking-normal text-default-400">
-              Closet Value
-            </p>
+            <p className="text-4xl num">${stats.totalValue.toLocaleString()}</p>
+            <p className="eyebrow text-stone">Closet Value</p>
           </div>
         </div>
       </div>

@@ -159,8 +159,8 @@ export function CommentSection({ targetType, targetId }: CommentSectionProps) {
 
   return (
     <div>
-      <h2 className="text-sm font-display font-light tracking-normal mb-6">
-        Comments ({total})
+      <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight mb-6">
+        Comments (<span className="num">{total}</span>)
       </h2>
 
       {/* New comment input */}
@@ -362,14 +362,14 @@ function CommentItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 mb-1">
           <Link
-            className="text-xs font-bold uppercase tracking-wider hover:underline"
+            className="font-display font-light tracking-tight hover:underline"
             href={`/u/${comment.author.username}`}
           >
             {comment.author.name || comment.author.username}
           </Link>
-          <span className="text-[10px] text-default-400">{timeAgo}</span>
+          <span className="eyebrow text-stone">{timeAgo}</span>
           {comment.isEdited && (
-            <span className="text-[9px] text-default-300 italic">edited</span>
+            <span className="eyebrow text-stone">edited</span>
           )}
         </div>
 
@@ -413,7 +413,7 @@ function CommentItem({
             </p>
             <div className="flex items-center gap-4 mt-2">
               <button
-                className="text-[10px] uppercase tracking-wider text-default-400 hover:text-foreground transition-colors"
+                className="eyebrow text-stone hover:text-foreground transition-colors"
                 onClick={() => onReply(comment.id)}
               >
                 Reply
@@ -421,7 +421,7 @@ function CommentItem({
               {isOwner && (
                 <>
                   <button
-                    className="text-[10px] uppercase tracking-wider text-default-400 hover:text-foreground transition-colors"
+                    className="eyebrow text-stone hover:text-foreground transition-colors"
                     onClick={() => {
                       onSetEditingId(comment.id);
                       onSetEditContent(comment.content);
@@ -430,7 +430,7 @@ function CommentItem({
                     Edit
                   </button>
                   <button
-                    className="text-[10px] uppercase tracking-wider text-danger/60 hover:text-danger transition-colors"
+                    className="eyebrow text-danger/60 hover:text-danger transition-colors"
                     onClick={() => onDelete(comment.id)}
                   >
                     Delete

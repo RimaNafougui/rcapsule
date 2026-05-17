@@ -194,7 +194,7 @@ export default function NotificationsPage() {
                 }}
               >
                 {/* Icon */}
-                <div className="w-8 h-8 flex items-center justify-center bg-default-100 flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 flex items-center justify-center bg-soft flex-shrink-0 mt-0.5">
                   {NOTIF_ICONS[notif.type] || <BellIcon className="w-4 h-4" />}
                 </div>
 
@@ -219,7 +219,7 @@ export default function NotificationsPage() {
                       {getNotifText(notif)}
                     </p>
                   </div>
-                  <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
+                  <p className="eyebrow text-stone mt-1">
                     {formatTimeAgo(notif.createdAt)}
                   </p>
                 </div>

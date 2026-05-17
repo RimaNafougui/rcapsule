@@ -7,12 +7,10 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
       {/* Best Value - Editorial Style */}
       <div className="bg-[#2d4530]/5 border-l-4 border-[#2d4530] p-6">
         <div className="mb-6">
-          <h3 className="text-[11px] font-display font-light tracking-normal text-[#2d4530] mb-1">
+          <h3 className="font-display font-light text-xl tracking-tight text-[#2d4530] mb-1">
             Investment Pieces
           </h3>
-          <p className="text-xs text-[#6b7884] italic">
-            Best cost-per-wear ratio
-          </p>
+          <p className="eyebrow text-stone">Best cost-per-wear ratio</p>
         </div>
 
         <div className="space-y-4">
@@ -22,19 +20,19 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
               className="flex justify-between items-start pb-4 border-b border-[#2d4530]/20 last:border-0"
             >
               <div className="flex items-start gap-3">
-                <span className="text-[10px] font-bold text-[#6b7884] w-5 pt-0.5">
+                <span className="eyebrow text-stone w-5 pt-0.5">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-[#171717] dark:text-[#EDEDED] mb-0.5">
+                  <p className="text-sm font-display font-light text-[#171717] dark:text-[#EDEDED] mb-0.5">
                     {item.name}
                   </p>
-                  <p className="text-[10px] text-[#6b7884] uppercase tracking-wider">
-                    {item.timesworn} wears
+                  <p className="eyebrow text-stone">
+                    <span className="num">{item.timesworn}</span> wears
                   </p>
                 </div>
               </div>
-              <p className="text-sm font-bold text-[#2d4530] italic">
+              <p className="num text-sm text-[#2d4530]">
                 ${item.costPerWear.toFixed(2)}
               </p>
             </div>
@@ -45,12 +43,10 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
       {/* Needs Attention */}
       <div className="bg-[#5e4b3b]/5 border-l-4 border-[#5e4b3b] p-6">
         <div className="mb-6">
-          <h3 className="text-[11px] font-display font-light tracking-normal text-[#5e4b3b] mb-1">
+          <h3 className="font-display font-light text-xl tracking-tight text-[#5e4b3b] mb-1">
             Wardrobe Edit
           </h3>
-          <p className="text-xs text-[#6b7884] italic">
-            Items deserving more attention
-          </p>
+          <p className="eyebrow text-stone">Items deserving more attention</p>
         </div>
 
         <div className="space-y-4">
@@ -60,14 +56,15 @@ export function ValueLeaders({ bestValue, worstValue }: any) {
               className="flex justify-between items-start pb-4 border-b border-[#5e4b3b]/20 last:border-0"
             >
               <div>
-                <p className="text-sm font-medium text-[#171717] dark:text-[#EDEDED] mb-0.5">
+                <p className="text-sm font-display font-light text-[#171717] dark:text-[#EDEDED] mb-0.5">
                   {item.name}
                 </p>
-                <p className="text-[10px] text-[#6b7884] uppercase tracking-wider">
-                  {item.timesworn} {item.timesworn === 1 ? "wear" : "wears"}
+                <p className="eyebrow text-stone">
+                  <span className="num">{item.timesworn}</span>{" "}
+                  {item.timesworn === 1 ? "wear" : "wears"}
                 </p>
               </div>
-              <p className="text-sm font-bold text-[#5e4b3b] italic">
+              <p className="num text-sm text-[#5e4b3b]">
                 ${item.costPerWear.toFixed(2)}
               </p>
             </div>

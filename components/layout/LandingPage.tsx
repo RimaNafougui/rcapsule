@@ -1,1376 +1,1159 @@
 "use client";
 
-import Image from "next/image";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useInView,
-  AnimatePresence,
-} from "framer-motion";
-import { useRef, useEffect, useState } from "react";
-import {
-  ArrowRight,
-  Sparkles,
-  Palette,
-  TrendingUp,
-  Calendar,
-  FolderOpen,
-  Heart,
-  Layers,
-  BookOpen,
-} from "lucide-react";
+import React from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
-import { Container } from "@/components/ui/container";
-import { DSButton } from "@/components/ui/button";
-import { fadeInUp, staggerContainer } from "@/components/ui/motion";
+/* ------------------------------------------------------------------ */
+/* Design tokens — garment swatch palette                              */
+/* ------------------------------------------------------------------ */
+const TONE_COLORS: Record<string, string> = {
+  charcoal: "#3d3d3d",
+  cream: "#f5f0e8",
+  denim: "#5c7a9b",
+  sand: "#c9b99a",
+  ink: "#1a1a1a",
+  bone: "#e8e4d5",
+  olive: "#6b7c45",
+  ecru: "#eee8d5",
+  navy: "#2c3e5a",
+  rust: "#9b4a2c",
+  paper: "#f8f6f0",
+  moss: "#5a6b3c",
+  smoke: "#8a8a8a",
+  plum: "#6b3b5c",
+  rose: "#c9a0a0",
+  ash: "#a8a8a0",
+};
 
-/* ========================================
-   UTILITY: Count-up animation hook
-   ======================================== */
-function useCountUp(end: number, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+const MOTION_TAGS: Record<string, React.ComponentType<any>> = {
+  div: motion.div,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+  p: motion.p,
+  span: motion.span,
+  section: motion.section,
+};
 
-  useEffect(() => {
-    if (!inView) return;
-    let _start = 0;
-    const startTime = Date.now();
+/* ------------------------------------------------------------------ */
+/* Utilities                                                            */
+/* ------------------------------------------------------------------ */
 
-    const tick = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+function Reveal({
+  children,
+  delay = 0,
+  className = "",
+  fade = false,
+  as = "div",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  fade?: boolean;
+  as?: string;
+}) {
+  const Tag = MOTION_TAGS[as] || motion.div;
 
-      setCount(Math.floor(eased * end));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-
-    requestAnimationFrame(tick);
-  }, [inView, end, duration]);
-
-  return { count, ref };
-}
-
-/* ========================================
-   PAGE LOADER
-   ======================================== */
-function PageLoader() {
   return (
-    <motion.div
-      className="fixed inset-0 z-50 bg-background flex items-center justify-center"
-      exit={{
-        y: "-100%",
-        transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1] },
+    <Tag
+      className={className}
+      initial={{ opacity: 0, y: fade ? 0 : 16 }}
+      transition={{
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+        delay: delay / 1000,
       }}
+      viewport={{ once: true, margin: "-8% 0px" }}
+      whileInView={{ opacity: 1, y: 0 }}
     >
-      <motion.span
-        animate={{ opacity: 1 }}
-        className="text-[10px] font-bold uppercase tracking-[0.5em] text-foreground"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        rcapsule
-      </motion.span>
-    </motion.div>
+      {children}
+    </Tag>
   );
 }
 
-/* ========================================
-   SECTION 1: HERO
-   ======================================== */
-function HeroSection({ ready }: { ready: boolean }) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
+function Container({
+  children,
+  className = "",
+  wide = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  wide?: boolean;
+}) {
+  return (
+    <div
+      className={`w-full mx-auto ${wide ? "max-w-[1480px]" : "max-w-[1320px]"} px-6 md:px-10 lg:px-14 ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
-  const card1Y = useTransform(scrollYProgress, [0, 1], [0, -220]);
-  const card2Y = useTransform(scrollYProgress, [0, 1], [0, -140]);
-  const card3Y = useTransform(scrollYProgress, [0, 1], [0, -300]);
+function Garment({ tone }: { tone: string }) {
+  return (
+    <div
+      className="w-full h-full"
+      style={{ backgroundColor: TONE_COLORS[tone] ?? "#e0ddd5" }}
+    />
+  );
+}
+
+function CTAButton({
+  children,
+  href,
+  variant = "dark",
+  className = "",
+}: {
+  children: React.ReactNode;
+  href: string;
+  variant?: "dark" | "ghost";
+  className?: string;
+}) {
+  const base =
+    "inline-flex items-center justify-center gap-3 h-[52px] px-7 text-[13px] font-mono uppercase tracking-[0.16em] transition-colors";
+
+  return (
+    <Link
+      className={`${base} ${variant === "dark" ? "lp-btn-dark" : "lp-btn-ghost"} ${className}`}
+      href={href}
+    >
+      {children}
+      <span className="translate-y-px">→</span>
+    </Link>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 1 — Hero                                                     */
+/* ------------------------------------------------------------------ */
+
+interface CatalogueStats {
+  itemCount: number;
+  categoryCount: number;
+  brandCount: number;
+}
+
+function Hero({ stats }: { stats: CatalogueStats }) {
+  const today = new Date();
+  const date = today
+    .toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    })
+    .toUpperCase();
+
+  const SPECIMEN_TONES = [
+    "charcoal",
+    "cream",
+    "denim",
+    "sand",
+    "ink",
+    "bone",
+    "olive",
+    "ecru",
+    "navy",
+    "rust",
+    "paper",
+    "moss",
+    "smoke",
+    "plum",
+    "rose",
+    "charcoal",
+  ];
 
   return (
     <section
-      ref={sectionRef}
-      className="relative flex flex-col items-center justify-center min-h-screen pt-20 md:pt-24 pb-16 md:pb-24 px-4 md:px-6 text-center overflow-hidden"
+      className="relative pt-16 md:pt-20 pb-16 md:pb-24 overflow-hidden bg-paper"
+      id="top"
     >
-      {/* Grid background */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(var(--heroui-foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--heroui-foreground)) 1px, transparent 1px)",
-          backgroundSize: "100px 100px",
-        }}
-      />
-
-      {/* Floating product card — Jacket (top-left) */}
-      <motion.div
-        className="absolute top-[7%] -left-8 md:left-[5%] w-32 h-44 md:w-40 md:h-56 overflow-hidden border border-default-200 shadow-sm"
-        style={{ y: card1Y, rotate: -12 }}
-      >
-        <div className="relative w-full h-32 md:h-40">
-          <Image
-            fill
-            unoptimized
-            alt="Leather jacket"
-            className="object-cover"
-            src="https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1800/f25_a05_128542_9166_off_a"
-          />
-        </div>
-        <div className="bg-background px-2 py-1.5 border-t border-default-200">
-          <p className="text-[9px] font-bold uppercase tracking-wider truncate">
-            Leather Jacket
-          </p>
-          <p className="text-[9px] text-default-400 font-mono">Worn 12×</p>
-        </div>
-      </motion.div>
-
-      {/* Floating product card — Sneakers (top-right) */}
-      <motion.div
-        className="absolute bottom-[10%] md:bottom-auto md:top-[25%] -right-4 md:right-[8%] w-28 h-40 md:w-36 md:h-48 overflow-hidden border border-default-200 shadow-sm"
-        style={{ y: card2Y, rotate: 8 }}
-      >
-        <div className="relative w-full h-28 md:h-36">
-          <Image
-            fill
-            unoptimized
-            alt="Sneakers"
-            className="object-cover"
-            src="https://static2.goldengoose.com/public/Style/ECOMM/GMF00102.F000311-10270.jpg"
-          />
-        </div>
-        <div className="bg-background px-2 py-1.5 border-t border-default-200">
-          <p className="text-[9px] font-bold uppercase tracking-wider truncate">
-            Sneakers
-          </p>
-          <p className="text-[9px] text-default-400 font-mono">Worn 28×</p>
-        </div>
-      </motion.div>
-
-      {/* Floating product card — Dress (bottom-left) */}
-      <motion.div
-        className="absolute bottom-[20%] left-[12%] w-24 h-32 md:w-32 md:h-44 hidden lg:block overflow-hidden border border-default-200 shadow-sm"
-        style={{ y: card3Y, rotate: -5 }}
-      >
-        <div className="relative w-full h-24 md:h-32">
-          <Image
-            fill
-            unoptimized
-            alt="Fashion dress"
-            className="object-cover"
-            src="https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/s26_a08_132084_1274_off_a"
-          />
-        </div>
-        <div className="bg-background px-2 py-1.5 border-t border-default-200">
-          <p className="text-[9px] font-bold uppercase tracking-wider truncate">
-            Satin Dress
-          </p>
-          <p className="text-[9px] text-default-400 font-mono">Worn 3×</p>
-        </div>
-      </motion.div>
-
-      {/* Content */}
-      <motion.div
-        animate={ready ? "visible" : "hidden"}
-        className="w-full max-w-5xl mx-auto z-10"
-        initial="hidden"
-        variants={staggerContainer}
-      >
-        <motion.h1
-          className="text-[clamp(2rem,8vw,7rem)] font-display font-light tracking-normal leading-[0.9] mb-6 md:mb-8"
-          variants={fadeInUp}
-        >
-          The Social Network <br />
-          <span className="text-default-400">For Fashion.</span>
-        </motion.h1>
-
-        <motion.p
-          className="text-sm sm:text-base md:text-lg text-default-500 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed font-light px-4"
-          variants={fadeInUp}
-        >
-          Discover real outfits from real people. Share your style, follow
-          people whose taste you love,
-          <br className="hidden sm:block" />
-          and build a wardrobe with intention.
-        </motion.p>
-
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 px-4"
-          variants={fadeInUp}
-        >
-          <DSButton
-            as="a"
-            className="w-full sm:w-auto"
-            href="/signup"
-            icon={<ArrowRight size={18} />}
-            size="lg"
-            variant="primary"
-          >
-            Join the Community
-          </DSButton>
-
-          <DSButton
-            as="a"
-            className="w-full sm:w-auto"
-            href="/discover"
-            size="lg"
-            variant="outline"
-          >
-            Explore Looks
-          </DSButton>
-        </motion.div>
-
-        <motion.p
-          className="text-[10px] md:text-xs text-default-400 uppercase tracking-widest mt-8"
-          variants={fadeInUp}
-        >
-          Free &bull; No Credit Card Required
-        </motion.p>
-      </motion.div>
-    </section>
-  );
-}
-
-/* ========================================
-   SECTION 2: CATEGORY STRIP
-   ======================================== */
-const CATEGORIES = [
-  "Tops",
-  "Dresses",
-  "Outerwear",
-  "Denim",
-  "Footwear",
-  "Accessories",
-  "Knitwear",
-  "Bags",
-  "Swimwear",
-  "Suits",
-  "Activewear",
-  "Skirts",
-];
-
-function CategoryStrip() {
-  return (
-    <div className="overflow-hidden border-y border-default-200 bg-default-50 py-3">
-      <motion.div
-        animate={{ x: [0, "-50%"] }}
-        className="flex gap-8 whitespace-nowrap"
-        transition={{ duration: 22, ease: "linear", repeat: Infinity }}
-      >
-        {[...CATEGORIES, ...CATEGORIES].map((cat, i) => (
-          <span
-            key={i}
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-default-400 flex-shrink-0"
-          >
-            {cat}
-            <span className="ml-8 text-default-200">·</span>
-          </span>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
-/* ========================================
-   SECTION 3: SOCIAL PROOF / STATS BAR
-   ======================================== */
-function StatsBar() {
-  const stat1 = useCountUp(2000);
-  const stat2 = useCountUp(500);
-  const stat3 = useCountUp(1000);
-  const stat4 = useCountUp(3500);
-
-  return (
-    <section className="py-8 md:py-12 border-b border-default-200">
       <Container>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-          <div className="text-center">
-            <span
-              ref={stat1.ref}
-              className="text-2xl md:text-3xl font-display font-light tracking-normal"
-            >
-              {stat1.count.toLocaleString()}+
-            </span>
-            <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
-              Items Cataloged
-            </p>
+        {/* Top meta strip */}
+        <Reveal fade className="grid grid-cols-12 gap-6 mb-16 md:mb-24">
+          <div className="col-span-6 md:col-span-3 eyebrow text-stone">
+            № 001 / Pre-launch
           </div>
-          <div className="hidden md:block h-8 w-px bg-default-200" />
-          <div className="text-center">
-            <span
-              ref={stat2.ref}
-              className="text-2xl md:text-3xl font-display font-light tracking-normal"
-            >
-              {stat2.count.toLocaleString()}+
-            </span>
-            <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
-              Closets Built
-            </p>
+          <div className="col-span-6 md:col-span-3 eyebrow text-stone md:text-left text-right">
+            {date}
           </div>
-          <div className="hidden md:block h-8 w-px bg-default-200" />
-          <div className="text-center">
-            <span
-              ref={stat3.ref}
-              className="text-2xl md:text-3xl font-display font-light tracking-normal"
-            >
-              {stat3.count.toLocaleString()}+
-            </span>
-            <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
-              Outfits Created
-            </p>
+          <div className="hidden md:block col-span-3 eyebrow text-stone">
+            Live now
           </div>
-          <div className="hidden md:block h-8 w-px bg-default-200" />
-          <div className="text-center">
-            <span
-              ref={stat4.ref}
-              className="text-2xl md:text-3xl font-display font-light tracking-normal"
+          <div className="hidden md:block col-span-3 eyebrow text-stone text-right">
+            {stats.itemCount.toLocaleString("en-US")} items catalogued
+          </div>
+        </Reveal>
+
+        {/* Headline */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 lg:col-span-10">
+            <Reveal
+              as="h1"
+              className="lp-display text-[clamp(56px,11vw,196px)]"
             >
-              {stat4.count.toLocaleString()}+
-            </span>
-            <p className="text-[10px] uppercase tracking-widest text-default-400 mt-1">
-              Outfits Shared
-            </p>
+              <span className="block">Your wardrobe</span>
+              <span className="block">deserves an</span>
+              <span className="block font-display italic font-normal text-stone">
+                audience.
+              </span>
+            </Reveal>
           </div>
         </div>
-      </Container>
-    </section>
-  );
-}
 
-/* ========================================
-   SECTION 4: FEATURE BENTO GRID
-   ======================================== */
-function FeatureBentoGrid() {
-  return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6">
-      <Container size="xl">
-        <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-8 md:mb-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          Core Features
-        </motion.h2>
-
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
-          initial="hidden"
-          variants={staggerContainer}
-          viewport={{ once: true }}
-          whileInView="visible"
-        >
-          {/* 1. WEAR TRACKING */}
-          <motion.div
-            className="md:col-span-2 bg-default-50 border border-default-200 p-6 md:p-10 relative overflow-hidden group min-h-[300px] md:min-h-[380px] transition-colors duration-300 hover:border-default-400"
-            variants={fadeInUp}
+        {/* Subhead + CTAs */}
+        <div className="grid grid-cols-12 gap-6 mt-14 md:mt-20">
+          <Reveal
+            className="col-span-12 md:col-span-5 lg:col-span-4"
+            delay={120}
           >
-            <div className="absolute top-4 md:top-6 right-4 md:right-6 p-2 md:p-3 bg-background border border-default-200">
-              <Calendar className="md:w-6 md:h-6" size={20} />
+            <div className="eyebrow text-stone mb-4">What rcapsule is</div>
+            <p className="text-[18px] md:text-[20px] leading-snug font-light text-ink/90 max-w-md">
+              catalogue what you own. Build outfits. Curate collections for any
+              chapter of your life. Then share your style — with the people who
+              actually want to see it.
+            </p>
+          </Reveal>
+
+          <div className="col-span-12 md:col-span-7 lg:col-span-7 md:col-start-6 lg:col-start-6 flex flex-col">
+            <Reveal className="flex flex-wrap items-center gap-4" delay={220}>
+              <CTAButton href="/signup">Build your closet</CTAButton>
+              <CTAButton href="/discover" variant="ghost">
+                Explore wardrobes
+              </CTAButton>
+            </Reveal>
+            <Reveal className="mt-5 eyebrow text-stone" delay={320}>
+              Free · No credit card · Web app, live today
+            </Reveal>
+          </div>
+        </div>
+
+        {/* Specimen row */}
+        <Reveal className="mt-20 md:mt-28" delay={420}>
+          <div className="grid grid-cols-12 gap-3">
+            <div className="col-span-12 flex items-center justify-between mb-2">
+              <span className="eyebrow text-stone">
+                Specimen — Founder closet, partial
+              </span>
+              <span className="eyebrow text-stone hidden md:inline">
+                Live today
+              </span>
             </div>
-
-            <div className="relative z-10 h-full flex flex-col justify-between">
-              <div className="space-y-3 md:space-y-4 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-display font-light tracking-normal">
-                  Track What You Actually Wear
-                </h3>
-                <p className="text-sm md:text-base text-default-500 font-medium">
-                  Log every time you wear an item. Discover which pieces you
-                  love and which are just taking up space. Make data-driven
-                  decisions about your wardrobe.
-                </p>
-              </div>
-
-              {/* Mini calendar mockup */}
-              <div className="mt-6 md:mt-8">
-                <div className="grid grid-cols-7 gap-1 max-w-[220px]">
-                  {Array.from({ length: 14 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-7 h-7 border border-default-200 flex items-center justify-center text-[9px] ${
-                        [2, 5, 8, 11].includes(i)
-                          ? "bg-foreground text-background font-bold"
-                          : "bg-background"
-                      }`}
-                    >
-                      {i + 1}
+            <div className="col-span-12">
+              <div className="border-t border-b hairline-strong py-3 overflow-hidden">
+                <div
+                  className="grid gap-2"
+                  style={{ gridTemplateColumns: "repeat(16, minmax(0, 1fr))" }}
+                >
+                  {SPECIMEN_TONES.map((tone, i) => (
+                    <div key={i} className="aspect-[3/4]">
+                      <Garment tone={tone} />
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] uppercase tracking-widest text-default-400 mt-2">
-                  4 wears this month
-                </p>
               </div>
             </div>
-          </motion.div>
-
-          {/* 2. VALUATION */}
-          <motion.div
-            className="bg-foreground text-background p-6 md:p-10 relative flex flex-col justify-between group overflow-hidden min-h-[300px] md:min-h-[380px]"
-            variants={fadeInUp}
-          >
-            <div className="absolute top-4 md:top-6 right-4 md:right-6 opacity-50">
-              <TrendingUp className="md:w-6 md:h-6" size={20} />
+            <div className="col-span-12 flex items-center justify-between mt-2">
+              <span className="num text-[11px] text-stone">
+                {stats.itemCount.toLocaleString("en-US")} ITEMS · {stats.categoryCount} CATEGORIES · {stats.brandCount} BRANDS
+              </span>
+              <span className="eyebrow text-stone">↓ scroll</span>
             </div>
-
-            <div>
-              <h3 className="text-lg md:text-xl font-display font-light tracking-normal mb-1">
-                Total Valuation
-              </h3>
-              <p className="opacity-40 text-xs">
-                Know your closet&apos;s worth
-              </p>
-            </div>
-
-            <div className="space-y-4 md:space-y-6 relative z-10">
-              <div className="border-b border-current/20 pb-2">
-                <div className="flex justify-between items-end mb-1">
-                  <span className="text-[10px] uppercase tracking-widest opacity-40">
-                    Your Closet Value
-                  </span>
-                </div>
-                <ValuationCounter />
-              </div>
-
-              <div className="space-y-2 text-xs md:text-sm">
-                <div className="flex justify-between items-center opacity-60">
-                  <span className="uppercase">Total Items</span>
-                  <span className="font-mono">39</span>
-                </div>
-                <div className="flex justify-between items-center opacity-60">
-                  <span className="uppercase">Avg. Item Cost</span>
-                  <span className="font-mono">$320</span>
-                </div>
-                <div className="flex justify-between items-center opacity-60">
-                  <span className="uppercase">Cost Per Wear</span>
-                  <span className="font-mono">$12</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* 3. COLOR DNA */}
-          <motion.div
-            className="bg-background border border-default-200 p-6 md:p-10 flex flex-col justify-between group hover:border-foreground transition-colors duration-300 min-h-[300px] md:min-h-[380px]"
-            variants={fadeInUp}
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg md:text-xl font-display font-light tracking-normal mb-1">
-                  Color DNA
-                </h3>
-                <p className="text-default-500 text-xs">
-                  Your palette at a glance
-                </p>
-              </div>
-              <Palette className="text-default-500 md:w-5 md:h-5" size={18} />
-            </div>
-
-            <div className="space-y-2 md:space-y-3">
-              {[
-                {
-                  color: "bg-neutral-900",
-                  pct: "40%",
-                  width: "w-full",
-                  label: "Black",
-                },
-                {
-                  color: "bg-neutral-400",
-                  pct: "25%",
-                  width: "w-[60%]",
-                  label: "Gray",
-                },
-                {
-                  color: "bg-blue-200",
-                  pct: "10%",
-                  width: "w-[30%]",
-                  label: "Blue",
-                },
-              ].map((bar) => (
-                <motion.div
-                  key={bar.label}
-                  className="flex items-center gap-2 md:gap-3"
-                  initial={{ opacity: 0, scaleX: 0 }}
-                  style={{ transformOrigin: "left" }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  viewport={{ once: true }}
-                  whileInView={{ opacity: 1, scaleX: 1 }}
-                >
-                  <div
-                    className={`${bar.width} h-7 md:h-8 ${bar.color} border border-default-200 flex items-center justify-center text-[10px] text-white font-bold`}
-                  >
-                    {bar.pct}
-                  </div>
-                  <span className="text-xs uppercase tracking-widest w-12 md:w-14 text-right">
-                    {bar.label}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* 4. OUTFITS */}
-          <motion.div
-            className="md:col-span-2 bg-default-50 border border-default-200 p-6 md:p-10 flex flex-col justify-between group hover:border-default-400 transition-colors duration-300 min-h-[300px] md:min-h-[380px]"
-            variants={fadeInUp}
-          >
-            <div className="flex justify-between items-start">
-              <div className="space-y-3 md:space-y-4 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-display font-light tracking-normal">
-                  Build &amp; Plan Outfits
-                </h3>
-                <p className="text-sm md:text-base text-default-500 font-medium">
-                  Combine pieces from your closet into saved outfits. Plan
-                  ahead, track what you wear, and never waste time deciding
-                  again.
-                </p>
-              </div>
-              <Layers
-                className="text-default-300 md:w-6 md:h-6 mt-1 flex-shrink-0"
-                size={20}
-              />
-            </div>
-
-            {/* Mini outfit builder mockup */}
-            <div className="mt-6 md:mt-8 flex flex-wrap gap-4 md:gap-6 items-end">
-              {[
-                {
-                  label: "Outfit 1",
-                  squares: [
-                    "bg-neutral-800",
-                    "bg-stone-200",
-                    "bg-indigo-200",
-                    "bg-neutral-800",
-                  ],
-                },
-                {
-                  label: "Outfit 2",
-                  squares: [
-                    "bg-white border border-default-200",
-                    "bg-amber-100",
-                    "bg-stone-300",
-                    "bg-amber-900",
-                  ],
-                },
-                {
-                  label: "Outfit 3",
-                  squares: [
-                    "bg-rose-100",
-                    "bg-neutral-200",
-                    "bg-rose-200",
-                    "bg-white border border-default-200",
-                  ],
-                },
-              ].map((outfit) => (
-                <div key={outfit.label} className="space-y-1.5">
-                  <p className="text-[9px] uppercase tracking-widest text-default-400">
-                    {outfit.label}
-                  </p>
-                  <div className="grid grid-cols-2 gap-1 w-20 md:w-24">
-                    {outfit.squares.map((cls, j) => (
-                      <div key={j} className={`h-9 md:h-10 ${cls}`} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <p className="text-[10px] uppercase tracking-widest text-default-300 self-center">
-                +&nbsp;more
-              </p>
-            </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );
 }
 
-function ValuationCounter() {
-  const counter = useCountUp(12450);
+/* ------------------------------------------------------------------ */
+/* Section 2 — The Social Layer (replaces Problem)                     */
+/* ------------------------------------------------------------------ */
 
+function SocialLayer() {
   return (
-    <span
-      ref={counter.ref}
-      className="text-3xl md:text-4xl font-mono font-light tracking-normal"
-    >
-      ${counter.count.toLocaleString()}
-    </span>
-  );
-}
+    <section className="py-28 md:py-44 border-t hairline bg-paper">
+      <Container>
+        <div className="grid grid-cols-12 gap-6">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">02 · Why rcapsule</div>
+          </Reveal>
 
-/* ========================================
-   SECTION 5: FROM THE HOUSES
-   ======================================== */
-const HOUSE_DROPS = [
-  {
-    house: "Burberry",
-    collection: "The Heritage Edit",
-    season: "FW 25",
-    tag: "Just Dropped",
-    img: "https://assets.burberry.com/is/image/Burberryltd/9FAB380E-9232-4CAA-8BE7-B5974480F779?$BBY_V3_UNSHARP_SL_1$&wid=4000&hei=4000",
-    href: "/catalog/brand/Burberry",
-  },
-  {
-    house: "Acne Studios",
-    collection: "Oversized Leather",
-    season: "FW 25",
-    tag: "New Arrival",
-    img: "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw55929c47/images/A7/A70220-/2000x/A70220-900_Y.jpg?sw=1500&sh=2250",
-    href: "/catalog/brand/Acne Studios",
-  },
-  {
-    house: "Max Mara",
-    collection: "Silk & Structure",
-    season: "SS 26",
-    tag: "New Season",
-    img: "https://b2c-media.maxmara.com/sys-master/m0/MM/2026/1/6101026306004/s3details/6101026306004-w-msecalle_normal.webp#product",
-    href: "/catalog/brand/Max Mara",
-  },
-  {
-    house: "Toteme",
-    collection: "Sharp Tailoring",
-    season: "FW 25",
-    tag: "Editor's Pick",
-    img: "https://www.mytheresa.com/media/1094/1238/100/64/P00825738.jpg",
-    href: "/catalog/brand/Toteme",
-  },
-  {
-    house: "Aritzia",
-    collection: "The Fall Edit",
-    season: "FW 25",
-    tag: "New Arrival",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1800/f25_a05_128542_9166_off_a",
-    href: "/catalog/brand/Aritzia",
-  },
-  {
-    house: "Aritzia",
-    collection: "Spring Essentials",
-    season: "SS 26",
-    tag: "New Season",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/s26_a08_132084_1274_off_a",
-    href: "/catalog/brand/Aritzia",
-  },
-];
-
-function FromTheHouses() {
-  return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6 bg-foreground text-background overflow-hidden">
-      <Container size="xl">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-14">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <p className="text-[10px] uppercase tracking-[0.4em] opacity-40 mb-3">
-              SS 26 · FW 25 · Pre-Fall
-            </p>
-            <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal leading-none">
-              From the Houses
-            </h2>
-          </motion.div>
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1 }}
-          >
-            <p className="text-sm opacity-50 max-w-xs">
-              The season&apos;s standout drops from the world&apos;s most
-              influential fashion houses.
-            </p>
-            <DSButton
-              as="a"
-              className="bg-background text-foreground hover:opacity-90 flex-shrink-0"
-              href="/catalog"
-              size="sm"
-              variant="primary"
+          <div className="col-span-12 md:col-span-9">
+            <Reveal
+              as="h2"
+              className="lp-display text-[clamp(40px,6.5vw,104px)]"
             >
-              All Brands
-            </DSButton>
-          </motion.div>
-        </div>
-
-        {/* Featured drop (large) + side grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 mb-4">
-          {/* Large featured card */}
-          <motion.a
-            className="group relative overflow-hidden border border-background/10 block"
-            href={HOUSE_DROPS[0].href}
-            initial={{ opacity: 0, y: 30 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <div className="relative aspect-[3/4] md:aspect-[4/5]">
-              <Image
-                fill
-                unoptimized
-                alt={HOUSE_DROPS[0].collection}
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                src={HOUSE_DROPS[0].img}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-            </div>
-            <div className="absolute bottom-0 left-0 p-6 md:p-8">
-              <span className="text-[9px] uppercase tracking-[0.4em] opacity-50 mb-2 block">
-                {HOUSE_DROPS[0].tag} · {HOUSE_DROPS[0].season}
+              Style inspiration should
+              <br />
+              come from real wardrobes,
+              <br />
+              <span className="font-display italic font-normal text-stone">
+                not brand campaigns.
               </span>
-              <p className="text-2xl md:text-3xl font-display font-light tracking-normal leading-tight">
-                {HOUSE_DROPS[0].house}
-              </p>
-              <p className="text-sm opacity-60 mt-1">
-                {HOUSE_DROPS[0].collection}
-              </p>
-              <div className="flex items-center gap-2 mt-4 text-xs font-display font-light tracking-normal opacity-0 group-hover:opacity-100 transition-opacity">
-                Explore <ArrowRight size={14} />
-              </div>
-            </div>
-          </motion.a>
+            </Reveal>
 
-          {/* 2×2 side grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {HOUSE_DROPS.slice(1, 5).map((drop, i) => (
-              <motion.a
-                key={drop.house + drop.collection}
-                className="group relative overflow-hidden border border-background/10 block"
-                href={drop.href}
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ delay: i * 0.08 }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
+            <div className="mt-20 md:mt-28 grid grid-cols-12 gap-6 items-start">
+              <Reveal className="col-span-12 md:col-span-5" delay={120}>
+                <p className="text-[18px] md:text-[20px] leading-snug font-light text-ink/90">
+                  Instagram shows outfits. Pinterest shows mood boards. Neither
+                  shows you the actual wardrobe — the pieces, the decisions, the
+                  real context behind the look.
+                </p>
+                <p className="mt-6 text-[18px] md:text-[20px] leading-snug font-light text-ink/90">
+                  rcapsule does.
+                </p>
+              </Reveal>
+
+              <Reveal
+                className="col-span-12 md:col-span-5 md:col-start-7"
+                delay={220}
               >
-                <div className="relative aspect-[3/4]">
-                  <Image
-                    fill
-                    unoptimized
-                    alt={drop.collection}
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    src={drop.img}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                <div className="space-y-8">
+                  {[
+                    {
+                      label: "Real pieces",
+                      body: "Every item in a public profile is something that person actually owns — photographed, tagged, and searchable.",
+                    },
+                    {
+                      label: "Real outfits",
+                      body: "Outfits built from pieces they own, saved to their profile, shared because someone asked to see them.",
+                    },
+                    {
+                      label: "Real collections",
+                      body: "Capsules curated for real occasions — a trip, a season, a new chapter. Not editorial. Lived.",
+                    },
+                  ].map((item) => (
+                    <div key={item.label} className="border-t hairline pt-6">
+                      <div className="eyebrow text-ink mb-2">{item.label}</div>
+                      <p className="text-[15px] font-light text-stone leading-snug">
+                        {item.body}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <div className="absolute bottom-0 left-0 p-3 md:p-4">
-                  <span className="text-[8px] uppercase tracking-[0.3em] opacity-40 block mb-0.5">
-                    {drop.tag}
-                  </span>
-                  <p className="text-sm md:text-base font-display font-light tracking-normal leading-tight">
-                    {drop.house}
-                  </p>
-                  <p className="text-[10px] opacity-50 truncate">
-                    {drop.collection}
-                  </p>
-                </div>
-              </motion.a>
-            ))}
+              </Reveal>
+            </div>
           </div>
         </div>
-
-        {/* Slim bottom strip — latest season tag */}
-        <motion.div
-          className="flex items-center justify-between border-t border-background/10 pt-4"
-          initial={{ opacity: 0 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1 }}
-        >
-          <p className="text-[10px] uppercase tracking-[0.3em] opacity-30">
-            Updated weekly · SS 26 collections now live
-          </p>
-          <a
-            className="text-[10px] uppercase tracking-[0.3em] opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
-            href="/catalog"
-          >
-            Browse all <ArrowRight size={10} />
-          </a>
-        </motion.div>
       </Container>
     </section>
   );
 }
 
-/* ========================================
-   SECTION 6: CATALOG MARQUEE
-   ======================================== */
-const CATALOG_ROW_1 = [
-  {
-    name: "Leather Jacket",
-    brand: "Acne Studios",
-    price: "$4,000",
-    img: "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw55929c47/images/A7/A70220-/2000x/A70220-900_Y.jpg?sw=1500&sh=2250",
-  },
-  {
-    name: "White Sneakers",
-    brand: "New Balance",
-    price: "$145",
-    img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSIiYpLZjMHHaBKM7TA_1-BOE1LpK6rg9kS6DBo4O6zGx9DyjOwSqAKhoXQWQ2ENQ2I2VVtV2GogtLror9itYteZECCJ9Du",
-  },
-  {
-    name: "Silk Skirt",
-    brand: "Max Mara",
-    price: "$1,475",
-    img: "https://b2c-media.maxmara.com/sys-master/m0/MM/2026/1/6101026306/004/s3details/6101026306004-w-msecalle_normal.webp#product",
-  },
-  {
-    name: "Wool Coat",
-    brand: "Aritzia",
-    price: "$425",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/f25_a05_127534_19070_off_a",
-  },
-  {
-    name: "Vintage Denim",
-    brand: "Levi's",
-    price: "$120",
-    img: "https://lscoglobal.scene7.com/is/image/lscoglobal/MB_00501-3604_GLO_CL_FV?fmt=webp&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=1320&hei=1320",
-  },
-  {
-    name: "Sunglasses",
-    brand: "Miu Miu",
-    price: "$613",
-    img: "https://assets2.sunglasshut.com/cdn-record-files-pi/a5a2f6ee-912c-4d70-9fac-b0c200337095/df18b7a0-8646-4962-95a2-b0c20033738f/0MU_11ZS__VAU2Z1__P21__shad__qt.png?impolicy=SGH_bgtransparent&width=2048",
-  },
-  {
-    name: "Heeled Sandals",
-    brand: "Manolo Blahnik",
-    price: "$1,245",
-    img: "https://img.ssensemedia.com/images/f_auto/252140F122003_4/manolo-blahnik-black-maysli-heeled-sandals.jpg",
-  },
-  {
-    name: "Small 25 Bag",
-    brand: "Chanel",
-    price: "$8,450",
-    img: "https://www.chanel.com/images///f_auto,q_auto:good,dpr_1.1/w_1600/-9572544610334.jpg",
-  },
-];
+/* ------------------------------------------------------------------ */
+/* Section 3 — Discover (dark, replaces Cost-per-wear)                 */
+/* ------------------------------------------------------------------ */
 
-const CATALOG_ROW_2 = [
-  {
-    name: "Blazer",
-    brand: "Toteme",
-    price: "$890",
-    img: "https://www.mytheresa.com/media/1094/1238/100/64/P00825738.jpg",
-  },
-  {
-    name: "Effortless Pants",
-    brand: "Aritzia",
-    price: "$85",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/s26_a06_77775_30751_off_a",
-  },
-  {
-    name: "Cardogan",
-    brand: "Aritzia",
-    price: "$118",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_1500/s26_a03_114360_4425_off_a",
-  },
-  {
-    name: "Trench Coat",
-    brand: "Burberry",
-    price: "$2,100",
-    img: "https://assets.burberry.com/is/image/Burberryltd/9FAB380E-9232-4CAA-8BE7-B5974480F779?$BBY_V3_UNSHARP_SL_1$&wid=4000&hei=4000",
-  },
-  {
-    name: "Midi Dress",
-    brand: "Reformation",
-    price: "$278",
-    img: "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto,w_800/s26_a08_132084_1274_off_a",
-  },
-  {
-    name: "Ballet Flats",
-    brand: "Chanel",
-    price: "$1,600",
-    img: "https://www.chanel.com/images///f_auto//-9543237763102.jpg",
-  },
-  {
-    name: "Cotton Shirt",
-    brand: "COS",
-    price: "$55",
-    img: "https://public.assets.hmgroup.com/assets/001/c0/16/c016e184c0fd876796eacd117171728fa30caf1e_xxl-1.jpg",
-  },
-  {
-    name: "Wide Trousers",
-    brand: "Mango",
-    price: "$70",
-    img: "https://shop.mango.com/assets/rcs/pics/static/T2/fotos/S/27085821_30_B.jpg?imwidth=2048&imdensity=1&ts=1767953150254",
-  },
-];
-
-function CatalogTile({ item }: { item: (typeof CATALOG_ROW_1)[number] }) {
-  return (
-    <div className="flex-shrink-0 w-40 md:w-48 border border-default-200 overflow-hidden bg-background">
-      <div className="relative h-28 md:h-36 bg-gray-200">
-        <Image
-          fill
-          unoptimized
-          alt={item.name}
-          className="object-contain"
-          src={item.img}
-        />
-      </div>
-      <div className="p-3">
-        <p className="text-[10px] font-bold uppercase tracking-wider truncate">
-          {item.name}
-        </p>
-        <p className="text-[9px] text-default-400 uppercase tracking-widest mt-0.5 truncate">
-          {item.brand}
-        </p>
-        <p className="text-[10px] font-mono text-default-500 mt-1">
-          {item.price}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function CatalogMarquee() {
-  return (
-    <section className="py-[var(--spacing-section)] overflow-hidden bg-default-50 border-y border-default-200">
-      <Container size="xl">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 px-4 md:px-0">
-          <motion.h2
-            className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal"
-            initial={{ opacity: 0, y: 20 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            Browse the Catalog
-          </motion.h2>
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1 }}
-          >
-            <p className="text-sm text-default-500 max-w-xs">
-              Thousands of cataloged items from the world&apos;s top brands —
-              all in one place.
-            </p>
-            <DSButton as="a" href="/catalog" size="sm" variant="outline">
-              View All
-            </DSButton>
-          </motion.div>
-        </div>
-      </Container>
-
-      {/* Row 1 — scrolls left */}
-      <div className="flex gap-4 pl-4 md:pl-8">
-        <motion.div
-          animate={{ x: [0, "-50%"] }}
-          className="flex gap-4 flex-shrink-0"
-          transition={{ duration: 35, ease: "linear", repeat: Infinity }}
-        >
-          {[...CATALOG_ROW_1, ...CATALOG_ROW_1].map((item, i) => (
-            <CatalogTile key={i} item={item} />
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Row 2 — scrolls right */}
-      <div className="flex gap-4 pl-4 md:pl-8 mt-4">
-        <motion.div
-          animate={{ x: ["-50%", 0] }}
-          className="flex gap-4 flex-shrink-0"
-          transition={{ duration: 30, ease: "linear", repeat: Infinity }}
-        >
-          {[...CATALOG_ROW_2, ...CATALOG_ROW_2].map((item, i) => (
-            <CatalogTile key={i} item={item} />
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ========================================
-   SECTION 7: HOW IT WORKS
-   ======================================== */
-function HowItWorks() {
-  const steps = [
+function Discover() {
+  const profiles = [
     {
-      number: "01",
-      title: "Add",
-      description:
-        "Add items manually, photograph your existing wardrobe, or discover from our global catalog of thousands of cataloged pieces across top brands.",
-      icon: <BookOpen className="w-8 h-8" />,
+      user: "maren_o",
+      loc: "Copenhagen",
+      items: 142,
+      tones: ["charcoal", "cream", "denim", "olive", "bone", "ink"],
     },
     {
-      number: "02",
-      title: "Organize",
-      description:
-        "Tag by category, season, occasion, and brand. Create custom wardrobes and curated collections for any chapter of your life.",
-      icon: <FolderOpen className="w-8 h-8" />,
+      user: "tobias.k",
+      loc: "Berlin",
+      items: 118,
+      tones: ["ink", "ash", "smoke", "charcoal", "navy", "plum"],
     },
     {
-      number: "03",
-      title: "Style",
-      description:
-        "Plan outfits, track what you wear, and unlock insights on your fashion habits, spending patterns, and cost-per-wear.",
-      icon: <Sparkles className="w-8 h-8" />,
+      user: "inea",
+      loc: "Stockholm",
+      items: 63,
+      tones: ["ecru", "bone", "paper", "sand", "cream", "rose"],
+    },
+    {
+      user: "fairwell",
+      loc: "Brooklyn",
+      items: 201,
+      tones: ["olive", "rust", "sand", "ecru", "moss", "smoke"],
     },
   ];
 
   return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6">
-      <Container size="xl">
-        <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-12 md:mb-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
+    <section
+      className="bg-ink text-paper py-24 md:py-36 relative overflow-hidden"
+      id="discover"
+    >
+      <Container wide>
+        <div className="grid grid-cols-12 gap-6">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-mist">03 · Discover</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-9">
+            <h2 className="lp-display text-paper text-[clamp(40px,6vw,96px)]">
+              Follow the wardrobes
+              <br />
+              <span className="font-display italic font-normal text-mist">
+                that actually inspire you.
+              </span>
+            </h2>
+            <p className="mt-6 max-w-xl text-mist text-[16px] md:text-[18px] font-light leading-snug">
+              Discover is a feed of real closets. Not brand partnerships. Not
+              gifted hauls. People sharing what they own, how they wear it, and
+              the collections they&rsquo;ve built for their real lives.
+            </p>
+          </Reveal>
+        </div>
+
+        <Reveal className="mt-20 md:mt-28" delay={140}>
+          <div className="border border-mist/20">
+            {/* Header strip */}
+            <div className="flex items-center justify-between px-6 md:px-10 py-4 border-b border-mist/20">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 bg-paper" />
+                <span className="eyebrow text-mist">
+                  Sample profiles · real format
+                </span>
+              </div>
+              <span className="eyebrow text-mist hidden md:inline">
+                /discover
+              </span>
+            </div>
+
+            {/* Profile grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4">
+              {profiles.map((p, i) => (
+                <div
+                  key={p.user}
+                  className={`p-6 ${i < 3 ? "md:border-r border-mist/20" : ""} border-b md:border-b-0 border-mist/20`}
+                >
+                  <div className="grid grid-cols-3 grid-rows-2 gap-1 aspect-[4/3] mb-4">
+                    {p.tones.map((t, j) => (
+                      <Garment key={j} tone={t} />
+                    ))}
+                  </div>
+                  <div className="flex items-baseline justify-between">
+                    <div>
+                      <div className="text-[15px] font-light text-paper">
+                        @{p.user}
+                      </div>
+                      <div className="eyebrow text-mist mt-1">{p.loc}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="num text-[16px] text-paper">
+                        {p.items}
+                      </div>
+                      <div className="eyebrow text-mist mt-1">pieces</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom strip */}
+            <div className="px-6 md:px-10 py-5 border-t border-mist/20 flex items-center justify-between">
+              <span className="font-display italic text-[clamp(18px,2vw,28px)] text-paper leading-snug">
+                Find your people. Follow their closets.
+              </span>
+              <Link
+                className="eyebrow text-mist underline underline-offset-4 hidden md:inline"
+                href="/discover"
+              >
+                Open /discover →
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 4 — Core features                                            */
+/* ------------------------------------------------------------------ */
+
+function CatalogueMockup() {
+  return (
+    <div className="w-full h-full border hairline p-3 flex flex-col gap-2">
+      {[
+        {
+          tone: "charcoal",
+          label: "Wool overcoat",
+          brand: "Toteme",
+          count: "12×",
+        },
+        {
+          tone: "navy",
+          label: "Straight trousers",
+          brand: "COS",
+          count: "28×",
+        },
+        { tone: "cream", label: "Silk blouse", brand: "Max Mara", count: "7×" },
+      ].map((item) => (
+        <div
+          key={item.label}
+          className="flex items-center gap-3 py-1.5 border-b hairline last:border-b-0"
         >
-          How It Works
-        </motion.h2>
+          <div
+            className="w-8 h-10 flex-shrink-0"
+            style={{ backgroundColor: TONE_COLORS[item.tone] }}
+          />
+          <div className="flex-1 min-w-0">
+            <div className="text-[11px] font-medium truncate">{item.label}</div>
+            <div className="eyebrow text-stone">{item.brand}</div>
+          </div>
+          <div className="num text-[11px] text-stone">{item.count}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 relative">
-          {/* Connecting line (desktop only) */}
-          <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-px bg-default-200" />
+function OutfitsMockup() {
+  const outfits = [
+    { tones: ["charcoal", "cream", "bone"], label: "Office Thursday" },
+    { tones: ["navy", "ecru", "sand"], label: "Weekend" },
+    { tones: ["ink", "olive", "cream"], label: "Travel day" },
+  ];
 
-          {steps.map((step, i) => (
-            <motion.div
-              key={step.number}
-              className="text-center relative"
-              initial={{ opacity: 0, y: 30 }}
-              transition={{ delay: i * 0.15 }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
+  return (
+    <div className="w-full h-full flex gap-4">
+      {outfits.map((o) => (
+        <div key={o.label} className="flex-1 flex flex-col gap-1">
+          {o.tones.map((t, j) => (
+            <div
+              key={j}
+              className="w-full border hairline"
+              style={{ height: 28, backgroundColor: TONE_COLORS[t] }}
+            />
+          ))}
+          <div className="eyebrow text-stone mt-2">{o.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CollectionsMockup() {
+  const collections = [
+    {
+      label: "Lisbon, May",
+      count: 11,
+      tones: ["cream", "sand", "bone", "ecru"],
+    },
+    {
+      label: "Winter capsule",
+      count: 18,
+      tones: ["charcoal", "navy", "ink", "smoke"],
+    },
+  ];
+
+  return (
+    <div className="w-full h-full flex flex-col gap-3">
+      {collections.map((c) => (
+        <div key={c.label} className="border hairline p-3 flex-1 flex flex-col">
+          <div className="flex gap-1 flex-1 min-h-0">
+            {c.tones.map((t, i) => (
+              <div
+                key={i}
+                className="flex-1"
+                style={{ backgroundColor: TONE_COLORS[t] }}
+              />
+            ))}
+          </div>
+          <div className="flex items-baseline justify-between mt-2">
+            <div className="text-[12px] font-light">{c.label}</div>
+            <div className="num text-[11px] text-stone">{c.count} pieces</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SocialMockup() {
+  const profiles = [
+    { tones: ["charcoal", "ink", "bone"], user: "@m.k", loc: "Copenhagen" },
+    { tones: ["ecru", "sand", "cream"], user: "@inea", loc: "Stockholm" },
+    { tones: ["navy", "olive", "smoke"], user: "@tobias", loc: "Berlin" },
+    { tones: ["rust", "sand", "paper"], user: "@ren", loc: "Melbourne" },
+  ];
+
+  return (
+    <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-2">
+      {profiles.map((p) => (
+        <div key={p.user} className="border hairline p-2">
+          <div className="flex gap-0.5 mb-1">
+            {p.tones.map((t, i) => (
+              <div
+                key={i}
+                className="flex-1 h-7"
+                style={{ backgroundColor: TONE_COLORS[t] }}
+              />
+            ))}
+          </div>
+          <div className="eyebrow text-stone">{p.user}</div>
+          <div className="eyebrow text-stone/60">{p.loc}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Features() {
+  const tiles = [
+    {
+      n: "01",
+      tag: "catalogue",
+      title: "Everything you own, in one place",
+      body: "Add pieces by photo, link, or receipt. Tag by brand, season, colour, occasion. Your whole wardrobe — searchable and shareable.",
+      mock: <CatalogueMockup />,
+    },
+    {
+      n: "02",
+      tag: "Outfits",
+      title: "Build and share looks from your wardrobe",
+      body: "Compose outfits from pieces you already own. Save them, share individual looks, or make your full outfit library public.",
+      mock: <OutfitsMockup />,
+    },
+    {
+      n: "03",
+      tag: "Collections",
+      title: "Curate for every chapter",
+      body: "A trip to Lisbon. Your winter capsule. A new work rotation. Group your pieces into themed collections for any occasion or season.",
+      mock: <CollectionsMockup />,
+    },
+    {
+      n: "04",
+      tag: "Discover",
+      title: "Follow real closets that inspire you",
+      body: "Discover public profiles of real wardrobes. Follow the people whose actual style — not their filtered feed — you want to see more of.",
+      mock: <SocialMockup />,
+    },
+  ];
+
+  return (
+    <section
+      className="py-28 md:py-40 border-t hairline bg-paper"
+      id="features"
+    >
+      <Container>
+        <div className="grid grid-cols-12 gap-6 mb-16 md:mb-24">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">03 · What you can do</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-9">
+            <h2 className="lp-display text-[clamp(40px,6.5vw,104px)]">
+              Four things.
+              <br />
+              <span className="font-display italic font-normal text-stone">
+                One wardrobe.
+              </span>
+            </h2>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 border-t border-l hairline">
+          {tiles.map((t, i) => (
+            <Reveal
+              key={t.n}
+              className="border-r border-b hairline"
+              delay={i * 90}
             >
-              <div className="inline-flex items-center justify-center w-12 h-12 border border-default-200 bg-background mb-6 relative z-10">
-                {step.icon}
+              <div className="p-7 md:p-9 flex flex-col h-full min-h-[440px] md:min-h-[520px]">
+                <div className="flex items-baseline justify-between">
+                  <span className="eyebrow text-stone">{t.n}</span>
+                  <span className="eyebrow text-stone">{t.tag}</span>
+                </div>
+                <div className="mt-6">
+                  <h3 className="text-[28px] md:text-[34px] leading-[1.05] font-light font-display tracking-tight max-w-[18ch]">
+                    {t.title}
+                  </h3>
+                  <p className="mt-4 text-[15px] text-stone leading-snug max-w-[42ch] font-light">
+                    {t.body}
+                  </p>
+                </div>
+                <div className="mt-auto pt-8">
+                  <div className="aspect-[16/9] w-full">{t.mock}</div>
+                </div>
               </div>
-              <div className="text-[10px] uppercase tracking-widest text-default-400 mb-2">
-                Step {step.number}
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 5 — How it works                                             */
+/* ------------------------------------------------------------------ */
+
+function HowItWorks() {
+  const steps = [
+    {
+      n: "01",
+      label: "Add",
+      title: "Add your pieces",
+      body: "Photograph what you own, paste a link, or scan a receipt. Your wardrobe, catalogued and organized.",
+    },
+    {
+      n: "02",
+      label: "Create",
+      title: "Build outfits & collections",
+      body: "Compose looks from pieces you own. Curate themed collections — a trip, a season, a recurring rotation. Keep it for yourself or share it.",
+    },
+    {
+      n: "03",
+      label: "Share",
+      title: "Share your style",
+      body: "Make your closet, your outfits, or specific collections public. Choose the depth. Let the people who care, in.",
+    },
+  ];
+
+  return (
+    <section className="py-28 md:py-40 border-t hairline bg-paper">
+      <Container>
+        <div className="grid grid-cols-12 gap-6 mb-16 md:mb-24">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">04 · How it works</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-9">
+            <h2 className="lp-display text-[clamp(40px,6.5vw,104px)]">
+              Three moves.
+            </h2>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t hairline-strong">
+          {steps.map((s, i) => (
+            <Reveal
+              key={s.n}
+              className={`pt-10 md:pt-14 pb-12 ${i < 2 ? "md:border-r hairline" : ""}`}
+              delay={i * 120}
+            >
+              <div className="px-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="num text-[64px] md:text-[88px] font-thin leading-none tracking-tight">
+                    {s.n}
+                  </span>
+                  <span className="eyebrow text-stone">{s.label}</span>
+                </div>
+                <div className="mt-10 max-w-sm pr-6">
+                  <h3 className="text-[28px] md:text-[34px] leading-tight font-light font-display tracking-tight">
+                    {s.title}
+                  </h3>
+                  <p className="mt-4 text-[15px] leading-snug text-stone font-light">
+                    {s.body}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl md:text-2xl font-display font-light tracking-normal mb-3">
-                {step.title}
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 6 — Collections + Wishlist                                   */
+/* ------------------------------------------------------------------ */
+
+function CollectionCard({
+  name,
+  season,
+  count,
+  tones,
+}: {
+  name: string;
+  season: string;
+  count: number;
+  tones: string[];
+}) {
+  return (
+    <div className="border hairline p-5 bg-paper hover:border-ink transition-colors">
+      <div className="grid grid-cols-4 gap-1 mb-4">
+        {tones.slice(0, 8).map((tone, i) => (
+          <div key={i} className="aspect-[3/4]">
+            <Garment tone={tone} />
+          </div>
+        ))}
+      </div>
+      <div className="flex items-baseline justify-between mt-3">
+        <div>
+          <div className="text-[15px] font-light">{name}</div>
+          <div className="eyebrow text-stone mt-1">{season}</div>
+        </div>
+        <div className="text-right">
+          <div className="num text-[16px]">{count}</div>
+          <div className="eyebrow text-stone mt-1">pieces</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CollectionsSection() {
+  const cols = [
+    {
+      name: "Winter capsule",
+      season: "Dec — Feb",
+      count: 18,
+      tones: [
+        "charcoal",
+        "ink",
+        "smoke",
+        "olive",
+        "plum",
+        "navy",
+        "ecru",
+        "bone",
+      ],
+    },
+    {
+      name: "Lisbon, May",
+      season: "Travel",
+      count: 11,
+      tones: [
+        "cream",
+        "sand",
+        "paper",
+        "ecru",
+        "bone",
+        "rust",
+        "smoke",
+        "denim",
+      ],
+    },
+    {
+      name: "Office, rotating",
+      season: "Year-round",
+      count: 14,
+      tones: [
+        "navy",
+        "charcoal",
+        "paper",
+        "bone",
+        "olive",
+        "denim",
+        "smoke",
+        "ink",
+      ],
+    },
+  ];
+
+  return (
+    <section className="py-28 md:py-40 bg-soft border-t hairline">
+      <Container>
+        <div className="grid grid-cols-12 gap-6 mb-16 md:mb-20">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">05 · Collections</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-9">
+            <h2 className="lp-display text-[clamp(40px,6.5vw,104px)]">
+              Curate for any chapter,{" "}
+              <span className="font-display italic font-normal text-stone">
+                from what you own.
+              </span>
+            </h2>
+            <p className="mt-6 max-w-xl text-[16px] md:text-[18px] font-light leading-snug text-ink/85">
+              Collections are themed groups of pieces from your wardrobe. Pack
+              for a trip, map out a season, lock in a recurring rotation. Share
+              the whole collection or keep it private — the choice is yours.
+            </p>
+          </Reveal>
+        </div>
+
+        <Reveal className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {cols.map((c, i) => (
+            <CollectionCard key={i} {...c} />
+          ))}
+        </Reveal>
+
+        {/* Sharing callout */}
+        <Reveal className="mt-16 md:mt-20" delay={120}>
+          <div className="border hairline-strong p-8 md:p-12 grid grid-cols-12 gap-6 items-center">
+            <div className="col-span-12 md:col-span-7">
+              <div className="eyebrow text-stone mb-4">Sharing is optional</div>
+              <h3 className="lp-display text-[clamp(28px,3.5vw,52px)]">
+                Your closet, your rules.
+                <br />
+                <span className="font-display italic font-normal text-stone">
+                  Share what you want.
+                </span>
               </h3>
-              <p className="text-sm text-default-500 max-w-xs mx-auto leading-relaxed">
-                {step.description}
+            </div>
+            <div className="col-span-12 md:col-span-5">
+              <p className="text-[16px] font-light text-stone leading-snug">
+                Make your full profile public, share specific collections with a
+                link, or keep everything private. rcapsule works as a personal
+                wardrobe tool first — the community layer is there when you want
+                it.
               </p>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );
 }
 
-/* ========================================
-   SECTION 8: WISHLIST + COLLECTIONS
-   ======================================== */
-const WISHLIST_ITEMS = [
-  { name: "Linen Blazer", brand: "COS", price: "$195", bg: "bg-stone-200" },
-  {
-    name: "Platform Boots",
-    brand: "Steve Madden",
-    price: "$160",
-    bg: "bg-neutral-800",
-  },
-  {
-    name: "Wrap Dress",
-    brand: "Reformation",
-    price: "$320",
-    bg: "bg-emerald-100",
-  },
-  { name: "Bucket Hat", brand: "Jacquemus", price: "$240", bg: "bg-amber-200" },
-];
+/* ------------------------------------------------------------------ */
+/* Section 7 — Community                                                */
+/* ------------------------------------------------------------------ */
 
-const COLLECTIONS = [
-  {
-    name: "Summer Capsule",
-    count: 14,
-    squares: [
-      "bg-white border border-default-200",
-      "bg-stone-200",
-      "bg-sky-100",
-      "bg-amber-100",
-    ],
-  },
-  {
-    name: "Work Wardrobe",
-    count: 22,
-    squares: [
-      "bg-neutral-800",
-      "bg-neutral-600",
-      "bg-stone-300",
-      "bg-white border border-default-200",
-    ],
-  },
-  {
-    name: "Weekend Fits",
-    count: 18,
-    squares: [
-      "bg-indigo-200",
-      "bg-neutral-300",
-      "bg-white border border-default-200",
-      "bg-stone-800",
-    ],
-  },
-];
+function Community() {
+  const profiles = [
+    {
+      user: "maren_o",
+      loc: "Copenhagen",
+      items: 142,
+      tones: ["charcoal", "cream", "denim", "olive", "bone", "ink"],
+      style: "Workwear · raw",
+    },
+    {
+      user: "tobias.k",
+      loc: "Berlin",
+      items: 118,
+      tones: ["ink", "ash", "smoke", "charcoal", "navy", "plum"],
+      style: "Black on black",
+    },
+    {
+      user: "inea",
+      loc: "Stockholm",
+      items: 63,
+      tones: ["ecru", "bone", "paper", "sand", "cream", "rose"],
+      style: "Slow neutrals",
+    },
+    {
+      user: "fairwell",
+      loc: "Brooklyn",
+      items: 201,
+      tones: ["olive", "rust", "sand", "ecru", "moss", "smoke"],
+      style: "Field & function",
+    },
+    {
+      user: "koja",
+      loc: "Kyoto",
+      items: 47,
+      tones: ["ink", "charcoal", "navy", "bone", "smoke", "paper"],
+      style: "Tailored minimum",
+    },
+    {
+      user: "ren.k",
+      loc: "Melbourne",
+      items: 92,
+      tones: ["sand", "cream", "rust", "bone", "ecru", "rose"],
+      style: "Sun-bleached",
+    },
+  ];
 
-function WishlistCollections() {
   return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6 bg-default-50 border-y border-default-200">
-      <Container size="xl">
-        <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-8 md:mb-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          Save &amp; Curate
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Wishlist panel */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, x: 0 }}
-          >
-            <div className="border border-default-200 bg-background p-6 md:p-8 h-full">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 border border-default-200 bg-default-50">
-                  <Heart size={18} />
-                </div>
-                <h3 className="text-lg font-display font-light tracking-normal">
-                  Wishlist
-                </h3>
-              </div>
-              <p className="text-sm text-default-500 mb-6 ml-12">
-                Save items you love before buying. Never lose track of something
-                you wanted.
-              </p>
-
-              <div className="space-y-2">
-                {WISHLIST_ITEMS.map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center gap-3 p-3 border border-default-200 hover:border-default-400 transition-colors"
-                  >
-                    <div className={`w-9 h-9 flex-shrink-0 ${item.bg}`} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold uppercase tracking-wider truncate">
-                        {item.name}
-                      </p>
-                      <p className="text-[10px] text-default-400 uppercase tracking-widest">
-                        {item.brand}
-                      </p>
-                    </div>
-                    <span className="text-xs font-mono text-default-500 flex-shrink-0">
-                      {item.price}
-                    </span>
-                    <Heart className="w-3.5 h-3.5 text-default-300 flex-shrink-0" />
-                  </div>
-                ))}
-
-                <div className="flex items-center justify-center gap-2 p-3 border border-dashed border-default-200 text-default-400">
-                  <span className="text-[10px] uppercase tracking-widest">
-                    + Add more items
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Collections panel */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, x: 0 }}
-          >
-            <div className="bg-foreground text-background p-6 md:p-8 h-full">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 border border-current/20 bg-current/10">
-                  <BookOpen className="opacity-80" size={18} />
-                </div>
-                <h3 className="text-lg font-display font-light tracking-normal">
-                  Collections
-                </h3>
-              </div>
-              <p className="text-sm opacity-50 mb-6 ml-12">
-                Curate themed capsule wardrobes for any season, trip, or chapter
-                of your style.
-              </p>
-
-              <div className="space-y-3">
-                {COLLECTIONS.map((col) => (
-                  <div
-                    key={col.name}
-                    className="border border-current/20 p-4 hover:border-current/40 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="text-xs font-bold uppercase tracking-wider">
-                        {col.name}
-                      </p>
-                      <span className="text-[10px] font-mono opacity-40">
-                        {col.count} items
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-1">
-                      {col.squares.map((cls, j) => (
-                        <div key={j} className={`h-8 ${cls}`} />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-
-                <div className="flex items-center justify-center gap-2 p-3 border border-dashed border-current/20 opacity-40">
-                  <span className="text-[10px] uppercase tracking-widest">
-                    + New collection
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+    <section
+      className="py-28 md:py-40 border-t hairline bg-paper"
+      id="community"
+    >
+      <Container>
+        <div className="grid grid-cols-12 gap-6 mb-16 md:mb-20">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">07 · Community</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-9">
+            <h2 className="lp-display text-[clamp(40px,6.5vw,104px)]">
+              Real closets.
+              <br />
+              <span className="font-display italic font-normal text-stone">
+                Real people.
+              </span>
+            </h2>
+            <p className="mt-6 max-w-xl text-[16px] md:text-[18px] font-light leading-snug text-ink/85">
+              Every public profile is someone&rsquo;s actual wardrobe. The
+              pieces they own, the outfits they&rsquo;ve built, the collections
+              they&rsquo;ve curated for their real life. Follow the people whose
+              closet resonates — not the ones with the best lighting.
+            </p>
+          </Reveal>
         </div>
-      </Container>
-    </section>
-  );
-}
 
-/* ========================================
-   SECTION 9: TESTIMONIALS
-   ======================================== */
-const TESTIMONIALS = [
-  {
-    quote:
-      "It's like having a personal stylist that actually knows what's in my closet.",
-    name: "Maria K.",
-    role: "Fashion Enthusiast",
-  },
-  {
-    quote:
-      "I stopped buying duplicates and finally know my actual cost-per-wear on everything I own.",
-    name: "James T.",
-    role: "Minimalist",
-  },
-  {
-    quote:
-      "Planning outfits the night before used to take forever. Now it takes two minutes.",
-    name: "Priya S.",
-    role: "Early Adopter",
-  },
-];
-
-function TestimonialsSection() {
-  return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6">
-      <Container size="xl">
-        <motion.h2
-          className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal mb-10 md:mb-14 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          What People Say
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.blockquote
-              key={i}
-              className="bg-default-50 border border-default-200 p-6 md:p-8 flex flex-col justify-between gap-6 hover:border-default-400 transition-colors"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
+        <Reveal className="grid grid-cols-1 md:grid-cols-3 border-t border-l hairline">
+          {profiles.map((p) => (
+            <div
+              key={p.user}
+              className="border-r border-b hairline p-5 hover:bg-soft transition-colors"
             >
-              <p className="text-base md:text-lg italic font-light leading-snug text-foreground/80">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <footer className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-default-200 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-3 h-3 text-default-500" />
-                </div>
+              <div className="aspect-[4/3] grid grid-cols-3 grid-rows-2 gap-1">
+                {p.tones.map((t, j) => (
+                  <Garment key={j} tone={t} />
+                ))}
+              </div>
+              <div className="mt-4 flex items-baseline justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider">
-                    {t.name}
-                  </p>
-                  <p className="text-[10px] text-default-400 uppercase tracking-widest">
-                    {t.role}
-                  </p>
+                  <div className="text-[16px] font-light">@{p.user}</div>
+                  <div className="eyebrow text-stone mt-1">
+                    {p.loc} · {p.style}
+                  </div>
                 </div>
-              </footer>
-            </motion.blockquote>
+                <div className="text-right">
+                  <div className="num text-[18px]">{p.items}</div>
+                  <div className="eyebrow text-stone mt-1">pieces</div>
+                </div>
+              </div>
+            </div>
           ))}
+        </Reveal>
+
+        <Reveal
+          className="mt-12 flex items-center justify-between border-t hairline-strong pt-6"
+          delay={160}
+        >
+          <div className="eyebrow text-stone">
+            Profiles are fictional in this preview. Real ones coming with
+            launch.
+          </div>
+          <Link
+            className="eyebrow text-stone underline underline-offset-4"
+            href="/discover"
+          >
+            Open /discover →
+          </Link>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 8 — Founder note                                             */
+/* ------------------------------------------------------------------ */
+
+function Founder({ stats }: { stats: CatalogueStats }) {
+  return (
+    <section className="py-28 md:py-44 border-t hairline bg-paper" id="founder">
+      <Container>
+        <div className="grid grid-cols-12 gap-6">
+          <Reveal className="col-span-12 md:col-span-3">
+            <div className="eyebrow text-stone">08 · Founder note</div>
+          </Reveal>
+          <Reveal className="col-span-12 md:col-span-8">
+            <p className="font-display italic text-[clamp(28px,3.6vw,52px)] leading-[1.18] text-ink">
+              &ldquo;The most interesting style I&rsquo;ve ever seen is in real
+              wardrobes — friends&rsquo; closets, people I spotted on the
+              street, strangers whose taste I wanted to understand. Not runway.
+              Not a campaign. Not what they&rsquo;d staged for a photo.
+              <br />
+              <br />
+              I wanted a place where that kind of style is visible and
+              discoverable — where you can follow someone&rsquo;s actual
+              wardrobe, see the outfits they really wear, and explore the
+              collections they&rsquo;ve built for their real life.
+              <br />
+              <br />
+              <span className="not-italic font-light text-stone text-[clamp(18px,1.4vw,22px)] leading-snug block mt-6">
+                I built rcapsule for that. Right now I&rsquo;m the only user —
+                {stats.itemCount.toLocaleString("en-US")} items, {stats.categoryCount} categories, all the pieces that make up my
+                actual wardrobe. If you have a closet worth sharing — and you do
+                — come build it here.&rdquo;
+              </span>
+            </p>
+            <div className="mt-10 flex items-center gap-3">
+              <div className="w-10 h-10 bg-ink" />
+              <div>
+                <div className="text-[14px]">The founder</div>
+                <div className="eyebrow text-stone mt-1">
+                  rcapsule · solo build · 2026
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </Container>
     </section>
   );
 }
 
-/* ========================================
-   SECTION 10: FINAL CTA
-   ======================================== */
+/* ------------------------------------------------------------------ */
+/* Section 9 — Final CTA                                                */
+/* ------------------------------------------------------------------ */
+
 function FinalCTA() {
   return (
-    <section className="py-[var(--spacing-section)] px-4 md:px-6 bg-foreground text-background">
-      <Container size="lg">
-        <motion.div
-          className="text-center space-y-6 md:space-y-8"
-          initial={{ opacity: 0, y: 30 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-display font-light tracking-normal">
-            Join a Community That Takes Fashion Seriously.
+    <section
+      className="bg-ink text-paper py-28 md:py-48 relative overflow-hidden"
+      id="signup"
+    >
+      {/* Faint vertical guides */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Container>
+          <div className="grid grid-cols-12 h-full">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                className={`${i === 0 ? "" : "border-l border-mist/10"} h-full`}
+              />
+            ))}
+          </div>
+        </Container>
+      </div>
+
+      <Container>
+        <Reveal>
+          <div className="eyebrow text-mist">06 · Begin</div>
+        </Reveal>
+
+        <Reveal className="mt-10" delay={80}>
+          <h2 className="lp-display text-paper text-[clamp(56px,11vw,200px)]">
+            Find your
+            <br />
+            style community.
           </h2>
-          <p className="text-sm md:text-base opacity-60 max-w-xl mx-auto">
-            Discover real outfits from real people. Share your style, follow
-            people whose taste you love, and build a wardrobe with intention.
-          </p>
-          <div className="flex flex-col items-center gap-3 md:gap-4">
-            <DSButton
-              as="a"
-              className="bg-background text-foreground hover:opacity-90"
-              href="/signup"
-              size="lg"
-              variant="primary"
-            >
-              Join the Community
-            </DSButton>
-            <p className="text-xs opacity-40 uppercase tracking-widest mt-2 md:mt-4">
-              Free &bull; No Credit Card Required
+          <h2 className="lp-display text-mist text-[clamp(56px,11vw,200px)] font-display italic font-normal mt-2">
+            It starts with your closet.
+          </h2>
+        </Reveal>
+
+        <Reveal className="mt-16 md:mt-24 grid grid-cols-12 gap-6" delay={220}>
+          <div className="col-span-12 md:col-span-7">
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                className="inline-flex items-center gap-3 h-[64px] px-9 bg-paper text-ink text-[13px] font-mono uppercase tracking-[0.18em] hover:bg-mist transition-colors"
+                href="/signup"
+              >
+                Build your closet <span className="translate-y-px">→</span>
+              </Link>
+              <Link
+                className="inline-flex items-center gap-3 h-[64px] px-9 border border-mist/40 text-paper text-[13px] font-mono uppercase tracking-[0.18em] hover:bg-mist/10 transition-colors"
+                href="/discover"
+              >
+                Browse wardrobes
+              </Link>
+            </div>
+            <div className="mt-6 eyebrow text-mist">
+              Free · No credit card · Web app, live today
+            </div>
+          </div>
+
+          <div className="col-span-12 md:col-span-5 md:text-right">
+            <div className="eyebrow text-mist">The fine print</div>
+            <p className="mt-3 text-mist text-[14px] font-light leading-snug max-w-sm md:ml-auto">
+              Pre-launch. One user so far (the founder). No waitlist, no queue.
+              Sign up, catalogue your wardrobe, and the community opens as
+              people join.
             </p>
           </div>
-        </motion.div>
+        </Reveal>
       </Container>
     </section>
   );
 }
 
-/* ========================================
-   MAIN LANDING PAGE
-   ======================================== */
-export default function LandingPage() {
-  // hasMounted is false on the server — loader only runs on the client so
-  // Googlebot receives fully-visible HTML without the fullscreen overlay.
-  const [hasMounted, setHasMounted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [ready, setReady] = useState(false);
+/* ------------------------------------------------------------------ */
+/* LandingPage                                                          */
+/* ------------------------------------------------------------------ */
 
-  useEffect(() => {
-    setHasMounted(true);
-    setLoading(true);
-    const t = setTimeout(() => setLoading(false), 450);
-
-    return () => clearTimeout(t);
-  }, []);
-
+export default function LandingPage({ stats }: { stats: CatalogueStats }) {
   return (
-    <div className="flex flex-col bg-background text-foreground">
-      <AnimatePresence onExitComplete={() => setReady(true)}>
-        {loading && <PageLoader />}
-      </AnimatePresence>
-      <HeroSection ready={!hasMounted || ready} />
-      <CategoryStrip />
-      <StatsBar />
-      <FeatureBentoGrid />
-      <FromTheHouses />
-      <CatalogMarquee />
+    <div className="bg-paper text-ink">
+      <Hero stats={stats} />
+      <SocialLayer />
+      <Features />
       <HowItWorks />
-      <WishlistCollections />
-      <TestimonialsSection />
+      <CollectionsSection />
       <FinalCTA />
     </div>
   );

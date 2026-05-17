@@ -223,10 +223,10 @@ export default function PublicProfilePage() {
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6 text-center px-4">
         <NoSymbolIcon className="w-16 h-16 text-default-300" />
         <div className="space-y-2">
-          <h1 className="text-3xl font-display font-light tracking-normal">
+          <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight">
             Profile Not Found
           </h1>
-          <p className="text-default-500 max-w-sm mx-auto">
+          <p className="text-stone max-w-sm mx-auto">
             The user @{username} doesn&apos;t exist or their profile is set to
             private.
           </p>
@@ -281,7 +281,7 @@ export default function PublicProfilePage() {
                 {/* Text Details */}
                 <div className="space-y-2">
                   <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 justify-center md:justify-start">
-                    <h1 className="text-3xl md:text-5xl font-display font-light tracking-normal">
+                    <h1 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight leading-tight">
                       {profile.name || profile.username}
                     </h1>
                     {profile.isVerified && (
@@ -292,8 +292,7 @@ export default function PublicProfilePage() {
                     {profile.isFeatured && (
                       <Chip
                         classNames={{
-                          content:
-                            "font-bold text-[10px] uppercase tracking-widest",
+                          content: "eyebrow",
                         }}
                         color="warning"
                         size="sm"
@@ -305,9 +304,7 @@ export default function PublicProfilePage() {
                   </div>
 
                   {/* USERNAME */}
-                  <p className="text-default-500 font-medium">
-                    @{profile.username}
-                  </p>
+                  <p className="text-stone eyebrow">@{profile.username}</p>
 
                   {profile.bio && (
                     <p className="pt-2 text-default-600 max-w-lg mx-auto md:mx-0 leading-relaxed">
@@ -379,8 +376,7 @@ export default function PublicProfilePage() {
                           key={tag}
                           classNames={{
                             base: "bg-default-100",
-                            content:
-                              "text-[10px] uppercase tracking-widest text-default-500",
+                            content: "eyebrow text-stone",
                           }}
                           size="sm"
                           variant="flat"
@@ -469,34 +465,20 @@ export default function PublicProfilePage() {
               {/* Stats Grid */}
               <div className="flex justify-center md:justify-start gap-8 md:gap-12 mt-8 md:mt-6">
                 <div className="text-center md:text-left">
-                  <p className="text-2xl font-light">{profile.followerCount}</p>
-                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                    Followers
-                  </p>
+                  <p className="text-2xl num">{profile.followerCount}</p>
+                  <p className="eyebrow text-stone">Followers</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-2xl font-light">
-                    {profile.followingCount}
-                  </p>
-                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                    Following
-                  </p>
+                  <p className="text-2xl num">{profile.followingCount}</p>
+                  <p className="eyebrow text-stone">Following</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-2xl font-light">
-                    {profile.publicOutfitCount}
-                  </p>
-                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                    Looks
-                  </p>
+                  <p className="text-2xl num">{profile.publicOutfitCount}</p>
+                  <p className="eyebrow text-stone">Looks</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-2xl font-light">
-                    {profile.publicWardrobeCount}
-                  </p>
-                  <p className="text-[10px] font-display font-light tracking-normal text-default-400">
-                    Collections
-                  </p>
+                  <p className="text-2xl num">{profile.publicWardrobeCount}</p>
+                  <p className="eyebrow text-stone">Collections</p>
                 </div>
               </div>
             </div>
@@ -528,10 +510,8 @@ export default function PublicProfilePage() {
             {activeTab === "outfits" && (
               <>
                 {outfits.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-200 rounded-lg">
-                    <p className="text-default-400 italic">
-                      No public looks yet
-                    </p>
+                  <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-200">
+                    <p className="text-stone italic">No public looks yet</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -556,12 +536,12 @@ export default function PublicProfilePage() {
                           )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="absolute bottom-0 left-0 w-full p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <p className="text-white font-bold uppercase tracking-normal text-sm truncate">
+                            <p className="text-white font-display font-light text-sm tracking-tight truncate">
                               {outfit.name}
                             </p>
-                            <div className="flex items-center gap-2 text-white/80 text-xs mt-1">
+                            <div className="flex items-center gap-2 text-white/80 eyebrow mt-1">
                               <HeartIcon className="w-3 h-3" />{" "}
-                              {outfit.likeCount}
+                              <span className="num">{outfit.likeCount}</span>
                             </div>
                           </div>
                         </div>
@@ -575,8 +555,8 @@ export default function PublicProfilePage() {
             {activeTab === "collections" && (
               <>
                 {wardrobes.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-200 rounded-lg">
-                    <p className="text-default-400 italic">
+                  <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-200">
+                    <p className="text-stone italic">
                       No public collections yet
                     </p>
                   </div>
@@ -605,22 +585,22 @@ export default function PublicProfilePage() {
                         </div>
 
                         <div className="pt-3 pb-1">
-                          <h3 className="text-sm font-semibold uppercase tracking-widest truncate">
+                          <h3 className="font-display font-light text-sm tracking-tight truncate">
                             {wardrobe.title}
                           </h3>
-                          <div className="flex items-center gap-3 mt-1 text-default-400 text-xs">
+                          <div className="flex items-center gap-3 mt-1 eyebrow text-stone">
                             <span>
-                              {wardrobe.itemCount}{" "}
+                              <span className="num">{wardrobe.itemCount}</span>{" "}
                               {wardrobe.itemCount === 1 ? "piece" : "pieces"}
                             </span>
                             <span>·</span>
                             <span className="flex items-center gap-1">
                               <HeartIcon className="w-3 h-3" />
-                              {wardrobe.likeCount}
+                              <span className="num">{wardrobe.likeCount}</span>
                             </span>
                           </div>
                           {wardrobe.description && (
-                            <p className="mt-1 text-xs text-default-400 line-clamp-1">
+                            <p className="mt-1 eyebrow text-stone line-clamp-1">
                               {wardrobe.description}
                             </p>
                           )}

@@ -54,13 +54,16 @@ function StudioPage() {
       key = "outfit_draft";
     } else {
       const match = returnTo.match(/^\/outfits\/([^/]+)\/edit$/);
+
       if (match) key = `outfit_draft_${match[1]}`;
     }
     if (!key) return;
     const raw = sessionStorage.getItem(key);
+
     if (!raw) return;
     try {
       const draft = JSON.parse(raw);
+
       if (Array.isArray(draft.selectedClothes)) {
         setSelectedItems(draft.selectedClothes);
       }
@@ -237,8 +240,8 @@ function StudioPage() {
       {/* Save Outfit Modal */}
       <Modal isOpen={isOpen} radius="none" size="sm" onClose={onClose}>
         <ModalContent>
-          <ModalHeader className="uppercase tracking-widest font-bold text-sm">
-            Save as Outfit
+          <ModalHeader className="font-display font-light text-xl tracking-tight">
+            Save as outfit
           </ModalHeader>
           <ModalBody>
             <Input
@@ -260,7 +263,7 @@ function StudioPage() {
               Cancel
             </Button>
             <Button
-              className="uppercase font-bold tracking-widest text-xs"
+              className="eyebrow"
               color="primary"
               isDisabled={!outfitName.trim()}
               isLoading={isSaving}

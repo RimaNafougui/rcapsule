@@ -27,21 +27,21 @@
 
 ## 1. Executive Summary
 
-**Rcapsule** is a multi-tenant SaaS application that allows users to digitally catalog their wardrobe, build outfit combinations, track wear history, receive AI-generated outfit recommendations based on live weather data, and share collections publicly.
+**Rcapsule** is a multi-tenant SaaS application that allows users to digitally catalogue their wardrobe, build outfit combinations, track wear history, receive AI-generated outfit recommendations based on live weather data, and share collections publicly.
 
-| Attribute | Value |
-|---|---|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| Deployment | Vercel (Serverless Functions + Edge Network) |
-| Database | PostgreSQL via Supabase |
-| Auth | NextAuth v5 (JWT) — Google, GitHub, Credentials |
-| Caching | Upstash Redis (REST, serverless-safe) |
-| Payments | Stripe (Checkout + Webhooks + Customer Portal) |
-| AI | OpenAI `gpt-4o-mini` with Anthropic Claude fallback |
-| Image Storage | Supabase Storage |
-| Image Processing | AWS Lambda (background removal) |
-| Monitoring | Sentry (server + client), Vercel Analytics |
-| Testing | Vitest + MSW (72 tests, 8 suites) |
+| Attribute        | Value                                               |
+| ---------------- | --------------------------------------------------- |
+| Framework        | Next.js 16 (App Router, Turbopack)                  |
+| Deployment       | Vercel (Serverless Functions + Edge Network)        |
+| Database         | PostgreSQL via Supabase                             |
+| Auth             | NextAuth v5 (JWT) — Google, GitHub, Credentials     |
+| Caching          | Upstash Redis (REST, serverless-safe)               |
+| Payments         | Stripe (Checkout + Webhooks + Customer Portal)      |
+| AI               | OpenAI `gpt-4o-mini` with Anthropic Claude fallback |
+| Image Storage    | Supabase Storage                                    |
+| Image Processing | AWS Lambda (background removal)                     |
+| Monitoring       | Sentry (server + client), Vercel Analytics          |
+| Testing          | Vitest + MSW (72 tests, 8 suites)                   |
 
 The system is designed for **zero-ops operation**: Vercel handles scaling, Supabase handles the database plane, and Upstash Redis operates over HTTP — no persistent connections, sockets, or server management required.
 
@@ -147,12 +147,12 @@ app/
 │   ├── outfits/          Outfit builder (collage), outfit list
 │   ├── collections/      Wardrobe collections
 │   ├── settings/         Profile, billing, preferences
-│   ├── catalog/          Global product catalog
+│   ├── catalogue/        Global product catalogue
 │   ├── wishlist/         Saved items
 │   └── calendar/         Wear history calendar
 │
 ├── (admin)/              Admin-only, role-gated
-│   └── users/, catalog/
+│   └── users/, catalogue/
 │
 └── u/[username]/         Public profiles (SSR, no auth required)
 ```
@@ -171,19 +171,20 @@ app/
 
 #### Key Custom Hooks
 
-| Hook | Purpose |
-|---|---|
-| `useCalendarLogs` | Fetch & manage wear calendar state |
-| `useCollageHistory` | Undo/redo stack for the collage builder |
-| `useCollageItems` | Item positions and transforms in collage |
-| `useCollagePanZoom` | Pinch-to-zoom and pan gesture handling |
-| `useCropModal` | Crop dialog state for image uploads |
+| Hook                | Purpose                                  |
+| ------------------- | ---------------------------------------- |
+| `useCalendarLogs`   | Fetch & manage wear calendar state       |
+| `useCollageHistory` | Undo/redo stack for the collage builder  |
+| `useCollageItems`   | Item positions and transforms in collage |
+| `useCollagePanZoom` | Pinch-to-zoom and pan gesture handling   |
+| `useCropModal`      | Crop dialog state for image uploads      |
 
 ### API Layer
 
 All API endpoints are Next.js **Route Handlers** (`app/api/.../route.ts`). They are stateless Node.js functions — no shared in-process state beyond module-level singletons for DB/Redis clients.
 
 Every handler follows this contract:
+
 1. Authenticate (`auth()` → JWT session)
 2. Rate-limit (Upstash sliding window)
 3. Parse & validate input (Zod)
@@ -242,7 +243,7 @@ GlobalProduct ──────────────────────
 
 **`OutfitRecommendations`** — Persisted AI recommendations. Acts as both a daily-quota counter and a recommendation history.
 
-**`GlobalProduct`** — Shared product catalog populated by the Chrome extension and admin imports. Linked to user `Clothes` items via `globalproductid`.
+**`GlobalProduct`** — Shared product catalogue populated by the Chrome extension and admin imports. Linked to user `Clothes` items via `globalproductid`.
 
 ### Data Access Pattern
 
@@ -253,16 +254,18 @@ Complex queries use Supabase's nested relation syntax:
 ```typescript
 supabase
   .from("Clothes")
-  .select(`
+  .select(
+    `
     *,
     wardrobes:WardrobeClothes(
       wardrobeId, addedAt,
       wardrobe:Wardrobe(id, title)
     )
-  `)
+  `,
+  )
   .eq("userId", userId)
   .order("createdAt", { ascending: false })
-  .range(offset, offset + limit - 1)
+  .range(offset, offset + limit - 1);
 ```
 
 ### Row-Level Security
@@ -275,31 +278,31 @@ Supabase RLS policies are enabled on all tables. Application-level ownership che
 
 ### Route Inventory
 
-| Domain | Method | Path | Auth | Rate Limit |
-|---|---|---|---|---|
-| Auth | POST | `/api/auth/signup` | — | authLimiter (5/10min) |
-| Auth | \* | `/api/auth/[...nextauth]` | — | — |
-| Clothes | GET, POST | `/api/clothes` | Required | apiLimiter |
-| Clothes | GET, PUT, DELETE | `/api/clothes/[id]` | Required | apiLimiter |
-| Outfits | GET, POST | `/api/outfits` | Required | apiLimiter |
-| Outfits | GET, PUT, DELETE | `/api/outfits/[id]` | Required | apiLimiter |
-| Outfits | GET | `/api/outfits/[id]/collage` | Required | apiLimiter |
-| Wardrobes | GET, POST | `/api/wardrobes` | Required | apiLimiter |
-| AI | GET, POST | `/api/recommendations` | Required | heavyLimiter (10/min) + 2/day |
-| Images | POST, DELETE | `/api/upload` | Required | apiLimiter |
-| Images | POST | `/api/remove-background` | Premium | heavyLimiter |
-| Social | POST, DELETE | `/api/likes` | Required | apiLimiter |
-| Social | GET, POST, DELETE | `/api/users/[u]/follow` | Required | apiLimiter |
-| Social | POST | `/api/users/[u]/block` | Required | apiLimiter |
-| Payments | POST | `/api/checkout` | Required | apiLimiter |
-| Payments | GET | `/api/billing/portal` | Required | apiLimiter |
-| Payments | POST | `/api/webhooks/stripe` | Stripe sig | — |
-| Analytics | GET | `/api/analytics` | Required | apiLimiter |
-| Calendar | GET | `/api/calendar` | Required | apiLimiter |
-| Weather | GET | `/api/weather` | Required | apiLimiter |
-| Catalog | GET | `/api/catalog` | — | publicLimiter |
-| Extension | POST | `/api/extension/import` | Required | apiLimiter |
-| Admin | \* | `/api/admin/*` | Admin role | apiLimiter |
+| Domain    | Method            | Path                        | Auth       | Rate Limit                    |
+| --------- | ----------------- | --------------------------- | ---------- | ----------------------------- |
+| Auth      | POST              | `/api/auth/signup`          | —          | authLimiter (5/10min)         |
+| Auth      | \*                | `/api/auth/[...nextauth]`   | —          | —                             |
+| Clothes   | GET, POST         | `/api/clothes`              | Required   | apiLimiter                    |
+| Clothes   | GET, PUT, DELETE  | `/api/clothes/[id]`         | Required   | apiLimiter                    |
+| Outfits   | GET, POST         | `/api/outfits`              | Required   | apiLimiter                    |
+| Outfits   | GET, PUT, DELETE  | `/api/outfits/[id]`         | Required   | apiLimiter                    |
+| Outfits   | GET               | `/api/outfits/[id]/collage` | Required   | apiLimiter                    |
+| Wardrobes | GET, POST         | `/api/wardrobes`            | Required   | apiLimiter                    |
+| AI        | GET, POST         | `/api/recommendations`      | Required   | heavyLimiter (10/min) + 2/day |
+| Images    | POST, DELETE      | `/api/upload`               | Required   | apiLimiter                    |
+| Images    | POST              | `/api/remove-background`    | Premium    | heavyLimiter                  |
+| Social    | POST, DELETE      | `/api/likes`                | Required   | apiLimiter                    |
+| Social    | GET, POST, DELETE | `/api/users/[u]/follow`     | Required   | apiLimiter                    |
+| Social    | POST              | `/api/users/[u]/block`      | Required   | apiLimiter                    |
+| Payments  | POST              | `/api/checkout`             | Required   | apiLimiter                    |
+| Payments  | GET               | `/api/billing/portal`       | Required   | apiLimiter                    |
+| Payments  | POST              | `/api/webhooks/stripe`      | Stripe sig | —                             |
+| Analytics | GET               | `/api/analytics`            | Required   | apiLimiter                    |
+| Calendar  | GET               | `/api/calendar`             | Required   | apiLimiter                    |
+| Weather   | GET               | `/api/weather`              | Required   | apiLimiter                    |
+| Catalogue | GET               | `/api/catalogue`            | —          | publicLimiter                 |
+| Extension | POST              | `/api/extension/import`     | Required   | apiLimiter                    |
+| Admin     | \*                | `/api/admin/*`              | Admin role | apiLimiter                    |
 
 ### Validation
 
@@ -308,7 +311,11 @@ All mutable endpoints validate request bodies with **Zod schemas** (`lib/validat
 ```json
 {
   "error": {
-    "fieldErrors": { "username": ["Username can only contain letters, numbers, dashes, and underscores"] },
+    "fieldErrors": {
+      "username": [
+        "Username can only contain letters, numbers, dashes, and underscores"
+      ]
+    },
     "formErrors": []
   }
 }
@@ -318,12 +325,12 @@ All mutable endpoints validate request bodies with **Zod schemas** (`lib/validat
 
 Four tiered limiters implemented with Upstash Redis sliding-window algorithm:
 
-| Limiter | Limit | Window | Identifier | Endpoints |
-|---|---|---|---|---|
-| `authLimiter` | 5 req | 10 min | IP | Signup, password reset |
-| `apiLimiter` | 60 req | 1 min | User ID | All authenticated endpoints |
-| `heavyLimiter` | 10 req | 1 min | User ID | AI, background removal |
-| `publicLimiter` | 30 req | 1 min | IP | Catalog, username check |
+| Limiter         | Limit  | Window | Identifier | Endpoints                   |
+| --------------- | ------ | ------ | ---------- | --------------------------- |
+| `authLimiter`   | 5 req  | 10 min | IP         | Signup, password reset      |
+| `apiLimiter`    | 60 req | 1 min  | User ID    | All authenticated endpoints |
+| `heavyLimiter`  | 10 req | 1 min  | User ID    | AI, background removal      |
+| `publicLimiter` | 30 req | 1 min  | IP         | Catalogue, username check   |
 
 All rate-limited routes return `429` with `Retry-After` and `X-RateLimit-Reset` headers.
 
@@ -365,6 +372,7 @@ All rate-limited routes return `429` with `Retry-After` and `X-RateLimit-Reset` 
 ### Authorization Layers
 
 **Route Protection (Middleware — `proxy.ts`)**:
+
 ```
 Protected paths: /profile, /closet, /settings, /outfits, /wishlist, /calendar, /collections
 Guest paths:     /login, /signup, /forgot-password, /update-password
@@ -376,6 +384,7 @@ Logic:
 
 **Role-Based Access (Admin routes)**:
 All `/api/admin/*` routes call `requireAdmin()`:
+
 ```typescript
 const session = await auth();
 if (session.user.role !== "admin") return 403;
@@ -383,6 +392,7 @@ if (session.user.role !== "admin") return 403;
 
 **Resource Ownership (All data mutation routes)**:
 Every write verifies the requesting user owns the resource:
+
 ```typescript
 const { data } = await supabase
   .from("Clothes")
@@ -399,15 +409,15 @@ if (data.userId !== session.user.id) return 403;
 
 ### Cache Layers
 
-| Layer | Technology | Scope | Invalidation |
-|---|---|---|---|
-| Serverless function warm reuse | Module-level singletons | Supabase + Redis clients | Process restart |
-| Redis: analytics | Upstash (600s TTL) | Per user | On clothes/outfit mutation |
-| Redis: user preferences | Upstash (300s TTL) | Per user | On preference update |
-| Redis: owned clothes | Upstash (180s TTL) | Per user | On clothes add/delete |
-| Redis: webhook idempotency | Upstash (86400s TTL) | Per Stripe event ID | Expires naturally |
-| Next.js fetch cache | HTTP revalidate | Weather API | 1800s (30 min) |
-| Vercel CDN | Edge cache | Static assets | Deploy |
+| Layer                          | Technology              | Scope                    | Invalidation               |
+| ------------------------------ | ----------------------- | ------------------------ | -------------------------- |
+| Serverless function warm reuse | Module-level singletons | Supabase + Redis clients | Process restart            |
+| Redis: analytics               | Upstash (600s TTL)      | Per user                 | On clothes/outfit mutation |
+| Redis: user preferences        | Upstash (300s TTL)      | Per user                 | On preference update       |
+| Redis: owned clothes           | Upstash (180s TTL)      | Per user                 | On clothes add/delete      |
+| Redis: webhook idempotency     | Upstash (86400s TTL)    | Per Stripe event ID      | Expires naturally          |
+| Next.js fetch cache            | HTTP revalidate         | Weather API              | 1800s (30 min)             |
+| Vercel CDN                     | Edge cache              | Static assets            | Deploy                     |
 
 ### Redis Client Pattern
 
@@ -468,6 +478,7 @@ Return processed image to client
 ```
 
 **SSRF Protection** — Before forwarding any URL to Lambda, the handler validates:
+
 - Protocol must be `https:`
 - Hostname must not match private/loopback ranges (`127.x`, `10.x`, `192.168.x`, `172.16-31.x`, `169.254.x`, `::1`, `0.0.0.0`)
 
@@ -518,24 +529,24 @@ Return processed image to client
 
 ### Defence-in-Depth Matrix
 
-| Layer | Control | Implementation |
-|---|---|---|
-| Transport | TLS everywhere | Vercel managed; HSTS 2-year preload |
-| Application | CSP | Restrictive allowlist; `unsafe-eval` dev-only |
-| Application | Clickjacking | `X-Frame-Options: DENY` |
-| Application | MIME sniffing | `X-Content-Type-Options: nosniff` |
-| API | Authentication | NextAuth JWT, HTTP-only cookies |
-| API | Authorization | Session check + resource ownership check per route |
-| API | Admin access | Role check (`user.role === "admin"`) |
-| API | Input validation | Zod schemas on all mutable endpoints |
-| API | SQL injection | Parameterized queries via Supabase SDK |
-| API | SSRF | URL validation + private IP blocklist |
-| API | CORS | Explicit allowlist for extension origin |
-| API | Rate limiting | Tiered Upstash Redis limiters |
-| Database | Access control | RLS policies + service-role-only server client |
-| Payments | PCI | Stripe-hosted checkout; no card data on server |
-| Webhooks | Authenticity | `stripe.webhooks.constructEvent()` signature verification |
-| Webhooks | Replay | Redis idempotency guard (24h window) |
+| Layer       | Control          | Implementation                                            |
+| ----------- | ---------------- | --------------------------------------------------------- |
+| Transport   | TLS everywhere   | Vercel managed; HSTS 2-year preload                       |
+| Application | CSP              | Restrictive allowlist; `unsafe-eval` dev-only             |
+| Application | Clickjacking     | `X-Frame-Options: DENY`                                   |
+| Application | MIME sniffing    | `X-Content-Type-Options: nosniff`                         |
+| API         | Authentication   | NextAuth JWT, HTTP-only cookies                           |
+| API         | Authorization    | Session check + resource ownership check per route        |
+| API         | Admin access     | Role check (`user.role === "admin"`)                      |
+| API         | Input validation | Zod schemas on all mutable endpoints                      |
+| API         | SQL injection    | Parameterized queries via Supabase SDK                    |
+| API         | SSRF             | URL validation + private IP blocklist                     |
+| API         | CORS             | Explicit allowlist for extension origin                   |
+| API         | Rate limiting    | Tiered Upstash Redis limiters                             |
+| Database    | Access control   | RLS policies + service-role-only server client            |
+| Payments    | PCI              | Stripe-hosted checkout; no card data on server            |
+| Webhooks    | Authenticity     | `stripe.webhooks.constructEvent()` signature verification |
+| Webhooks    | Replay           | Redis idempotency guard (24h window)                      |
 
 ### Security Headers
 
@@ -555,20 +566,23 @@ Content-Security-Policy: default-src 'self'; [strict allowlist]
 
 ### Sentry Integration
 
-| Context | Configuration |
-|---|---|
-| Server | DSN from env; 10% trace sample rate in production |
-| Client | 100% trace sampling; PII collection enabled |
-| Edge | Minimal config; request error capture |
+| Context         | Configuration                                       |
+| --------------- | --------------------------------------------------- |
+| Server          | DSN from env; 10% trace sample rate in production   |
+| Client          | 100% trace sampling; PII collection enabled         |
+| Edge            | Minimal config; request error capture               |
 | Instrumentation | `onRequestError` hook captures all unhandled errors |
 
 Custom spans annotate expensive operations:
 
 ```typescript
-Sentry.startSpan({ op: "analytics.calculate", name: "Calculate Wardrobe Analytics" }, async (span) => {
-  // ... fetch + compute ...
-  span?.setAttribute("total_items", clothes.length);
-});
+Sentry.startSpan(
+  { op: "analytics.calculate", name: "Calculate Wardrobe Analytics" },
+  async (span) => {
+    // ... fetch + compute ...
+    span?.setAttribute("total_items", clothes.length);
+  },
+);
 ```
 
 ### Error Handling Pattern
@@ -578,7 +592,8 @@ Sentry.startSpan({ op: "analytics.calculate", name: "Calculate Wardrobe Analytic
 export function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
   if (typeof err === "string") return err;
-  if (err !== null && typeof err === "object" && "message" in err) return (err as any).message;
+  if (err !== null && typeof err === "object" && "message" in err)
+    return (err as any).message;
   return "An unexpected error occurred";
 }
 ```
@@ -654,55 +669,55 @@ NEXT_PUBLIC_SITE_URL, ALLOWED_EXTENSION_ORIGIN, NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 **Chosen**: Next.js 16 App Router with Route Handlers
 
-| Pro | Con |
-|---|---|
-| Unified codebase (UI + API in one repo/deploy) | Beta features (RSC streaming edge cases) |
-| Type-safe from DB → API → component | Slightly higher cold start vs dedicated API server |
-| Excellent DX (Turbopack, HMR, TS out of box) | Bundle size discipline required |
-| Vercel-native deployment optimizations | Less fine-grained scaling control than microservices |
+| Pro                                            | Con                                                  |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| Unified codebase (UI + API in one repo/deploy) | Beta features (RSC streaming edge cases)             |
+| Type-safe from DB → API → component            | Slightly higher cold start vs dedicated API server   |
+| Excellent DX (Turbopack, HMR, TS out of box)   | Bundle size discipline required                      |
+| Vercel-native deployment optimizations         | Less fine-grained scaling control than microservices |
 
 ### Supabase (vs raw Postgres + Prisma / raw Drizzle)
 
 **Chosen**: Supabase (PostgreSQL + Auth + Storage + RLS)
 
-| Pro | Con |
-|---|---|
-| Managed Postgres + built-in Auth saves significant infrastructure work | Less query flexibility than Prisma/Drizzle ORM |
-| Storage bucket tightly integrated with DB | Vendor lock-in for auth and storage |
-| RLS provides DB-level security | SDK-level query API is less expressive than raw SQL for complex analytics |
-| Free tier sufficient for early traction | Connection pooling via PgBouncer (external config required for large scale) |
+| Pro                                                                    | Con                                                                         |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Managed Postgres + built-in Auth saves significant infrastructure work | Less query flexibility than Prisma/Drizzle ORM                              |
+| Storage bucket tightly integrated with DB                              | Vendor lock-in for auth and storage                                         |
+| RLS provides DB-level security                                         | SDK-level query API is less expressive than raw SQL for complex analytics   |
+| Free tier sufficient for early traction                                | Connection pooling via PgBouncer (external config required for large scale) |
 
 ### Upstash Redis (vs Elasticache / self-hosted Redis)
 
 **Chosen**: Upstash Redis (HTTP/REST based)
 
-| Pro | Con |
-|---|---|
+| Pro                                                                 | Con                                       |
+| ------------------------------------------------------------------- | ----------------------------------------- |
 | HTTP protocol — no persistent connection required (serverless-safe) | Higher per-command latency than TCP Redis |
-| Per-request billing (no idle cost) | Limited to single-region in free tier |
-| Built-in Ratelimit SDK | REST API overhead vs raw RESP protocol |
-| No connection pool exhaustion under Lambda concurrency | |
+| Per-request billing (no idle cost)                                  | Limited to single-region in free tier     |
+| Built-in Ratelimit SDK                                              | REST API overhead vs raw RESP protocol    |
+| No connection pool exhaustion under Lambda concurrency              |                                           |
 
 ### NextAuth v5 (vs Supabase Auth directly / Clerk)
 
 **Chosen**: NextAuth v5 with Supabase as user store
 
-| Pro | Con |
-|---|---|
-| Full control over session data and callbacks | Beta software — occasional breaking changes |
-| Multi-provider (OAuth + credentials) with unified interface | Requires manual token refresh for OAuth providers |
-| Extensible JWT/session callbacks for custom claims | Supabase Auth used only for password verification (dual-system complexity) |
-| No third-party user data costs | |
+| Pro                                                         | Con                                                                        |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Full control over session data and callbacks                | Beta software — occasional breaking changes                                |
+| Multi-provider (OAuth + credentials) with unified interface | Requires manual token refresh for OAuth providers                          |
+| Extensible JWT/session callbacks for custom claims          | Supabase Auth used only for password verification (dual-system complexity) |
+| No third-party user data costs                              |                                                                            |
 
 ### OpenAI `gpt-4o-mini` with Anthropic fallback
 
 **Chosen**: Dual-provider AI with graceful fallback
 
-| Pro | Con |
-|---|---|
-| `gpt-4o-mini` is 10x cheaper than GPT-4 while sufficient for outfit suggestions | JSON parsing requires cleanup (markdown code block stripping) |
-| `json_object` response format reduces parsing failures | AI hallucinations still possible (wardrobe ID filtering required) |
-| Anthropic Claude failover improves resilience | Adds complexity and a second API key to manage |
+| Pro                                                                             | Con                                                               |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `gpt-4o-mini` is 10x cheaper than GPT-4 while sufficient for outfit suggestions | JSON parsing requires cleanup (markdown code block stripping)     |
+| `json_object` response format reduces parsing failures                          | AI hallucinations still possible (wardrobe ID filtering required) |
+| Anthropic Claude failover improves resilience                                   | Adds complexity and a second API key to manage                    |
 
 ---
 
@@ -710,14 +725,14 @@ NEXT_PUBLIC_SITE_URL, ALLOWED_EXTENSION_ORIGIN, NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 ### Current Constraints
 
-| Area | Constraint | Mitigation |
-|---|---|---|
-| AI recommendations | 2/day hard limit (cost control) | Redis quota tracking; Stripe premium tier for more |
-| Analytics | Computed on every request for cache miss | Redis cache (10-min TTL) reduces DB load significantly |
-| Session role updates | Role changes require re-login | Acceptable for admin use case; could add forced re-auth |
-| Stripe SDK types | `current_period_end` typed as `any` in v2025 API | Tracked for upstream fix |
-| Extension CORS | Single `ALLOWED_EXTENSION_ORIGIN` env var | Sufficient for private extension; add token auth for public distribution |
-| Collage generation | Client-side only (`html2canvas`) | Server-side generation planned as a premium feature |
+| Area                 | Constraint                                       | Mitigation                                                               |
+| -------------------- | ------------------------------------------------ | ------------------------------------------------------------------------ |
+| AI recommendations   | 2/day hard limit (cost control)                  | Redis quota tracking; Stripe premium tier for more                       |
+| Analytics            | Computed on every request for cache miss         | Redis cache (10-min TTL) reduces DB load significantly                   |
+| Session role updates | Role changes require re-login                    | Acceptable for admin use case; could add forced re-auth                  |
+| Stripe SDK types     | `current_period_end` typed as `any` in v2025 API | Tracked for upstream fix                                                 |
+| Extension CORS       | Single `ALLOWED_EXTENSION_ORIGIN` env var        | Sufficient for private extension; add token auth for public distribution |
+| Collage generation   | Client-side only (`html2canvas`)                 | Server-side generation planned as a premium feature                      |
 
 ### Roadmap Considerations
 
@@ -730,4 +745,4 @@ NEXT_PUBLIC_SITE_URL, ALLOWED_EXTENSION_ORIGIN, NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 ---
 
-*Last updated: February 2026 · Rcapsule v1.x · Architecture by Rima Nafougui*
+_Last updated: February 2026 · Rcapsule v1.x · Architecture by Rima Nafougui_

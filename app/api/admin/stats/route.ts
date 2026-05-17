@@ -22,7 +22,7 @@ export async function GET(_req: Request) {
     const [
       { count: totalUsers },
       { count: totalItems },
-      { count: catalogSize },
+      { count: catalogueSize },
       { count: pendingReports },
     ] = await Promise.all([
       supabase.from("User").select("*", { count: "exact", head: true }),
@@ -97,7 +97,7 @@ export async function GET(_req: Request) {
     return NextResponse.json({
       totalUsers: totalUsers ?? 0,
       totalItems: totalItems ?? 0,
-      catalogSize: catalogSize ?? 0,
+      catalogueSize: catalogueSize ?? 0,
       pendingReports: pendingReports ?? 0,
       signupTrend,
       topBrands,

@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     // Admin-only: only admins can bulk-import to GlobalProduct
     if (session.user.role !== "admin") {
       return NextResponse.json(
-        { error: "Forbidden: only admins can bulk-import to the catalog" },
+        { error: "Forbidden: only admins can bulk-import to the catalogue" },
         { status: 403, headers: corsHeaders(origin) },
       );
     }

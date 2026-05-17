@@ -1,4 +1,8 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  JetBrains_Mono,
+  Plus_Jakarta_Sans,
+} from "next/font/google";
 
 export const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -8,10 +12,17 @@ export const fontSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-export const fontDisplay = Plus_Jakarta_Sans({
+export const fontDisplay = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500"],
   style: ["normal", "italic"],
   variable: "--font-display",
+  display: "swap",
+});
+
+export const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-mono",
   display: "swap",
 });

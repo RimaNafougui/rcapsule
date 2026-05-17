@@ -1,0 +1,152 @@
+/* Shared styles for rcapsule design-system preview cards.
+   Each card links this file. Keeps individual cards small.    */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --bg:    #FFFFFF;
+  --fg:    #0A0A0A;
+  --s1:    #F7F7F5;
+  --s2:    #EFEDE7;
+  --bd:    #E5E3DC;
+  --mu:    #6B6B66;
+  --mu2:   #A8A8A2;
+  --ac:    #7A2E1F;
+  --acs:   #A45A4A;
+  --dn:    #8A1F1F;
+  --sc:    #3F5C3A;
+  --paper: #FAFAF7;
+
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --sans:  "Geist", system-ui, sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card {
+  width: 700px;
+  padding: 24px 28px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.card.paper { background: var(--paper); }
+.card.surface { background: var(--s1); }
+.card.dark { background: var(--fg); color: #FAFAF7; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--mu);
+}
+.dark .eyebrow { color: #8E8E88; }
+
+.serif       { font-family: var(--serif); font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
+.serif-i     { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.mono        { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.num         { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 400; }
+.tnum        { font-variant-numeric: tabular-nums; }
+
+.row { display: flex; align-items: center; gap: 16px; }
+.row.between { justify-content: space-between; }
+.col { display: flex; flex-direction: column; }
+
+.divider { height: 1px; background: var(--bd); }
+.divider-strong { height: 1px; background: var(--fg); }
+
+.swatch {
+  width: 56px;
+  height: 56px;
+  display: block;
+  box-shadow: inset 0 0 0 1px rgba(10,10,10,0.06);
+}
+.swatch.lg { width: 96px; height: 96px; }
+.swatch.sm { width: 36px; height: 36px; }
+
+.label-stack { display: flex; flex-direction: column; gap: 2px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; }
+.label-stack .name  { color: var(--fg); font-weight: 500; text-transform: uppercase; letter-spacing: 0.16em; }
+.label-stack .hex   { color: var(--mu); }
+.label-stack .use   { color: var(--mu2); margin-top: 2px; }
+
+.btn-prim, .btn-out, .btn-ghost, .btn-danger { white-space: nowrap; }
+.btn-prim {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 44px; padding: 0 24px;
+  background: var(--fg); color: var(--bg);
+  font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+  border: none;
+}
+.btn-out {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 44px; padding: 0 24px;
+  background: transparent; color: var(--fg);
+  border: 1px solid var(--fg);
+  font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 44px; padding: 0 16px;
+  background: transparent; color: var(--fg);
+  font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+}
+.btn-danger {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 44px; padding: 0 24px;
+  background: transparent; color: var(--dn);
+  border: 1px solid var(--dn);
+  font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+}
+
+.chip-sharp {
+  display: inline-flex; align-items: center;
+  height: 28px; padding: 0 12px;
+  border: 1px solid var(--bd);
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.20em; font-weight: 500;
+  color: var(--fg);
+}
+.chip-sharp.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+.chip-pill {
+  display: inline-flex; align-items: center;
+  height: 24px; padding: 0 12px;
+  border-radius: 9999px;
+  background: var(--fg); color: var(--bg);
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.20em; font-weight: 500;
+}
+.chip-pill.warn { background: var(--ac); }
+.chip-pill.outline { background: transparent; color: var(--mu); border: 1px solid var(--bd); }
+
+.input {
+  width: 100%; height: 44px; padding: 0 14px;
+  background: transparent; color: var(--fg);
+  border: 1px solid var(--bd);
+  font-family: var(--sans); font-size: 14px;
+}
+.input:focus, .input.focus { outline: none; border-color: var(--fg); }
+.input.error { border-color: var(--dn); }
+
+.tag-cat {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--mu);
+}

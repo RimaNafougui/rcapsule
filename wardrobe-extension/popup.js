@@ -866,11 +866,15 @@ async function extractProductData() {
     const colorEl =
       document.querySelector('[data-testid="selected-color"]') ||
       document.querySelector('[data-testid="color-name"]') ||
-      document.querySelector('.product-color-name') ||
+      document.querySelector(".product-color-name") ||
       document.querySelector('[class*="color-name"]') ||
       document.querySelector('[class*="selectedColor"]');
     const aritziaColor = colorEl?.textContent.trim();
-    if (aritziaColor && data.name && !data.name.toLowerCase().includes(aritziaColor.toLowerCase())) {
+    if (
+      aritziaColor &&
+      data.name &&
+      !data.name.toLowerCase().includes(aritziaColor.toLowerCase())
+    ) {
       data.name = `${data.name} — ${aritziaColor}`;
     }
   }
@@ -1281,7 +1285,8 @@ async function startPass2() {
     if (summaryEl) {
       summaryEl.classList.remove("hidden");
       summaryEl.className = "bulk-summary has-errors";
-      summaryEl.textContent = "Not logged in. Please log in at rcapsule.com first, then try again.";
+      summaryEl.textContent =
+        "Not logged in. Please log in at rcapsule.com first, then try again.";
     }
     updateBulkUI({ phase: "complete", message: "Login required." });
     return;
@@ -1327,7 +1332,7 @@ async function handleBulkScanComplete(result) {
 
   updateBulkUI({
     phase: "importing",
-    message: `Scan complete! Importing ${result.scanned} items to your catalog...`,
+    message: `Scan complete! Importing ${result.scanned} items to your catalogue...`,
   });
 
   await submitBulkImport();
@@ -1381,7 +1386,8 @@ async function submitBulkImport() {
         if (summaryEl) {
           summaryEl.classList.remove("hidden");
           summaryEl.className = "bulk-summary has-errors";
-          summaryEl.textContent = "Not logged in. Your scanned items are saved — log in at rcapsule.com and click Retry Import.";
+          summaryEl.textContent =
+            "Not logged in. Your scanned items are saved — log in at rcapsule.com and click Retry Import.";
         }
         updateBulkUI({ phase: "complete", message: "Login required." });
         document.getElementById("bulkRetryBtn")?.classList.remove("hidden");
@@ -1514,7 +1520,11 @@ async function checkBulkImportState() {
         current: state.currentIndex,
         total: state.totalCount,
       });
-    } else if (state && state.status === "complete" && state.scannedProducts?.length > 0) {
+    } else if (
+      state &&
+      state.status === "complete" &&
+      state.scannedProducts?.length > 0
+    ) {
       // Scan completed but import may have failed (e.g. logged out)
       switchView("bulkView");
       const summaryEl = document.getElementById("bulkSummary");

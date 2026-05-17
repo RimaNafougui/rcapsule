@@ -25,7 +25,10 @@ export async function DELETE(
       .maybeSingle();
 
     if (!wardrobe)
-      return NextResponse.json({ error: "Collection not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Collection not found" },
+        { status: 404 },
+      );
 
     const { error } = await supabase
       .from("WardrobeOutfit")
@@ -39,6 +42,9 @@ export async function DELETE(
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json({ error: "Failed to remove outfit" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to remove outfit" },
+      { status: 500 },
+    );
   }
 }

@@ -45,7 +45,7 @@ export function heavyLimiter() {
 }
 
 /**
- * Public / unauthenticated routes (catalog, username check).
+ * Public / unauthenticated routes (catalogue, username check).
  * 30 requests per IP per minute.
  */
 let _publicLimiter: Ratelimit | null = null;

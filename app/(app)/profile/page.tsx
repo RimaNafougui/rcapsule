@@ -185,12 +185,12 @@ export default function ProfilePage() {
               {/* Deep Analysis Row */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {/* Color DNA */}
-                <div className="bg-background border border-default-200 p-6 shadow-sm">
+                <div className="bg-background border border-default-200 p-6">
                   <div className="mb-6">
-                    <h3 className="text-sm font-display font-light tracking-normal text-default-500">
+                    <h3 className="font-display font-light text-xl tracking-tight">
                       Color DNA
                     </h3>
-                    <p className="text-xs text-default-400 mt-1">
+                    <p className="eyebrow text-stone mt-1">
                       Dominant tones in your collection
                     </p>
                   </div>
@@ -205,7 +205,7 @@ export default function ProfilePage() {
 
                 {/* Top Designers */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-display font-light tracking-normal text-default-500">
+                  <h3 className="font-display font-light text-xl tracking-tight">
                     Top Designers
                   </h3>
                   <div className="flex flex-col gap-2">
@@ -229,22 +229,23 @@ export default function ProfilePage() {
                           className="flex justify-between items-center py-3 border-b border-default-100 group"
                         >
                           <div className="flex items-center gap-4">
-                            <span className="text-xs font-bold text-default-300 w-4">
+                            <span className="num text-xs text-stone w-4">
                               0{index + 1}
                             </span>
-                            <span className="text-lg font-display font-light tracking-normal text-foreground group-hover:translate-x-2 transition-transform duration-300">
+                            <span className="text-lg font-display font-light tracking-tight text-foreground group-hover:translate-x-2 transition-transform duration-300">
                               {brand}
                             </span>
                           </div>
-                          <span className="text-[10px] font-display font-light tracking-normal bg-content2 px-2 py-1 text-default-500 rounded-sm">
-                            {count} {count === 1 ? "Item" : "Items"}
+                          <span className="eyebrow bg-content2 px-2 py-1 text-stone">
+                            <span className="num">{count}</span>{" "}
+                            {count === 1 ? "Item" : "Items"}
                           </span>
                         </div>
                       ))}
 
                     {clothes.filter((c) => c.brand).length === 0 && (
-                      <div className="py-8 text-center border border-dashed border-default-200 rounded-lg">
-                        <p className="text-xs uppercase tracking-widest text-default-400">
+                      <div className="py-8 text-center border border-dashed border-default-200">
+                        <p className="eyebrow text-stone">
                           No brand data available
                         </p>
                       </div>
@@ -256,7 +257,7 @@ export default function ProfilePage() {
               {/* Recently Acquired */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-display font-light tracking-normal text-default-500">
+                  <h3 className="font-display font-light text-xl tracking-tight">
                     Recently Acquired
                   </h3>
                 </div>
@@ -265,7 +266,7 @@ export default function ProfilePage() {
                   {clothes.slice(0, 4).map((item) => (
                     <div
                       key={item.id}
-                      className="aspect-[3/4] bg-content2 relative group overflow-hidden rounded-md"
+                      className="aspect-[3/4] bg-content2 relative group overflow-hidden"
                     >
                       <Image
                         removeWrapper
@@ -281,7 +282,7 @@ export default function ProfilePage() {
                     </div>
                   ))}
                   {clothes.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-default-400 text-sm border border-dashed border-default-200 rounded-lg">
+                    <div className="col-span-full py-12 text-center text-stone text-sm border border-dashed border-default-200">
                       Start adding items to your closet to see them here.
                     </div>
                   )}
@@ -327,10 +328,10 @@ export default function ProfilePage() {
                 {/* Header / Utility Bar */}
                 <div className="flex justify-between items-end">
                   <div>
-                    <h2 className="text-2xl font-display font-light tracking-normal">
+                    <h2 className="font-display font-light text-2xl md:text-3xl tracking-tight">
                       Daily Curator
                     </h2>
-                    <p className="text-xs text-default-400 uppercase tracking-widest mt-1">
+                    <p className="eyebrow text-stone mt-1">
                       AI-Powered Personal Styling
                     </p>
                   </div>
@@ -391,15 +392,15 @@ export default function ProfilePage() {
             ) : (
               // Upgrade Prompt for Free Users
               <div className="py-16 flex flex-col items-center justify-center text-center space-y-8 animate-in zoom-in-95 duration-500">
-                <div className="w-20 h-20 rounded-full bg-default-100 flex items-center justify-center">
+                <div className="w-20 h-20 bg-default-100 flex items-center justify-center">
                   <SparklesIcon className="w-10 h-10 text-default-400" />
                 </div>
 
                 <div className="space-y-3 max-w-md">
-                  <h2 className="text-3xl font-display font-light tracking-normal">
+                  <h2 className="font-display font-light text-[clamp(32px,4vw,56px)] tracking-tight">
                     Unlock The Edit
                   </h2>
-                  <p className="text-default-500 text-sm">
+                  <p className="text-stone text-sm">
                     Get AI-powered outfit recommendations tailored to your
                     wardrobe, the weather, and your personal style. Your pocket
                     stylist awaits.

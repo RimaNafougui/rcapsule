@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     user.bio ||
     `Check out ${displayName}'s wardrobe and outfit inspiration on Rcapsule.`;
 
-  const ogImage = user.coverImage || user.image || "/og-default.png";
+  const ogImage = user.coverImage || user.image || "/opengraph-image";
 
   return {
     title,

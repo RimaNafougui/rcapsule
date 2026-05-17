@@ -2,6 +2,28 @@
 
 @config "../tailwind.config.js";
 
+/* ===== LANDING PAGE DESIGN SYSTEM TOKENS ===== */
+/* Named semantic tokens used by the new editorial landing page */
+:root {
+  --ink: #0A0A0A;
+  --paper: #FAFAF7;
+  --soft: #F7F7F5;
+  --stone: #6B6B66;
+  --mist: #A8A8A2;
+  --accent-warm: #7A2E1F;
+  --border-hairline: #E5E3DC;
+}
+
+/* Tailwind v4 theme extension — generates bg-ink, text-stone, etc. */
+@theme inline {
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-soft: var(--soft);
+  --color-stone: var(--stone);
+  --color-mist: var(--mist);
+  --color-accent-warm: var(--accent-warm);
+}
+
 /* ===== DESIGN TOKENS ===== */
 :root {
   /* Typography scale (fluid) */
@@ -179,3 +201,97 @@ html {
   border: 1px dashed;
   border-color: hsl(var(--heroui-default-300));
 }
+
+/* ===== EDITORIAL LANDING PAGE UTILITIES ===== */
+
+/* Large editorial display type — Cormorant Garamond */
+.lp-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+/* Canonical small label — mono caps */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Editorial italic — Cormorant italic accent */
+.serif-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Tabular numerals with mono font */
+.num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hairline borders */
+.hairline       { border-color: var(--border-hairline); }
+.hairline-strong { border-color: var(--ink); }
+
+/* Landing page CTA buttons */
+.lp-btn-dark {
+  background-color: var(--ink);
+  color: var(--paper);
+  transition: background-color 150ms;
+}
+.lp-btn-dark:hover { background-color: var(--stone); }
+
+.lp-btn-ghost {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background-color: transparent;
+  transition: background-color 150ms, color 150ms;
+}
+.lp-btn-ghost:hover { background-color: var(--ink); color: var(--paper); }
+
+/* Cost-per-wear range slider — dark variant */
+.cpw-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 24px;
+  width: 100%;
+}
+.cpw-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: rgba(168,168,162,0.4);
+}
+.cpw-range::-moz-range-track {
+  height: 1px;
+  background: rgba(168,168,162,0.4);
+}
+.cpw-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #FAFAF7;
+  border-radius: 0;
+  margin-top: -6px;
+  cursor: ew-resize;
+}
+.cpw-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #FAFAF7;
+  border: none;
+  border-radius: 0;
+  cursor: ew-resize;
+}
+/* Light variant */
+.cpw-range--light::-webkit-slider-runnable-track { background: rgba(10,10,10,0.2); }
+.cpw-range--light::-moz-range-track             { background: rgba(10,10,10,0.2); }
+.cpw-range--light::-webkit-slider-thumb         { background: #0A0A0A; }
+.cpw-range--light::-moz-range-thumb             { background: #0A0A0A; }

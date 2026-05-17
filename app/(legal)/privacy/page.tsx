@@ -1,3 +1,12 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Rcapsule",
+  description:
+    "Read how Rcapsule collects, uses, and protects your personal information and wardrobe data.",
+  alternates: { canonical: "https://rcapsule.com/privacy" },
+};
+
 export default function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12 font-sans">

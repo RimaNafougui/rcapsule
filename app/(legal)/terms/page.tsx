@@ -1,4 +1,12 @@
+import { Metadata } from "next";
 import { Divider } from "@heroui/react";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Rcapsule",
+  description:
+    "Review the terms and conditions that govern your use of Rcapsule, including acceptable use, subscriptions, and your rights.",
+  alternates: { canonical: "https://rcapsule.com/terms" },
+};
 
 export default function TermsPage() {
   return (

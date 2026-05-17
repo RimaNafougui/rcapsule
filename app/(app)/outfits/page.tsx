@@ -140,6 +140,7 @@ export default function OutfitsPage() {
 
   const suggestions = useMemo((): SearchSuggestion[] => {
     const query = searchQuery.trim();
+
     if (!query) return [];
 
     const lowerQuery = query.toLowerCase();
@@ -147,14 +148,19 @@ export default function OutfitsPage() {
     const candidates: SearchSuggestion[] = [];
 
     for (const outfit of outfits) {
-      const check = (value: string | undefined, type: SearchSuggestion["type"]) => {
+      const check = (
+        value: string | undefined,
+        type: SearchSuggestion["type"],
+      ) => {
         if (!value) return;
         const key = value.toLowerCase();
+
         if (!seen.has(key) && key.includes(lowerQuery)) {
           seen.add(key);
           candidates.push({ label: value, type });
         }
       };
+
       check(outfit.name, "item");
       check(outfit.season, "season");
     }
@@ -175,6 +181,7 @@ export default function OutfitsPage() {
       <WardrobeHeader
         actionLabel="Curate Look"
         history={history}
+        searchPlaceholder="Search outfits"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setShowFilters={setShowFilters}
@@ -183,14 +190,13 @@ export default function OutfitsPage() {
         showFilters={showFilters}
         sortBy={sortBy}
         subtitle={
-          <div className="flex gap-2 text-xs uppercase tracking-widest text-default-400 mt-1">
+          <div className="flex gap-2 eyebrow text-stone mt-1">
             <span>Collection</span>
             <span>/</span>
-            <span className="text-foreground">All Looks</span>
+            <span className="text-ink">All Looks</span>
           </div>
         }
         suggestions={suggestions}
-        searchPlaceholder="Search outfits"
         title="Outfits"
         viewMode={viewMode}
         onAddNew={() => router.push("/outfits/new")}
@@ -213,9 +219,7 @@ export default function OutfitsPage() {
             <div className="p-6 flex flex-wrap gap-8 items-center">
               {/* Filter: Favorites */}
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] uppercase tracking-widest text-default-500 font-bold">
-                  Status
-                </span>
+                <span className="eyebrow text-stone">Status</span>
                 <Switch
                   classNames={{ label: "text-sm font-light" }}
                   isSelected={filterFavorites}
@@ -228,9 +232,7 @@ export default function OutfitsPage() {
 
               {/* Filter: Season (Example of extra filtering) */}
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] uppercase tracking-widest text-default-500 font-bold">
-                  Season
-                </span>
+                <span className="eyebrow text-stone">Season</span>
                 <div className="flex gap-2">
                   {["All", "Summer", "Winter", "Spring", "Fall"].map(
                     (season) => (
@@ -335,19 +337,21 @@ export default function OutfitsPage() {
                 <div className="space-y-1">
                   <div className="flex justify-between items-start">
                     <h3
-                      className={`font-bold uppercase tracking-normal leading-none ${viewMode === "gallery" ? "text-sm" : "text-lg"}`}
+                      className={`font-display font-light tracking-tight leading-none ${viewMode === "gallery" ? "text-sm" : "text-lg"}`}
                     >
                       {outfit.name}
                     </h3>
                     {outfit.timesWorn > 0 && viewMode === "grid" && (
-                      <span className="text-[10px] font-display font-light tracking-normal text-default-400">
-                        Worn {outfit.timesWorn}x
+                      <span className="eyebrow text-stone">
+                        Worn <span className="num">{outfit.timesWorn}</span>x
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2 text-xs text-default-500 uppercase tracking-wider">
-                    <span>{outfit.itemCount} Items</span>
+                  <div className="flex flex-wrap gap-2 eyebrow text-stone">
+                    <span>
+                      <span className="num">{outfit.itemCount}</span> Items
+                    </span>
                     {viewMode === "grid" && outfit.occasion && (
                       <>
                         <span>•</span>

@@ -45,7 +45,6 @@ export async function POST(req: Request) {
     : imageBase64;
 
   try {
-
     const command = new InvokeCommand({
       FunctionName: functionName,
       Payload: JSON.stringify({

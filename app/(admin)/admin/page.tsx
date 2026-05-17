@@ -22,13 +22,18 @@ function StatCard({
   href?: string;
 }) {
   const content = (
-    <Card className="hover:scale-[1.02] transition-transform cursor-pointer">
-      <CardBody className="gap-1">
-        <p className="text-sm opacity-60 uppercase tracking-widest">{label}</p>
+    <Card
+      className="hover:opacity-80 transition-opacity cursor-pointer"
+      radius="none"
+    >
+      <CardBody className="gap-2 p-5">
+        <p className="eyebrow text-default-400">{label}</p>
         {loading ? (
-          <Skeleton className="h-8 w-24 rounded-lg" />
+          <Skeleton className="h-8 w-24" />
         ) : (
-          <p className="text-3xl font-bold">{value?.toLocaleString() ?? "—"}</p>
+          <p className="font-display font-light text-3xl tracking-tight">
+            {value?.toLocaleString() ?? "—"}
+          </p>
         )}
       </CardBody>
     </Card>
@@ -53,8 +58,10 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <p className="text-sm opacity-50 mt-1">Overview of your platform</p>
+        <h1 className="font-display font-light text-3xl tracking-tight">
+          Admin Dashboard
+        </h1>
+        <p className="eyebrow text-default-400 mt-2">Platform overview</p>
       </div>
 
       {/* Stat cards */}
@@ -71,10 +78,10 @@ export default function AdminDashboard() {
           value={stats?.totalItems}
         />
         <StatCard
-          href="/admin/catalog"
-          label="Catalog Size"
+          href="/admin/catalogue"
+          label="Catalogue Size"
           loading={isLoading}
-          value={stats?.catalogSize}
+          value={stats?.catalogueSize}
         />
         <StatCard
           href="/admin/reports"
@@ -88,7 +95,9 @@ export default function AdminDashboard() {
         {/* Top brands */}
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold">Top Brands by Items</h2>
+            <h2 className="font-display font-light text-lg tracking-tight">
+              Top Brands by Items
+            </h2>
           </CardHeader>
           <CardBody className="gap-2">
             {isLoading ? (
@@ -114,7 +123,9 @@ export default function AdminDashboard() {
         {/* Items by category */}
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold">Items by Category</h2>
+            <h2 className="font-display font-light text-lg tracking-tight">
+              Items by Category
+            </h2>
           </CardHeader>
           <CardBody className="gap-2">
             {isLoading ? (
@@ -153,7 +164,9 @@ export default function AdminDashboard() {
       {/* Recent pending reports */}
       <Card>
         <CardHeader className="flex justify-between">
-          <h2 className="text-base font-semibold">Recent Pending Reports</h2>
+          <h2 className="font-display font-light text-lg tracking-tight">
+            Recent Pending Reports
+          </h2>
           <NextLink
             className="text-sm text-primary hover:underline"
             href="/admin/reports"
