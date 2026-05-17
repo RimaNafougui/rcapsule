@@ -39,10 +39,30 @@ export default async function OgImage() {
       >
         {/* Corner marks */}
         {[
-          { top: 40, left: 40, borderTop: "1px solid #E5E3DC", borderLeft: "1px solid #E5E3DC" },
-          { top: 40, right: 40, borderTop: "1px solid #E5E3DC", borderRight: "1px solid #E5E3DC" },
-          { bottom: 40, left: 40, borderBottom: "1px solid #E5E3DC", borderLeft: "1px solid #E5E3DC" },
-          { bottom: 40, right: 40, borderBottom: "1px solid #E5E3DC", borderRight: "1px solid #E5E3DC" },
+          {
+            top: 40,
+            left: 40,
+            borderTop: "1px solid #E5E3DC",
+            borderLeft: "1px solid #E5E3DC",
+          },
+          {
+            top: 40,
+            right: 40,
+            borderTop: "1px solid #E5E3DC",
+            borderRight: "1px solid #E5E3DC",
+          },
+          {
+            bottom: 40,
+            left: 40,
+            borderBottom: "1px solid #E5E3DC",
+            borderLeft: "1px solid #E5E3DC",
+          },
+          {
+            bottom: 40,
+            right: 40,
+            borderBottom: "1px solid #E5E3DC",
+            borderRight: "1px solid #E5E3DC",
+          },
         ].map((style, i) => (
           <div
             key={i}
@@ -117,8 +137,18 @@ export default async function OgImage() {
     {
       ...size,
       fonts: [
-        { name: "Cormorant Garamond", data: displayLight, weight: 300, style: "normal" },
-        { name: "JetBrains Mono", data: monoRegular, weight: 400, style: "normal" },
+        {
+          name: "Cormorant Garamond",
+          data: displayLight,
+          weight: 300,
+          style: "normal",
+        },
+        {
+          name: "JetBrains Mono",
+          data: monoRegular,
+          weight: 400,
+          style: "normal",
+        },
       ],
     },
   );

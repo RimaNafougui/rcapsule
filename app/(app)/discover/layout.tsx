@@ -9,7 +9,14 @@ export const metadata: Metadata = {
     description:
       "Explore outfits and style inspiration from the Rcapsule community. See what people are wearing, trending looks, and follow your favorite stylists.",
     url: "https://rcapsule.com/discover",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Discover on Rcapsule" }],
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Discover on Rcapsule",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

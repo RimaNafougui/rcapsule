@@ -10,7 +10,14 @@ export const metadata: Metadata = {
     description:
       "We believe a great wardrobe isn't about having more clothes — it's about knowing exactly what you have, where it is, and how to wear it.",
     url: "https://rcapsule.com/about",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "About Rcapsule" }],
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "About Rcapsule",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

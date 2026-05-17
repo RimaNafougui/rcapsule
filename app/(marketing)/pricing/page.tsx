@@ -379,8 +379,8 @@ export default function PricingPage() {
             aria-label="export"
             title="Can I export my data?"
           >
-            Yes. You own your data. You can export your entire wardrobe catalogue
-            and usage logs at any time from your account settings.
+            Yes. You own your data. You can export your entire wardrobe
+            catalogue and usage logs at any time from your account settings.
           </AccordionItem>
           <AccordionItem
             key="4"

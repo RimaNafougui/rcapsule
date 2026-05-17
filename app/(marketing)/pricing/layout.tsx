@@ -9,7 +9,14 @@ export const metadata: Metadata = {
     description:
       "Start for free with unlimited uploads and outfit planning. Upgrade to Rcapsule Premium for AI outfit generation, background removal, and weather-smart suggestions.",
     url: "https://rcapsule.com/pricing",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Rcapsule Pricing" }],
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Rcapsule Pricing",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

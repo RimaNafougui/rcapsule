@@ -23,13 +23,19 @@ export const metadata: Metadata = {
     "Rcapsule is a wardrobe management and fashion community. Catalogue your clothes, build outfits, track wear, and discover looks from real people.",
   icons: {
     icon: [
-      { url: "/rcapsuleFavicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/rcapsuleFavicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      {
+        url: "/rcapsuleFavicon/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: "/rcapsuleFavicon/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
     ],
     apple: "/rcapsuleFavicon/apple-touch-icon.png",
-    other: [
-      { rel: "manifest", url: "/manifest.json" },
-    ],
+    other: [{ rel: "manifest", url: "/manifest.json" }],
   },
   openGraph: {
     title: "Rcapsule",

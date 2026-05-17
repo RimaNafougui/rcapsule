@@ -129,7 +129,12 @@ export default function CatalogueItemPage({
         <p className="text-xl font-light italic text-default-400 mb-6">
           Product not found.
         </p>
-        <Button as={NextLink} href="/catalogue" radius="none" variant="bordered">
+        <Button
+          as={NextLink}
+          href="/catalogue"
+          radius="none"
+          variant="bordered"
+        >
           Back to catalogue
         </Button>
       </div>
