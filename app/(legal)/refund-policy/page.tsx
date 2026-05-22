@@ -63,9 +63,9 @@ export default function RefundPolicyPage() {
               <strong>Email:</strong> Send a request to{" "}
               <a
                 className="text-primary underline"
-                href="mailto:nafouguirima@gmail.com"
+                href="mailto:hello@rcapsule.com"
               >
-                nafouguirima@gmail.com
+                hello@rcapsule.com
               </a>{" "}
               with the subject line &quot;Refund Request&quot;
             </li>
@@ -122,9 +122,9 @@ export default function RefundPolicyPage() {
             For these situations, please contact{" "}
             <a
               className="text-primary underline"
-              href="mailto:nafouguirima@gmail.com"
+              href="mailto:hello@rcapsule.com"
             >
-              nafouguirima@gmail.com
+              hello@rcapsule.com
             </a>{" "}
             with details about your situation.
           </p>
@@ -177,9 +177,9 @@ export default function RefundPolicyPage() {
               <strong>Email:</strong>{" "}
               <a
                 className="text-primary underline"
-                href="mailto:nafouguirima@gmail.com"
+                href="mailto:hello@rcapsule.com"
               >
-                nafouguirima@gmail.com
+                hello@rcapsule.com
               </a>
             </p>
           </div>
