@@ -365,20 +365,38 @@ async function handleBulkScanCancel() {
 }
 
 // ============================================================================
+// PANEL TOGGLE
+// ============================================================================
+
+async function sendToggle(tabId) {
+  try {
+    await chrome.tabs.sendMessage(tabId, { action: 'TOGGLE_PANEL' });
+  } catch {
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId },
+        files: ['content.js'],
+      });
+      await chrome.tabs.sendMessage(tabId, { action: 'TOGGLE_PANEL' });
+    } catch (err) {
+      console.warn('Rcapsule Admin: could not inject panel on this page.', err.message);
+    }
+  }
+}
+
+// Handle extension icon click
+chrome.action.onClicked.addListener((tab) => {
+  sendToggle(tab.id);
+});
+
+// ============================================================================
 // KEYBOARD COMMANDS
 // ============================================================================
 
-chrome.commands.onCommand.addListener((command) => {
-  if (command === "scan-page") {
-    chrome.action.openPopup();
-  } else if (command === "open-popup") {
-    chrome.action.openPopup();
+chrome.commands.onCommand.addListener((command, tab) => {
+  if (command === 'toggle-panel' || command === 'scan-page') {
+    sendToggle(tab.id);
   }
-});
-
-// Handle extension icon click
-chrome.action.onClicked.addListener(async (tab) => {
-  console.log("Extension clicked on tab:", tab.id);
 });
 
 // ============================================================================
@@ -412,15 +430,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "SCROLL_PROGRESS") {
-    // Forward scroll progress to popup
-    chrome.runtime
-      .sendMessage({
+    // Forward scroll progress to the panel in the same tab (no popup anymore)
+    if (sender.tab?.id) {
+      chrome.tabs.sendMessage(sender.tab.id, {
         action: "SCROLL_PROGRESS_UPDATE",
         totalProducts: request.totalProducts,
-      })
-      .catch(() => {});
+      }).catch(() => {});
+    }
     sendResponse({ ok: true });
     return true;
+  }
+
+  // ── API relay ──────────────────────────────────────────────────────────────
+  // Content scripts cannot make credentialed cross-origin requests reliably;
+  // the service worker (which has full host_permissions) does it instead.
+  if (request.action === "API_IMPORT") {
+    fetch("https://rcapsule.com/api/extension/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(request.data),
+    })
+      .then(async (res) => {
+        const body = await res.json().catch(() => ({}));
+        sendResponse({ ok: res.ok, status: res.status, body });
+      })
+      .catch((err) => {
+        sendResponse({ ok: false, status: 0, body: { message: err.message } });
+      });
+    return true; // keep message channel open for async response
   }
 });
 

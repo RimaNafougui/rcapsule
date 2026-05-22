@@ -1,16 +1,15 @@
 // ============================================================================
-// RCAPSULE — Floating Wardrobe Import Panel (Admin Content Script)
+// RCAPSULE — Floating Wardrobe Import Panel (Content Script)
 // Injected into every page. Panel is created on first toggle, then reused.
 // Uses Shadow DOM so the extension's CSS is fully isolated from the page.
-// Admin version — identical UI to user version, with Admin badge in header.
 // ============================================================================
 
 (function () {
   'use strict';
 
   // ── Guard against double-injection ─────────────────────────────────────────
-  if (window.__rcapsuleAdminInjected__) return;
-  window.__rcapsuleAdminInjected__ = true;
+  if (window.__rcapsuleInjected__) return;
+  window.__rcapsuleInjected__ = true;
 
   // ── Constants ───────────────────────────────────────────────────────────────
 
@@ -37,8 +36,8 @@
 
   // ── State ────────────────────────────────────────────────────────────────────
 
-  let host    = null;
-  let root    = null;
+  let host = null;       // the element appended to <html>
+  let root = null;       // shadow root
   let visible = false;
 
   // drag state
@@ -52,7 +51,7 @@
 
   function detectCategory(name) {
     if (!name) return 'Uncategorized';
-    const text   = name.toLowerCase();
+    const text = name.toLowerCase();
     const sorted = [...CATEGORIES].sort((a, b) => b.length - a.length);
     for (const cat of sorted) {
       if (text.includes(cat)) return cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -86,13 +85,13 @@
   }
 
   function switchView(id) {
-    ['scanView','formView'].forEach((v) => {
+    ['scanView', 'formView'].forEach((v) => {
       const el = q(v);
       if (el) el.classList.toggle('hidden', v !== id);
     });
   }
 
-  // ── Storage manager ──────────────────────────────────────────────────────────
+  // ── Storage manager (same as popup.js) ──────────────────────────────────────
 
   const Store = {
     KEYS: {
@@ -141,7 +140,7 @@
         if (now - d.windowStart > this.CFG.WINDOW) { d.requests = []; d.windowStart = now; }
         d.requests = d.requests.filter((t) => now - t < this.CFG.WINDOW);
         return {
-          allowed:           d.requests.length < this.CFG.MAX_REQ,
+          allowed:          d.requests.length < this.CFG.MAX_REQ,
           remainingRequests: Math.max(0, this.CFG.MAX_REQ - d.requests.length),
           resetTime:         d.windowStart + this.CFG.WINDOW,
         };
@@ -243,17 +242,6 @@
       color: #A3A3A3;
     }
 
-    .admin-badge {
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      background: #FFFFFF;
-      color: #171717;
-      padding: 2px 6px;
-    }
-
     #closeBtn {
       background: transparent;
       border: none;
@@ -317,6 +305,7 @@
     }
     .btn-secondary:hover:not(:disabled) { background: #171717; color: #FFFFFF; }
     .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
 
 
     /* ── Utility ── */
@@ -461,6 +450,11 @@
       font-size: 9px;
     }
 
+    /* ── Scrollbar on selects ── */
+    select::-webkit-scrollbar { width: 6px; }
+    select::-webkit-scrollbar-track { background: #FAFAFA; }
+    select::-webkit-scrollbar-thumb { background: #D4D4D4; }
+
     /* ── Offline badge ── */
     #offlineBadge {
       font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -508,30 +502,27 @@
         <span class="logo">Rcapsule / Import</span>
         <div class="header-right">
           <span id="offlineBadge" style="display:none">Offline</span>
-          <span class="admin-badge">Admin</span>
           <span class="version">v1.1</span>
           <button id="closeBtn" title="Close panel">✕</button>
         </div>
       </div>
 
       <div id="body">
-
-        <!-- ─── Scan view ─── -->
+        <!-- Scan view -->
         <div id="scanView">
           <p class="intro">
             Navigate to a product page on <strong>Zara</strong>, <strong>SSENSE</strong>,
             <strong>Aritzia</strong>, <strong>Grailed</strong>, <strong>Nike</strong>,
-            <strong>H&amp;M</strong>, or other supported retailers to automatically extract details.
+            <strong>H&M</strong>, or other supported retailers to automatically extract details.
           </p>
           <button id="scanBtn" class="btn btn-primary">Scan Current Page</button>
           <button id="manualBtn" class="btn btn-secondary hidden">Enter Manually</button>
-
-          <div class="hint" style="margin-top:12px">
+          <div class="hint" style="margin-top:10px">
             <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> to scan · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> to toggle
           </div>
         </div>
 
-        <!-- ─── Form view ─── -->
+        <!-- Form view -->
         <div id="formView" class="hidden">
           <div class="img-container">
             <img id="previewImg" src="" alt="Product preview" class="img-preview" style="display:none"
@@ -605,14 +596,14 @@
 
   function createPanel() {
     host = document.createElement('div');
-    host.id = '__rcapsule-admin-host__';
+    host.id = '__rcapsule-host__';
     Object.assign(host.style, {
-      position: 'fixed',
-      top:      '20px',
-      right:    '20px',
-      width:    '380px',
-      zIndex:   '2147483647',
-      display:  'block',
+      position:  'fixed',
+      top:       '20px',
+      right:     '20px',
+      width:     '380px',
+      zIndex:    '2147483647',
+      display:   'block',
     });
 
     root = host.attachShadow({ mode: 'open' });
@@ -632,11 +623,12 @@
     const header = q('header');
 
     header.addEventListener('mousedown', (e) => {
+      // Don't start drag if clicking the close button
       if (e.target.closest && e.target.closest('#closeBtn')) return;
-      dragging  = true;
+      dragging = true;
       header.classList.add('dragging');
-      dStartX   = e.clientX;
-      dStartY   = e.clientY;
+      dStartX  = e.clientX;
+      dStartY  = e.clientY;
       const rect = host.getBoundingClientRect();
       dOrigLeft  = rect.left;
       dOrigTop   = rect.top;
@@ -666,7 +658,7 @@
     });
   }
 
-  // ── Form helpers ──────────────────────────────────────────────────────────────
+  // ── Form handlers ─────────────────────────────────────────────────────────────
 
   function populateForm(data) {
     const map = {
@@ -708,23 +700,11 @@
     };
   }
 
-  // ── Event handlers ────────────────────────────────────────────────────────────
-
   function setupHandlers() {
     q('closeBtn').addEventListener('click', () => togglePanel());
     q('scanBtn').addEventListener('click', scanPage);
     q('saveBtn').addEventListener('click', saveProduct);
-    q('cancelBtn').addEventListener('click', () => resetToScanView());
-    q('manualBtn').addEventListener('click', () => {
-      populateForm({ name:'', brand:'', price:'', size:'', link: window.location.href,
-                     imageUrl:'', category:'Uncategorized', materials:'', description:'' });
-      switchView('formView');
-      setStatus('');
-    });
-    q('addAnotherBtn').addEventListener('click', () => resetToScanView());
-    q('loginBtn').addEventListener('click', () => {
-      window.open('https://rcapsule.com/login', '_blank', 'noopener');
-    });
+    q('cancelBtn').addEventListener('click', () => { switchView('scanView'); setStatus(''); });
     q('inputImgUrl').addEventListener('input', () => {
       const url = q('inputImgUrl').value.trim();
       const img = q('previewImg');
@@ -737,6 +717,16 @@
         img.style.display = 'none';
         if (ph) ph.style.display = 'block';
       }
+    });
+    q('manualBtn').addEventListener('click', () => {
+      populateForm({ name:'', brand:'', price:'', size:'', link: window.location.href,
+                     imageUrl:'', category:'Uncategorized', materials:'', description:'' });
+      switchView('formView');
+      setStatus('');
+    });
+    q('addAnotherBtn').addEventListener('click', () => resetToScanView());
+    q('loginBtn').addEventListener('click', () => {
+      window.open('https://rcapsule.com/login', '_blank', 'noopener');
     });
 
     // Keyboard shortcuts inside the shadow root
@@ -779,12 +769,12 @@
   }
 
   function resetToScanView() {
-    const manualBtn     = q('manualBtn');
+    const manualBtn    = q('manualBtn');
     const addAnotherBtn = q('addAnotherBtn');
-    const viewInAppBtn  = q('viewInAppBtn');
-    const loginBtn      = q('loginBtn');
-    const saveBtn       = q('saveBtn');
-    const cancelBtn     = q('cancelBtn');
+    const viewInAppBtn = q('viewInAppBtn');
+    const loginBtn     = q('loginBtn');
+    const saveBtn      = q('saveBtn');
+    const cancelBtn    = q('cancelBtn');
     if (manualBtn)     manualBtn.classList.add('hidden');
     if (addAnotherBtn) addAnotherBtn.classList.add('hidden');
     if (viewInAppBtn)  viewInAppBtn.classList.add('hidden');
@@ -807,6 +797,7 @@
       return;
     }
 
+    // Check cache first
     const cached = await Store.getCached(window.location.href);
     if (cached) {
       const s = sanitize(cached);
@@ -863,8 +854,8 @@
 
     const rate = await Store.checkRate();
     if (!rate.allowed) {
-      const w = Math.ceil((rate.resetTime - Date.now()) / 1000);
-      setStatus(`Rate limit reached. Try again in ${w}s.`, 'error');
+      const wait = Math.ceil((rate.resetTime - Date.now()) / 1000);
+      setStatus(`Rate limit reached. Try again in ${wait}s.`, 'error');
       btn.disabled    = false;
       btn.textContent = 'Add to Wardrobe';
       return;
@@ -872,6 +863,8 @@
 
     try {
       await Store.recordRequest();
+
+      // Relay through background service worker (avoids CORS issues)
       const result = await chrome.runtime.sendMessage({ action: 'API_IMPORT', data });
 
       if (result.ok) {
@@ -937,6 +930,7 @@
     if (!host) {
       createPanel();
       visible = true;
+      // Auto-scan if this looks like a product page
       if (isProductPage()) setTimeout(scanPage, 100);
     } else {
       visible = !visible;
@@ -1096,6 +1090,7 @@
       );
       const colorName = selectedSwatch?.getAttribute('aria-label')?.trim();
       if (colorName && data.name && !data.name.toLowerCase().includes(colorName.toLowerCase())) {
+        // Convert "LIGHT BIRCH" → "Light Birch" for nicer display
         const pretty = colorName.charAt(0) + colorName.slice(1).toLowerCase();
         data.name = `${data.name} — ${pretty}`;
       }
@@ -1312,374 +1307,7 @@
 
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.action === 'TOGGLE_PANEL') togglePanel();
-    if (msg.action === 'SCAN_PAGE') { if (!visible) togglePanel(); scanPage(); }
+    if (msg.action === 'SCAN_PAGE'   ) { if (!visible) togglePanel(); scanPage(); }
   });
 
 })();
-
-// ============================================================================
-// MESSAGE LISTENER (listing page / bulk import orchestration)
-// These handlers are called by the background service worker.
-// ============================================================================
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "EXTRACT_LISTING_PRODUCTS") {
-    extractListingProducts().then(sendResponse);
-    return true;
-  }
-
-  if (request.action === "SCROLL_AND_LOAD_ALL") {
-    scrollAndLoadAll().then(sendResponse);
-    return true;
-  }
-
-  if (request.action === "CHECK_IS_LISTING_PAGE") {
-    sendResponse({ isListing: checkIsListingPage() });
-    return false;
-  }
-});
-
-// ============================================================================
-// LISTING PAGE DETECTION
-// ============================================================================
-
-function checkIsListingPage() {
-  if (!window.location.hostname.includes("aritzia")) return false;
-  if (window.location.pathname.includes("/product/")) return false;
-  const links = document.querySelectorAll('a[href*="/product/"]');
-  return links.length > 2;
-}
-
-// ============================================================================
-// AUTO-SCROLL TO LOAD ALL PRODUCTS
-// ============================================================================
-
-async function scrollAndLoadAll() {
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  let previousHeight = 0;
-  let currentHeight = document.body.scrollHeight;
-  let noChangeCount = 0;
-  const MAX_NO_CHANGE = 3;
-  const SCROLL_DELAY = 1500;
-
-  while (noChangeCount < MAX_NO_CHANGE) {
-    previousHeight = currentHeight;
-
-    // Try to find and click any "load more" / "show more" button
-    // Aritzia uses data-testid attributes, so check those too
-    const loadMoreBtn =
-      document.querySelector('[data-testid*="load-more"]') ||
-      document.querySelector('[data-testid*="show-more"]') ||
-      document.querySelector('[data-testid*="loadMore"]') ||
-      document.querySelector('[data-testid*="showMore"]') ||
-      document.querySelector(".show-more button") ||
-      document.querySelector("button.more") ||
-      findButtonByText("load more") ||
-      findButtonByText("show more");
-
-    if (loadMoreBtn && !loadMoreBtn.disabled) {
-      console.log("Clicking load more button");
-      loadMoreBtn.click();
-      await wait(2500);
-    }
-
-    // Scroll to bottom
-    window.scrollTo(0, document.body.scrollHeight);
-    await wait(SCROLL_DELAY);
-
-    currentHeight = document.body.scrollHeight;
-
-    if (currentHeight === previousHeight) {
-      noChangeCount++;
-    } else {
-      noChangeCount = 0;
-    }
-
-    // Count unique products
-    const total = countUniqueProducts();
-    chrome.runtime
-      .sendMessage({
-        action: "SCROLL_PROGRESS",
-        totalProducts: total,
-        scrollComplete: false,
-      })
-      .catch(() => {});
-  }
-
-  window.scrollTo(0, 0);
-
-  return {
-    complete: true,
-    totalProducts: countUniqueProducts(),
-    pageHeight: currentHeight,
-  };
-}
-
-function findButtonByText(text) {
-  const buttons = document.querySelectorAll("button");
-  for (const btn of buttons) {
-    if (btn.textContent.toLowerCase().trim().includes(text)) return btn;
-  }
-  return null;
-}
-
-// Query params that distinguish product variants (color, size, etc.)
-const VARIANT_PARAMS = new Set([
-  "color",
-  "colorid",
-  "colour",
-  "variant",
-  "sku",
-  "dwvar",
-  "sz",
-]);
-
-// Normalizes a product URL: keeps variant params, strips tracking params
-function normalizeProductUrl(href) {
-  try {
-    const url = new URL(href);
-    const kept = new URLSearchParams();
-    for (const [key, val] of url.searchParams) {
-      if (VARIANT_PARAMS.has(key.toLowerCase())) kept.set(key, val);
-    }
-    const base = url.origin + url.pathname.replace(/\/$/, "");
-    const qs = kept.toString();
-    return qs ? `${base}?${qs}` : base;
-  } catch {
-    return href.split("?")[0].replace(/\/$/, "");
-  }
-}
-
-// Strips ALL query params — used only for card boundary detection where
-// different color swatches within the same card should be treated as one product
-function baseProductUrl(href) {
-  return href.split("?")[0].replace(/\/$/, "");
-}
-
-function countUniqueProducts() {
-  const links = document.querySelectorAll('a[href*="/product/"]');
-  const urls = new Set();
-  links.forEach((a) => {
-    urls.add(normalizeProductUrl(a.href));
-  });
-  return urls.size;
-}
-
-// ============================================================================
-// CARD BOUNDARY DETECTION
-// ============================================================================
-
-// Walks up from a product link to find the card boundary.
-// The card is the deepest ancestor that contains links to ONLY this product.
-// Once the parent contains links to OTHER products, we've gone too far.
-function findCardBoundary(link) {
-  const thisProduct = baseProductUrl(link.href);
-  let el = link;
-
-  while (el.parentElement) {
-    const parent = el.parentElement;
-    const parentLinks = parent.querySelectorAll('a[href*="/product/"]');
-    const hasOtherProducts = Array.from(parentLinks).some((l) => {
-      return baseProductUrl(l.href) !== thisProduct;
-    });
-
-    if (hasOtherProducts) {
-      // Parent contains other products — el is the card boundary
-      return el;
-    }
-
-    el = parent;
-  }
-
-  return el;
-}
-
-// ============================================================================
-// PRODUCT DATA EXTRACTION FROM CARD
-// ============================================================================
-
-function extractNameFromCard(card, productLinks) {
-  // Strategy 1: Find a link to this product that has text content (not just an image)
-  for (const link of productLinks) {
-    const text = link.textContent?.trim();
-    if (text && text.length > 2 && !text.match(/^\$/) && !link.querySelector("img")) {
-      return text.split("\n")[0].trim();
-    }
-  }
-
-  // Strategy 2: Find data-testid elements that might be the name
-  const testIdEls = card.querySelectorAll("[data-testid]");
-  for (const el of testIdEls) {
-    const testId = el.getAttribute("data-testid");
-    if (
-      testId.includes("name") ||
-      testId.includes("title") ||
-      testId.includes("product-name")
-    ) {
-      const text = el.textContent?.trim();
-      if (text) return text;
-    }
-  }
-
-  // Strategy 3: Find a text-only link
-  for (const link of productLinks) {
-    const text = link.textContent?.trim();
-    if (text && text.length > 2) {
-      // Strip out price-like text
-      const cleaned = text.replace(/\$[\d,.]+/g, "").trim();
-      if (cleaned.length > 2) return cleaned.split("\n")[0].trim();
-    }
-  }
-
-  // Strategy 4: Use the alt text from any product image
-  const img = card.querySelector("img[alt]");
-  if (img?.alt && img.alt.length > 2) return img.alt.trim();
-
-  return "";
-}
-
-function extractPriceFromCard(card) {
-  // Strategy 1: data-testid with "price" in it
-  const testIdEls = card.querySelectorAll("[data-testid]");
-  for (const el of testIdEls) {
-    const testId = el.getAttribute("data-testid");
-    if (testId.includes("price")) {
-      const text = el.textContent?.trim();
-      const match = text?.match(/\$?([\d,]+\.?\d*)/);
-      if (match) return match[1].replace(/,/g, "");
-    }
-  }
-
-  // Strategy 2: Find any text with a $ sign inside the card
-  const allText = card.innerText || card.textContent || "";
-  // Find all price-like patterns, prefer the last one (usually the sale/current price)
-  const priceMatches = allText.match(/\$\s*([\d,]+\.?\d*)/g);
-  if (priceMatches && priceMatches.length > 0) {
-    // Use the last price (often the current/sale price)
-    const lastPrice = priceMatches[priceMatches.length - 1];
-    const match = lastPrice.match(/([\d,]+\.?\d*)/);
-    if (match) return match[1].replace(/,/g, "");
-  }
-
-  return "";
-}
-
-function extractImageFromCard(card, productLinks) {
-  // Strategy 1: img inside a product link (the main product image)
-  for (const link of productLinks) {
-    const img = link.querySelector("img");
-    if (img) {
-      return getBestImageUrl(img);
-    }
-  }
-
-  // Strategy 2: Any img with an aritzia src
-  const aritziaImg = card.querySelector("img[src*='aritzia']");
-  if (aritziaImg) return getBestImageUrl(aritziaImg);
-
-  // Strategy 3: First img in the card
-  const anyImg = card.querySelector("img");
-  if (anyImg) return getBestImageUrl(anyImg);
-
-  return "";
-}
-
-function getBestImageUrl(img) {
-  // Prefer srcset for higher resolution
-  if (img.srcset) {
-    const sources = img.srcset.split(",").map((s) => s.trim().split(" ")[0]);
-    const best = sources[sources.length - 1];
-    if (best) return normalizeUrl(best);
-  }
-  const src = img.src || img.dataset.src || "";
-  return normalizeUrl(src);
-}
-
-function normalizeUrl(url) {
-  if (!url) return "";
-  if (url.startsWith("//")) url = "https:" + url;
-  if (url.startsWith("data:")) return "";
-  return url.split(" ")[0];
-}
-
-function extractBrandFromCard(card) {
-  // Aritzia sub-brands: Wilfred, Babaton, TNA, Sunday Best, Wilfred Free, etc.
-  const testIdEls = card.querySelectorAll("[data-testid]");
-  for (const el of testIdEls) {
-    const testId = el.getAttribute("data-testid");
-    if (testId.includes("brand")) {
-      return el.textContent?.trim() || "";
-    }
-  }
-  return "";
-}
-
-// ============================================================================
-// LISTING PAGE PRODUCT EXTRACTION (Pass 1)
-// ============================================================================
-
-async function extractListingProducts() {
-  const products = [];
-  const seenUrls = new Set();
-
-  // Find ALL product links on the page
-  const allLinks = Array.from(
-    document.querySelectorAll('a[href*="/product/"]'),
-  );
-
-  console.log(`Found ${allLinks.length} total product links`);
-
-  // Group links by normalized product URL (preserves color/variant params)
-  const productGroups = new Map();
-  for (const link of allLinks) {
-    const normalizedUrl = normalizeProductUrl(link.href);
-    if (!productGroups.has(normalizedUrl)) {
-      productGroups.set(normalizedUrl, []);
-    }
-    productGroups.get(normalizedUrl).push(link);
-  }
-
-  console.log(`Grouped into ${productGroups.size} unique products (including color variants)`);
-
-  for (const [normalizedUrl, links] of productGroups) {
-    if (seenUrls.has(normalizedUrl)) continue;
-    seenUrls.add(normalizedUrl);
-
-    try {
-      // Find the card boundary by walking up from the first image-bearing link
-      const imageLink = links.find((l) => l.querySelector("img"));
-      const primaryLink = imageLink || links[0];
-      const card = findCardBoundary(primaryLink);
-
-      // Get all links to this base product within the card (any color variant)
-      const base = baseProductUrl(links[0].href);
-      const cardProductLinks = Array.from(
-        card.querySelectorAll('a[href*="/product/"]'),
-      ).filter(
-        (l) => baseProductUrl(l.href) === base,
-      );
-
-      const name = extractNameFromCard(card, cardProductLinks);
-      const price = extractPriceFromCard(card);
-      const imageUrl = extractImageFromCard(card, cardProductLinks);
-      const brand = extractBrandFromCard(card);
-
-      // Use the full URL (with color param) from the first link in this variant group
-      const url = links[0].href;
-
-      products.push({ url, name, price, imageUrl, brand });
-    } catch (e) {
-      console.warn("Failed to extract product:", baseUrl, e);
-    }
-  }
-
-  console.log(`Extracted ${products.length} products with data`);
-
-  // Log a sample for debugging
-  if (products.length > 0) {
-    console.log("Sample product:", JSON.stringify(products[0], null, 2));
-  }
-
-  return { products, count: products.length };
-}
