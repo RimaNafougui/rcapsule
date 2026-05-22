@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "@heroui/react";
 import { Check, Loader, ArrowRight } from "lucide-react";
-import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaTwitter } from "react-icons/fa";
 
 import { Logo } from "@/components/ui/logo";
 import { DSInput } from "@/components/ui/input";
@@ -35,17 +35,18 @@ export default function Footer() {
     {
       title: "Explore",
       links: [
-        { name: "Discover wardrobes", href: "/discover" },
-        { name: "Community", href: "/discover" },
-        { name: "Outfits", href: "/discover" },
-        { name: "Collections", href: "/discover" },
+        { name: "Discover", href: "/discover" },
+        { name: "Outfits", href: "/outfits" },
+        { name: "Collections", href: "/collections" },
+        { name: "Closet", href: "/closet" },
       ],
     },
     {
-      title: "Platform",
+      title: "Product",
       links: [
         { name: "Features", href: "/features" },
         { name: "Pricing", href: "/pricing" },
+        { name: "Chrome Extension", href: "/extension" },
         { name: "About", href: "/about" },
         { name: "Contact", href: "/contact" },
       ],
@@ -70,7 +71,7 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="text-default-500 text-sm leading-relaxed max-w-sm">
-              catalogue what you own. Build outfits. Curate collections for any
+              Catalogue what you own. Build outfits. Curate collections for any
               chapter of your life. Share your real style with the people who
               actually want to see it.
             </p>
@@ -131,6 +132,7 @@ export default function Footer() {
                         className="text-sm transition-colors duration-200 hover:underline underline-offset-4"
                         color="foreground"
                         href={link.href}
+                        isExternal={"external" in link && link.external}
                       >
                         {link.name}
                       </Link>
@@ -148,15 +150,11 @@ export default function Footer() {
               &copy; {currentYear} rcapsule.
             </p>
             <span className="hidden sm:inline text-default-300">&middot;</span>
-            <p className="text-xs text-default-400 font-mono tracking-wide">
-              v.01 · pre-launch · solo build
-            </p>
-            <span className="hidden sm:inline text-default-300">&middot;</span>
             <Link
               className="text-xs text-default-400 hover:text-foreground transition-colors duration-200"
-              href="mailto:nafouguirima@gmail.com"
+              href="mailto:hello@rcapsule.com"
             >
-              nafouguirima@gmail.com
+              hello@rcapsule.com
             </Link>
           </div>
 
@@ -164,14 +162,8 @@ export default function Footer() {
             <Link
               isExternal
               color="foreground"
-              href="https://github.com/RimaNafougui"
+              href="https://twitter.com/rcapsule"
             >
-              <FaGithub
-                className="hover:text-default-500 transition-colors duration-200"
-                size={18}
-              />
-            </Link>
-            <Link isExternal color="foreground" href="https://twitter.com">
               <FaTwitter
                 className="hover:text-default-500 transition-colors duration-200"
                 size={18}
@@ -180,7 +172,7 @@ export default function Footer() {
             <Link
               isExternal
               color="foreground"
-              href="https://instagram.com/RimaNafougui"
+              href="https://instagram.com/rcapsule"
             >
               <FaInstagram
                 className="hover:text-default-500 transition-colors duration-200"
