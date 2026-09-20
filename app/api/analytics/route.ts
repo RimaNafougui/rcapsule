@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { cacheGet, cacheSet, analyticsKey, ANALYTICS_TTL } from "@/lib/redis";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 interface ClothesItem {
   id: string;
@@ -47,6 +48,12 @@ export async function GET(_req: Request) {
         if (!session?.user?.id) {
           return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+
+        const { success, reset } = await apiLimiter().limit(
+          `user:${session.user.id}`,
+        );
+
+        if (!success) return rateLimitResponse(reset);
 
         const userId = session.user.id;
 

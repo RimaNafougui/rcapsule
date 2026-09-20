@@ -4,6 +4,7 @@ import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { getWeather, getWeatherSummary } from "@/lib/services/weather";
 import { getErrorMessage } from "@/lib/utils/error";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function GET() {
   const session = await auth();
@@ -11,6 +12,12 @@ export async function GET() {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
 
   const supabase = getSupabaseServer();
 

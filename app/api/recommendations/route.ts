@@ -10,6 +10,7 @@ import {
   type ClothingItem,
 } from "@/lib/services/ai-recommendations";
 import { getErrorMessage } from "@/lib/utils/error";
+import { heavyLimiter, rateLimitResponse } from "@/lib/ratelimit";
 import {
   cacheGet,
   cacheSet,
@@ -43,6 +44,12 @@ export async function GET(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { success: rlSuccess, reset: rlReset } = await heavyLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!rlSuccess) return rateLimitResponse(rlReset);
 
   const { searchParams } = new URL(req.url);
   const occasion = searchParams.get("occasion") || undefined;
@@ -261,6 +268,12 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { success: rlSuccess, reset: rlReset } = await heavyLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!rlSuccess) return rateLimitResponse(rlReset);
 
   const body = await req.json();
   const { occasion, excludeIds, customWeather } = body;

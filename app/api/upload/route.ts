@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +11,12 @@ export async function POST(req: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success: rlSuccess, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!rlSuccess) return rateLimitResponse(reset);
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
@@ -92,6 +99,12 @@ export async function DELETE(req: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success: rlSuccess, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!rlSuccess) return rateLimitResponse(reset);
 
     const { searchParams } = new URL(req.url);
     const path = searchParams.get("path");

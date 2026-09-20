@@ -17,6 +17,11 @@ vi.mock("stripe", () => {
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 
+vi.mock("@/lib/ratelimit", () => ({
+  apiLimiter: () => ({ limit: vi.fn().mockResolvedValue({ success: true, reset: 0 }) }),
+  rateLimitResponse: vi.fn(),
+}));
+
 import { POST } from "@/app/api/checkout/route";
 
 // POST handler expects NextRequest so that request.nextUrl.origin is available

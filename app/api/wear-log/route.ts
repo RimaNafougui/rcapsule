@@ -4,6 +4,7 @@ import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { getErrorMessage } from "@/lib/utils/error";
 import { cacheDel, analyticsKey } from "@/lib/redis";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -11,6 +12,12 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
 
   const body = await req.json();
   const { items, date } = body;

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { getSupabaseServer } from "@/lib/supabase-server";
+import { heavyLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function POST(req: Request) {
   try {
@@ -11,6 +12,12 @@ export async function POST(req: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await heavyLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const supabase = getSupabaseServer();
     const { data: user } = await supabase

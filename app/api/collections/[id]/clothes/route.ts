@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function POST(
   req: Request,
@@ -14,6 +15,12 @@ export async function POST(
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const { id: wardrobeId } = await params;
     const { clothesIds } = await req.json();

@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 import { clothesPostSchema } from "@/lib/validations/schemas";
 import {
   cacheGet,
@@ -27,6 +28,13 @@ export async function GET(req: Request) {
         if (!session?.user?.id) {
           return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+
+        const { success, reset } = await apiLimiter().limit(
+          `user:${session.user.id}`,
+        );
+
+        if (!success) return rateLimitResponse(reset);
+
         const userId = session.user.id;
         const { searchParams } = new URL(req.url);
         const wardrobeId = searchParams.get("wardrobeId");
@@ -158,6 +166,12 @@ export async function POST(req: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const userId = session.user.id;
     const body = await req.json();

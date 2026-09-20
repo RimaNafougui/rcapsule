@@ -35,6 +35,11 @@ vi.mock("@/lib/redis", () => ({
   CLOTHES_LIST_TTL: 300,
 }));
 
+vi.mock("@/lib/ratelimit", () => ({
+  apiLimiter: () => ({ limit: vi.fn().mockResolvedValue({ success: true, reset: 0 }) }),
+  rateLimitResponse: vi.fn(),
+}));
+
 function makeRequest(url: string, options?: RequestInit) {
   return new Request(url, options);
 }

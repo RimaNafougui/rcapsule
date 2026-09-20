@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
 import { getErrorMessage } from "@/lib/utils/error";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 // FIXED: Count distinct wornAt timestamps, not total rows
 async function updateOutfitStats(
@@ -95,6 +96,12 @@ export async function GET(req: Request) {
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
+
   const { searchParams } = new URL(req.url);
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -135,6 +142,12 @@ export async function POST(req: Request) {
 
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
 
   const body = await req.json();
   const { date, outfitId, occasion, weather, temperature, location, notes } =
@@ -209,6 +222,12 @@ export async function PUT(req: Request) {
 
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
 
   const body = await req.json();
   const {
@@ -288,6 +307,12 @@ export async function DELETE(req: Request) {
 
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { success, reset } = await apiLimiter().limit(
+    `user:${session.user.id}`,
+  );
+
+  if (!success) return rateLimitResponse(reset);
 
   const { searchParams } = new URL(req.url);
   const outfitId = searchParams.get("outfitId");

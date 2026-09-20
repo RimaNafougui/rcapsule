@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 
 import { auth } from "@/auth";
+import { getSupabaseServer } from "@/lib/supabase-server";
 import { heavyLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 const lambda = new LambdaClient({
@@ -20,6 +21,20 @@ export async function POST(req: Request) {
   );
 
   if (!success) return rateLimitResponse(reset);
+
+  const supabase = getSupabaseServer();
+  const { data: user } = await supabase
+    .from("User")
+    .select("subscription_status")
+    .eq("id", session.user.id)
+    .single();
+
+  if (user?.subscription_status !== "premium") {
+    return NextResponse.json(
+      { error: "Premium subscription required" },
+      { status: 403 },
+    );
+  }
 
   const functionName = process.env.AWS_LAMBDA_FUNCTION_NAME;
 

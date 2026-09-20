@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { apiLimiter, rateLimitResponse } from "@/lib/ratelimit";
 
 export async function GET(
   req: Request,
@@ -13,6 +14,12 @@ export async function GET(
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const { id } = await params;
     const supabase = getSupabaseServer();
@@ -102,6 +109,12 @@ export async function PUT(
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const { id } = await params;
     const data = await req.json();
@@ -204,6 +217,12 @@ export async function DELETE(
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success, reset } = await apiLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) return rateLimitResponse(reset);
 
     const { id } = await params;
     const supabase = getSupabaseServer();

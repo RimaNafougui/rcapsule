@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { auth } from "@/auth";
+import { heavyLimiter } from "@/lib/ratelimit";
 
 // Browser extensions send a chrome-extension:// origin; allow the app origin too
 const ALLOWED_ORIGINS = new Set([
@@ -52,6 +53,25 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Forbidden: only admins can bulk-import to the catalogue" },
         { status: 403, headers: corsHeaders(origin) },
+      );
+    }
+
+    const { success, reset } = await heavyLimiter().limit(
+      `user:${session.user.id}`,
+    );
+
+    if (!success) {
+      const retryAfter = Math.max(0, Math.ceil((reset - Date.now()) / 1000));
+
+      return NextResponse.json(
+        { error: "Too many requests. Please slow down." },
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders(origin),
+            "Retry-After": String(retryAfter),
+          },
+        },
       );
     }
 
