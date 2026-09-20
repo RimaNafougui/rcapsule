@@ -38,10 +38,21 @@ A full-stack wardrobe management and fashion community platform. Catalogue your 
 
 ### Platform
 
-- **Chrome Extension** — Import items directly from online shopping sites (Manifest V3)
+- **Chrome Extension** — Import items directly from online shopping sites (Manifest V3), with a dedicated marketing/install page
+- **Outfit Studio** — Standalone collage builder flow for composing outfits from your wardrobe
 - **Stripe Payments** — Premium subscription via Checkout and billing portal
+- **Newsletter Unsubscribe** — Self-serve email preference management
 - **Responsive Design** — Optimized for desktop, tablet, and mobile
 - **Custom 404** — Branded error page
+
+### Admin Dashboard
+
+- **Stats Overview** — Platform-wide usage metrics
+- **User Management** — Search, view, and moderate user accounts
+- **Catalogue Management** — Curate the global product catalogue
+- **Reports Queue** — Review and resolve user-submitted reports
+- **Broadcast** — Send platform-wide announcements
+- Gated by `role === "admin"` on both the route group and every `/api/admin/*` handler
 
 ## Tech Stack
 
@@ -68,20 +79,23 @@ A full-stack wardrobe management and fashion community platform. Catalogue your 
 rcapsule/
 ├── app/
 │   ├── (auth)/              # Login, signup, forgot/update password, onboarding
-│   ├── (marketing)/         # Landing, about, features, pricing, contact
+│   ├── (marketing)/         # Landing, about, features, pricing, contact, extension, unsubscribe
 │   ├── (legal)/             # Terms, privacy, refund policy
+│   ├── (admin)/             # Admin dashboard (stats, users, catalogue, reports, broadcast)
 │   ├── (app)/               # Authenticated app
 │   │   ├── closet/          # Wardrobe catalogue + item detail
 │   │   ├── outfits/         # Lookbook + outfit builder
+│   │   ├── studio/          # Standalone collage builder flow
 │   │   ├── catalogue/       # Global product catalogue + brand pages
 │   │   ├── collections/     # Capsule wardrobes
 │   │   ├── wishlist/        # Saved items
 │   │   ├── discover/        # Community feed
 │   │   ├── notifications/   # Activity notifications
+│   │   ├── checkout/        # Stripe checkout flow
 │   │   ├── profile/         # User profile
 │   │   └── settings/        # Account & preferences
 │   ├── u/[username]/        # Public user profiles + outfit detail pages
-│   ├── api/                 # API routes (auth, clothes, outfits, feed, AI, Stripe…)
+│   ├── api/                 # API routes (auth, clothes, outfits, feed, AI, Stripe, admin…)
 │   └── not-found.tsx        # Custom 404 page
 ├── components/
 │   ├── layout/              # Navbar, Footer, LandingPage, page loader
@@ -128,18 +142,24 @@ pnpm test                  # run all tests
 pnpm vitest --coverage     # run with coverage report
 ```
 
-**72 tests** across 8 suites — all passing.
+**137 tests** across 14 suites — all passing.
 
-| Suite                                       | Tests | Coverage                                                                    |
-| ------------------------------------------- | ----: | --------------------------------------------------------------------------- |
-| `tests/api/signup.test.ts`                  |    11 | Input validation, username rules, duplicate checks                          |
-| `tests/api/clothes.test.ts`                 |    10 | CRUD, auth guards, ownership verification, DB errors                        |
-| `tests/api/catalogue.test.ts`               |     6 | Listing, cache headers, pagination, search suggestions                      |
-| `tests/api/checkout.test.ts`                |     6 | Auth, billing cycle, Stripe session creation                                |
-| `tests/services/ai-recommendations.test.ts` |    10 | Recommendation structure, multi-provider (OpenAI/Anthropic), error recovery |
-| `tests/services/weather.test.ts`            |    10 | Weather context, temp rounding, API fallback                                |
-| `tests/lib/redis.test.ts`                   |    10 | Cache get/set/delete, TTL, multi-key delete, error resilience               |
-| `tests/lib/ratelimit.test.ts`               |     9 | Identifier extraction, 429 responses, Retry-After headers                   |
+| Suite                                        | Tests | Coverage                                                                    |
+| --------------------------------------------- | ----: | --------------------------------------------------------------------------- |
+| `tests/api/admin/catalogue.test.ts`          |    19 | Admin catalogue CRUD, auth/role guards, validation                          |
+| `tests/api/admin/users.test.ts`              |    16 | User search, role changes, moderation actions, guards                      |
+| `tests/api/signup.test.ts`                   |    11 | Input validation, username rules, duplicate checks                          |
+| `tests/api/admin/reports.test.ts`            |    12 | Report listing, resolution, admin guards                                    |
+| `tests/api/clothes.test.ts`                  |    10 | CRUD, auth guards, ownership verification, DB errors                        |
+| `tests/services/ai-recommendations.test.ts`  |    10 | Recommendation structure, multi-provider (OpenAI/Anthropic), error recovery |
+| `tests/services/weather.test.ts`             |    10 | Weather context, temp rounding, API fallback                                |
+| `tests/lib/redis.test.ts`                    |    10 | Cache get/set/delete, TTL, multi-key delete, error resilience               |
+| `tests/lib/ratelimit.test.ts`                |     9 | Identifier extraction, 429 responses, Retry-After headers                   |
+| `tests/api/admin/broadcast.test.ts`          |     8 | Broadcast send, validation, auth/role guards                                |
+| `tests/api/catalogue.test.ts`                |     6 | Listing, cache headers, pagination, search suggestions                      |
+| `tests/api/checkout.test.ts`                 |     6 | Auth, billing cycle, Stripe session creation                                |
+| `tests/lib/admin.test.ts`                    |     5 | `requireAdmin()` auth/role checks                                           |
+| `tests/api/admin/stats.test.ts`              |     5 | Stats aggregation, auth/role guards                                         |
 
 Coverage thresholds enforced: **70% lines/functions/statements**, **60% branches**.
 
