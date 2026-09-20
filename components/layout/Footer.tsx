@@ -132,7 +132,9 @@ export default function Footer() {
                         className="text-sm transition-colors duration-200 hover:underline underline-offset-4"
                         color="foreground"
                         href={link.href}
-                        isExternal={"external" in link && link.external}
+                        isExternal={Boolean(
+                          "external" in link && link.external,
+                        )}
                       >
                         {link.name}
                       </Link>
